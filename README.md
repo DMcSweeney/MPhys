@@ -18,8 +18,7 @@ Accurate and fast image registration using convolutional neural networks for hea
 
 ### To-Do
 
-- [x] Be cool 
-- [ ] Be shit
+- [ ] Talk to Eliana and Andrew, 3 pm 27/09
 
 
 
