@@ -23,7 +23,9 @@ What do we aim to have completed by January? By June?
 
 - [ ] Talk to Eliana and Andrew, 3 pm 27/09
 
-
+### Ideas
+Have a look at GitHub Marketplace for apps.
+Implement continuous integration?
 
 ### Requirements
 Python version:<br>
