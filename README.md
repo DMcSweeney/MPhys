@@ -16,6 +16,13 @@ Accurate and fast image registration using convolutional neural networks for hea
 [Medical Image Registration Library](https://pypi.org/project/SimpleElastix/0.10.0.post224/ "SimpleElastix")<br>
 [Iterative Closest Point Algorithm](https://pypi.org/project/ICP/2.1.1/ "ICP")<br>
 
+### To-Do
+
+- [x] Be cool 
+- [ ] Be shit
+
+
+
 ### Requirements
 Python version:<br>
 Add other libraries used.<br>
