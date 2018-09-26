@@ -12,8 +12,8 @@ Accurate and fast image registration using convolutional neural networks for hea
 [Python Machine Learning](https://ebookcentral.proquest.com/lib/manchester/detail.action?docID=4191233)<br>
 [Artificial Intelligence: A modern approach](http://thuvien.thanglong.edu.vn:8081/dspace/bitstream/DHTL_123456789/4010/1/CS503-2.pdf)<br>
 ##### _Libraries_
-[Keras Homepage](https://keras.io/ "Keras Documentation") <br>
-[Medical image registration Library](https://pypi.org/project/SimpleElastix/0.10.0.post224/ "SimpleElastix")<br>
+[Keras](https://keras.io/ "Keras Documentation") <br>
+[Medical Image Registration Library](https://pypi.org/project/SimpleElastix/0.10.0.post224/ "SimpleElastix")<br>
 [Iterative Closest Point Algorithm](https://pypi.org/project/ICP/2.1.1/ "ICP")<br>
 
 ### Requirements
