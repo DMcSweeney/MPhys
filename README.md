@@ -22,7 +22,7 @@ What do we aim to have completed by January? By June?
 
 ### To-Do
 
-- [x] Talk to Eliana and Andrew, 3 pm 27/09
+- [] Talk to Eliana and Andrew, 3 pm 27/09
 
 ### Ideas
 Have a look at GitHub Marketplace for apps.
