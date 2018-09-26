@@ -4,7 +4,8 @@ Accurate and fast image registration using convolutional neural networks for hea
 *Add further description* <br>
 #### _Aims_
 What do we aim to have completed by January? By June?
-
+### Weekly Progress
+[Week 1](https://github.com/DMcSweeney/MPhys/Week_1 "Week 1")
 
 ### Useful Links
 ##### _General Help_
@@ -31,6 +32,6 @@ Implement continuous integration?
 Python version:<br>
 Add other libraries used.<br>
 
-*Weekly Summaries?*
 
-*List of references?*
+
+### References
