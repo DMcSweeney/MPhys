@@ -1,7 +1,8 @@
 Made Git Repo for project and introduction to machine learning and Keras. <br>
 
 
-PetCT, PCT and Vector field info is stored in DICOM format so need to read this into Python. Use pyDICOM to do this: <br>
+PetCT, PCT and Vector field info is stored in DICOM format so need to read this into Python. 
+Use pyDICOM to do this: <br>
 [pyDICOM library](https://github.com/pydicom/pydicom)<br>
 or simpleITK:<br>
 [simpleITK](http://www.simpleitk.org/)
