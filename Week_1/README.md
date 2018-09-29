@@ -9,7 +9,7 @@ SimpleITK is a C++ library with binary distribution for Python whereas pyDICOM i
 All data is open-source and can be found at: https://wiki.cancerimagingarchive.net/display/Public/Head-Neck-PET-CT <br>
 I think this is the dataset they showed us.<br>
 
-*_Links_*<br>
+*__Links__*<br>
 [Voxel Morph](https://arxiv.org/pdf/1809.05231.pdf)<br>
 [FCN](https://arxiv.org/ftp/arxiv/papers/1709/1709.00799.pdf)<br>
 [Unsupervised model](https://arxiv.org/pdf/1802.02604.pdf)<br>
