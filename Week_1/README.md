@@ -15,9 +15,7 @@ The code for Voxel Morph is available [here](https://github.com/voxelmorph/voxel
 
 *__Links__*<br>
 [Voxel Morph](https://arxiv.org/pdf/1809.05231.pdf) - This paper expands on the authors' previous work [here](https://arxiv.org/pdf/1802.02604.pdf)<br>
-
-
-[FCN](https://arxiv.org/ftp/arxiv/papers/1709/1709.00799.pdf)<br>
+[FCN](https://arxiv.org/ftp/arxiv/papers/1709/1709.00799.pdf) - Ref. 37 in Voxel Morph paper<br>
 [CNN IR](https://wbir2018.nl/files/WBIR2018_Abstracts.pdf)<br>
 [CNN-IR-2](https://pure.tue.nl/ws/portalfiles/portal/98728122/105740S.pdf)<br>
 [IR in Radiotherapy](https://aapm.onlinelibrary.wiley.com/doi/abs/10.1002/mp.12256)<br>
