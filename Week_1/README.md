@@ -1,3 +1,4 @@
+# Week begin 24/09
 Made Git Repo for project and introduction to machine learning and Keras. <br>
 
 
