@@ -6,7 +6,7 @@ Accurate and fast image registration using convolutional neural networks for hea
 What do we aim to have completed by January? By June?
 ### Weekly Progress
 [Week 1](https://github.com/DMcSweeney/MPhys/tree/master/Week_1 "Week 1")
-
+---
 ### Useful Links
 ##### _General Help_
 [Python Homepage](https://www.python.org/ "Python Documentation") <br> 
@@ -19,7 +19,7 @@ What do we aim to have completed by January? By June?
 [Keras](https://keras.io/ "Keras Documentation") <br>
 [Medical Image Registration Library](https://pypi.org/project/SimpleElastix/0.10.0.post224/ "SimpleElastix")<br>
 [Iterative Closest Point Algorithm](https://pypi.org/project/ICP/2.1.1/ "ICP")<br>
-
+---
 ### To-Do
 
 - [x] Talk to Eliana and Andrew, 3 pm 27/09
