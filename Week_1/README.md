@@ -13,7 +13,7 @@ I think this is the dataset they showed us.<br>
 The code for Voxel Morph is available [here](https://github.com/voxelmorph/voxelmorph "Voxelmorph").<br>
 
 *__Links__*<br>
-[Voxel Morph](https://arxiv.org/pdf/1809.05231.pdf) This paper expands on the authors' previous work [here](https://arxiv.org/pdf/1802.02604.pdf)<br>
+[Voxel Morph](https://arxiv.org/pdf/1809.05231.pdf) - This paper expands on the authors' previous work [here](https://arxiv.org/pdf/1802.02604.pdf)<br>
 
 
 [FCN](https://arxiv.org/ftp/arxiv/papers/1709/1709.00799.pdf)<br>
