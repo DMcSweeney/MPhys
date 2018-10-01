@@ -5,7 +5,8 @@ Accurate and fast image registration using convolutional neural networks for hea
 #### _Aims_
 What do we aim to have completed by January? By June?
 ### Weekly Progress
-[Week 1](https://github.com/DMcSweeney/MPhys/tree/master/Week_1 "Week 1")
+[Week 1](https://github.com/DMcSweeney/MPhys/tree/master/Week_1 "Week 1")<br>
+[Week 2](https://github.com/DMcSweeney/MPhys/tree/master/Week_2 "Week 2")
 
 ---
 ### Useful Links
