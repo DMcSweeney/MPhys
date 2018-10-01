@@ -29,7 +29,7 @@ Have a look at GitHub Marketplace for apps.
 Implement continuous integration?
 
 ### Requirements
-Python version:<br>
+Python version: 3.6.6<br>
 Add other libraries used.<br>
 
 
