@@ -7,7 +7,7 @@ import pydicom
 class ReadData(object):
 
         @staticmethod
-        def read_dicom(input_path, output_filename):
+        def read_dicom(input_path):
             dataset = pydicom.dcmread(input_path)
             print("Storage type.....:", dataset.SOPClassUID)
             print()
@@ -18,7 +18,6 @@ class ReadData(object):
             print("Patient id.......:", dataset.PatientID)
             print("Modality.........:", dataset.Modality)
             print("Study Date.......:", dataset.StudyDate)
-            print("Vector Grid Data .", dataset.DeformableRegistrationSequence)
             if 'PixelData' in dataset:
                 plt.imshow(dataset.pixel_array, cmap=plt.cm.bone)
                 plt.show()
@@ -31,7 +30,32 @@ class ReadData(object):
 
             # use .get() if not sure the item exists, and want a default value if missing
             print("Slice location...:", dataset.get('SliceLocation', "(missing)"))
-            with open("{}.txt".format(output_filename), 'w') as f:
-                f.write(str(dataset))
-
             return dataset
+
+        @staticmethod
+        def write_dicom(dataset,  output_filename):
+            with open("{}.txt".format(output_filename), 'w') as f:
+                f.write(str(dataset.DeformableRegistrationSequence))
+
+        @staticmethod
+        def load_patient_data(dvf_path, pct_path, petct_path):
+            # Load dvf
+            for filename in os.listdir(dvf_path):
+                dvf_file = filename
+            dvf_file_path = os.path.join(dvf_path, dvf_file)
+            print(dvf_file_path)
+            dataset_dvf = pydicom.dcmread(dvf_file_path)
+            # Load PetCt directory
+            pct_dict = {}
+            for filename in os.listdir(pct_path):
+                pct_file_path = os.path.join(pct_path, filename)
+                print(pct_file_path)
+                pct_dict[filename] = pydicom.dcmread(pct_file_path)
+            # Load PCt directory
+            petct_dict = {}
+            for filename in os.listdir(petct_path):
+                petct_file_path = os.path.join(petct_path, filename)
+                print(petct_file_path)
+                petct_dict[filename] = pydicom.dcmread(petct_file_path)
+
+            return dataset_dvf, pct_dict, petct_dict
