@@ -8,7 +8,7 @@ class ReadData(object):
 
         @staticmethod
         def read_dicom(input_path):
-            dataset = pydicom.dcmread(input_path)
+            dataset = pydicom.dcmread(input_path, force=True)
             print("Storage type.....:", dataset.SOPClassUID)
             print()
 
@@ -35,7 +35,7 @@ class ReadData(object):
         @staticmethod
         def write_dicom(dataset,  output_filename):
             with open("{}.txt".format(output_filename), 'w') as f:
-                f.write(str(dataset.DeformableRegistrationSequence))
+                f.write(str(dataset))
 
         @staticmethod
         def load_patient_data(dvf_path, pct_path, petct_path):

@@ -1,7 +1,7 @@
 # MPHYS project main file to control image pre-processing
 import os
 from readData import ReadData
-
+from pydicom.datadict import dictionary_VR
 # Change working directory such that it can access data
 os.chdir("..")
 # Print current working directory
@@ -22,6 +22,7 @@ readData = ReadData()
 
 def preprocess(input_path, output_filename):
     ds = readData.read_dicom(input_path)
+    ds = ds.DeformableRegistrationSequence[1].DeformableRegistrationGridSequence[0].VectorGridData
     readData.write_dicom(ds, output_filename)
     print("Done")
 
@@ -32,8 +33,8 @@ def load_patient(dvf_path, pct_path, petct_path):
 
 
 def main(argv=None):
-    # preprocess(in_path, "dvf_data")
-    load_patient(dvf_Path, pct_Path, petct_Path)
+    preprocess(in_path, "dvf_data")
+    #load_patient(dvf_Path, pct_Path, petct_Path)
 
 
 if __name__ == '__main__':
