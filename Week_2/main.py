@@ -1,7 +1,7 @@
 # MPHYS project main file to control image pre-processing
 import os
 from readData import ReadData
-from pydicom.datadict import dictionary_VR
+
 # Change working directory such that it can access data
 os.chdir("..")
 # Print current working directory
@@ -20,21 +20,29 @@ in_path = os.path.join(dvf_Path, dvf_filename)
 readData = ReadData()
 
 
-def preprocess(input_path, output_filename):
-    ds = readData.read_dicom(input_path)
-    ds = ds.DeformableRegistrationSequence[1].DeformableRegistrationGridSequence[0].VectorGridData
-    readData.write_dicom(ds, output_filename)
-    print("Done")
+
+def import_data(input_path, output_filename):
+    dataset = readData.read_dicom(input_path)
+    readData.write_dicom(dataset, output_filename)
+    print("Done reading DICOM file. Written to text file.")
+    return dataset
 
 
 def load_patient(dvf_path, pct_path, petct_path):
     dvf_ds, pct_ds, petct_ds = readData.load_patient_data(dvf_path, pct_path, petct_path)
     print("Done Loading Patient Info.")
+    return dvf_ds, pct_ds, petct_ds
 
 
 def main(argv=None):
-    preprocess(in_path, "dvf_data")
-    #load_patient(dvf_Path, pct_Path, petct_Path)
+    # ds = import_data(in_path, "dvf_data")
+    dvf_ds, pct_ds, petct_ds = load_patient(dvf_Path, pct_Path, petct_Path)
+    # Extract pixel data into an pixel_array
+    pct_data = readData.dataset_to_array(pct_ds)
+    petct_data = readData.dataset_to_array(petct_ds)
+    dvf_data = readData.load_dvf_data(dvf_ds)
+
+    # Extract important data
 
 
 if __name__ == '__main__':

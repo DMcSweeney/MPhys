@@ -3,7 +3,6 @@ import os
 import pydicom
 
 
-
 class ReadData(object):
 
         @staticmethod
@@ -59,3 +58,15 @@ class ReadData(object):
                 petct_dict[filename] = pydicom.dcmread(petct_file_path)
 
             return dataset_dvf, pct_dict, petct_dict
+
+        @staticmethod
+        def load_dvf_data(dataset):
+            dvf_data = dataset.DeformableRegistrationSequence[1].DeformableRegistrationGridSequence[0].VectorGridData
+            return dvf_data
+
+        @staticmethod
+        def dataset_to_array(dataset):
+            pixel_data = {}
+            for key, value in dataset.items():
+                pixel_data[key] = value.pixel_array
+            return pixel_data
