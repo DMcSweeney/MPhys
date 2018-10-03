@@ -70,3 +70,17 @@ class ReadData(object):
             for key, value in dataset.items():
                 pixel_data[key] = value.pixel_array
             return pixel_data
+
+        @staticmethod
+        def load_patient(dvf_path, pct_path, petct_path):
+            dvf_ds, pct_ds, petct_ds = ReadData.load_patient_data(dvf_path, pct_path, petct_path)
+            return dvf_ds, pct_ds, petct_ds
+
+        @staticmethod
+        def load_patient_array(dvf_Path, pct_Path, petct_Path):
+            dvf_ds, pct_ds, petct_ds = ReadData.load_patient(dvf_Path, pct_Path, petct_Path)
+            # Extract pixel data into an pixel_array
+            pct_data = ReadData.dataset_to_array(pct_ds)
+            petct_data = ReadData.dataset_to_array(petct_ds)
+            dvf_data = ReadData.load_dvf_data(dvf_ds)
+            return pct_data, petct_data, dvf_data
