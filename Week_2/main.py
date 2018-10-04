@@ -30,6 +30,7 @@ def load_patients_array():
 
 def main(argv=None):
     pct_data, petct_data, dvf_data = load_patients_array()
+    ReadData.write_dicom(dvf_data, 'test')
     print("Done Loading Patient Info")
 
 

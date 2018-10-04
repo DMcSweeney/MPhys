@@ -88,11 +88,10 @@ class ReadData(object):
 
         @staticmethod
         def find_path(patient_folder, id_1, id_2):
+            filepath = ''
             for filename in os.listdir('.\Patients\{}'.format(patient_folder)):
-                filepath = os.path.join('.\Patients', patient_folder)
                 if id_1 in filename:
-                    filepath = os.path.join(filepath, filename)
-
+                    filepath = os.path.join('.\Patients', patient_folder, filename)
             for filename in os.listdir(filepath):
                 if id_2 in filename:
                     filepath = os.path.join(filepath, filename)
