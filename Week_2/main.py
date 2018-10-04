@@ -8,30 +8,28 @@ os.chdir("..")
 cwd = os.getcwd()
 print(cwd)
 # Paths
-pct_Path = "HN-CHUM-001\\08-27-1885-TomoTherapy Patient Disease-00441\\112161818-kVCT Image Set-62659"
-dvf_Path = "HN-CHUM-001\\08-27-1885-TomoTherapy Patient Disease-00441\\1-REGCTsim-CTPET-CT-43961"
-petct_Path = "HN-CHUM-001\\08-27-1885-PANC. avec C.A. SPHRE ORL   tte et cou  -TP-74220\\3-StandardFull-07232"
+# pct_path = "HN-CHUM-001\\08-27-1885-TomoTherapy Patient Disease-00441\\112161818-kVCT Image Set-62659"
+# dvf_path = "HN-CHUM-001\\08-27-1885-TomoTherapy Patient Disease-00441\\1-REGCTsim-CTPET-CT-43961"
+# petct_path = "HN-CHUM-001\\08-27-1885-PANC. avec C.A. SPHRE ORL   tte et cou  -TP-74220\\3-StandardFull-07232"
 
 ReadData = ReadData()
 
 
-def load_patients_array(dvf_Path, pct_Path, petct_Path):
+def load_patients_array():
+    pct_data = {}
+    petct_data = {}
+    dvf_data = {}
     for folder in os.listdir('.\Patients'):
-        # Need to look at structure of folder names to see if we can
-        # automatically find the important folders
-        pct_data = {}
-        petct_data = {}
-        dvf_data = {}
-        dvf_Path = os.path.join('.\Patients', dvf_Path)
-        pct_Path = os.path.join('.\Patients', pct_Path)
-        petct_Path = os.path.join('.\Patients', petct_Path)
-        print(dvf_Path)
-        pct_data[folder], petct_data[folder], dvf_data[folder] = ReadData.load_patient_array(dvf_Path, pct_Path, petct_Path)
+        dvf_path = ReadData.find_path(folder, 'TomoTherapy Patient Disease', 'REGCTsim-CTPET-CT')
+        pct_path = ReadData.find_path(folder, 'TomoTherapy Patient Disease', 'kVCT Image Set')
+        petct_path = ReadData.find_path(folder, 'PANC.', 'StandardFull')
+        # print(petct_path)
+        pct_data[folder], petct_data[folder], dvf_data[folder] = ReadData.load_patient_array(dvf_path, pct_path, petct_path)
     return pct_data, petct_data, dvf_data
 
 
 def main(argv=None):
-    pct_data, petct_data, dvf_data = load_patients_array(dvf_Path, pct_Path, petct_Path)
+    pct_data, petct_data, dvf_data = load_patients_array()
     print("Done Loading Patient Info")
 
 

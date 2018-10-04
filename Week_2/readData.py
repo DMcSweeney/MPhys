@@ -42,19 +42,20 @@ class ReadData(object):
             for filename in os.listdir(dvf_path):
                 dvf_file = filename
             dvf_file_path = os.path.join(dvf_path, dvf_file)
-            print(dvf_file_path)
+            # print(dvf_file_path)
             dataset_dvf = pydicom.dcmread(dvf_file_path)
             # Load PetCt directory
             pct_dict = {}
             for filename in os.listdir(pct_path):
                 pct_file_path = os.path.join(pct_path, filename)
-                print(pct_file_path)
+
+                # print(pct_file_path)
                 pct_dict[filename] = pydicom.dcmread(pct_file_path)
             # Load PCt directory
             petct_dict = {}
             for filename in os.listdir(petct_path):
                 petct_file_path = os.path.join(petct_path, filename)
-                print(petct_file_path)
+                # print(petct_file_path)
                 petct_dict[filename] = pydicom.dcmread(petct_file_path)
 
             return dataset_dvf, pct_dict, petct_dict
@@ -77,10 +78,23 @@ class ReadData(object):
             return dvf_ds, pct_ds, petct_ds
 
         @staticmethod
-        def load_patient_array(dvf_Path, pct_Path, petct_Path):
-            dvf_ds, pct_ds, petct_ds = ReadData.load_patient(dvf_Path, pct_Path, petct_Path)
+        def load_patient_array(dvf_path, pct_path, petct_path):
+            dvf_ds, pct_ds, petct_ds = ReadData.load_patient(dvf_path, pct_path, petct_path)
             # Extract pixel data into an pixel_array
             pct_data = ReadData.dataset_to_array(pct_ds)
             petct_data = ReadData.dataset_to_array(petct_ds)
             dvf_data = ReadData.load_dvf_data(dvf_ds)
             return pct_data, petct_data, dvf_data
+
+        @staticmethod
+        def find_path(patient_folder, id_1, id_2):
+            for filename in os.listdir('.\Patients\{}'.format(patient_folder)):
+                filepath = os.path.join('.\Patients', patient_folder)
+                if id_1 in filename:
+                    filepath = os.path.join(filepath, filename)
+
+            for filename in os.listdir(filepath):
+                if id_2 in filename:
+                    filepath = os.path.join(filepath, filename)
+            print(filepath)
+            return filepath
