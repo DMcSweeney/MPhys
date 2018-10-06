@@ -13,6 +13,7 @@ What do we aim to have completed by January? By June?
 ##### _General Help_
 [Python Homepage](https://www.python.org/ "Python Documentation") <br> 
 [StackOverflow](https://stackoverflow.com/ "Stack Overflow")<br>
+[Dicom Keyword Dictionary](https://dicom.innolitics.com/ciods/pet-image/image-plane/00200032 "DICOM Dictionary")<br>
 ##### _Ebooks_
 [How to think like a Computer Scientist](http://interactivepython.org/runestone/static/thinkcspy/index.html)<br>
 [Python Machine Learning](https://ebookcentral.proquest.com/lib/manchester/detail.action?docID=4191233)<br>
