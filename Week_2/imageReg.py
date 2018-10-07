@@ -11,5 +11,5 @@ class ImageReg(object):
 
     @staticmethod
     def load_itk_image(pixel_array):
-        print(pixel_array.shape())
+        img = sitk.GetImageFromArray(pixel_array)
         print("Done Loading")

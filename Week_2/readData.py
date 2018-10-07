@@ -53,7 +53,6 @@ class ReadData(object):
             pct_dict = {}
             for filename in os.listdir(pct_path):
                 pct_file_path = os.path.join(pct_path, filename)
-
                 # print(pct_file_path)
                 pct_dict[filename] = pydicom.dcmread(pct_file_path)
             # Load PCt directory
@@ -69,34 +68,33 @@ class ReadData(object):
         def load_dvf_data(dataset):
             # See Dicom Dictionary on Git Repo homepage for explanations
             dvf_data = {}
-            dvf_data["Image Position Patient"] = dataset.DeformableRegistrationSequence[1].DeformableRegistrationGridSequence[0].ImagePositionPatient
-            dvf_data["Image Orientation Patient"] = dataset.DeformableRegistrationSequence[1].DeformableRegistrationGridSequence[0].ImageOrientationPatient
+            dvf_data["Image Position (Patient)"] = dataset.DeformableRegistrationSequence[1].DeformableRegistrationGridSequence[0].ImagePositionPatient
+            dvf_data["Image Orientation (Patient)"] = dataset.DeformableRegistrationSequence[1].DeformableRegistrationGridSequence[0].ImageOrientationPatient
             dvf_data["Grid Dimensions"] = dataset.DeformableRegistrationSequence[1].DeformableRegistrationGridSequence[0].GridDimensions
             dvf_data["Grid Resolution"] = dataset.DeformableRegistrationSequence[1].DeformableRegistrationGridSequence[0].GridResolution
             dvf_data["Vector Grid Data"] = dataset.DeformableRegistrationSequence[1].DeformableRegistrationGridSequence[0].VectorGridData
             return dvf_data
 
         @staticmethod
-        def dataset_to_array(dataset):
+        def load_scan(dataset):
             # Need to find useful parameters
-            #
-            pixel_data = {}
+            scan_data = {}
             for key, value in dataset.items():
-                pixel_data[key] = value.pixel_array
-            return pixel_data
-
-        # Think this function is useless
-        # @staticmethod
-        # def load_patient(dvf_path, pct_path, petct_path):
-        #     dvf_ds, pct_ds, petct_ds = ReadData.load_patient_data(dvf_path, pct_path, petct_path)
-        #     return dvf_ds, pct_ds, petct_ds
+                scan_data[key] = {}
+                scan_data[key]["Slice Thickness"] = value.SliceThickness
+                scan_data[key]["Image Position (Patient)"] = value.ImagePositionPatient
+                scan_data[key]["Image Orientation (Patient)"] = value.ImageOrientationPatient
+                scan_data[key]["Slice Location"] = value.SliceLocation
+                scan_data[key]["Pixel Spacing"] = value.PixelSpacing
+                scan_data[key]["Pixel Array"] = value.pixel_array    
+            return scan_data
 
         @staticmethod
         def load_patient_array(dvf_path, pct_path, petct_path):
             dvf_ds, pct_ds, petct_ds = ReadData.load_patient_data(dvf_path, pct_path, petct_path)
             # Extract pixel data into an pixel_array
-            pct_data = ReadData.dataset_to_array(pct_ds)
-            petct_data = ReadData.dataset_to_array(petct_ds)
+            pct_data = ReadData.load_scan(pct_ds)
+            petct_data = ReadData.load_scan(petct_ds)
             dvf_data = ReadData.load_dvf_data(dvf_ds)
             return pct_data, petct_data, dvf_data
 
