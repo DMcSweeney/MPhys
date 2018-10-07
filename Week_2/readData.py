@@ -1,13 +1,17 @@
 # Python file containing functions required to preprocess images
+# Static method used for utility functions as they are independent
+# of the class state. Class methods are used to create factory methods,
+# which take the class as implicit first arg.
 import os
 import pydicom
+import matplotlib.pyplot as plt
 
 
 class ReadData(object):
 
         @staticmethod
         def read_dicom(input_path):
-            dataset = pydicom.dcmread(input_path, force=True)
+            dataset = pydicom.dcmread(input_path)
             print("Storage type.....:", dataset.SOPClassUID)
             print()
 
@@ -29,6 +33,7 @@ class ReadData(object):
 
             # use .get() if not sure the item exists, and want a default value if missing
             print("Slice location...:", dataset.get('SliceLocation', "(missing)"))
+            ReadData.write_dicom(dataset, '1')
             return dataset
 
         @staticmethod
@@ -62,24 +67,33 @@ class ReadData(object):
 
         @staticmethod
         def load_dvf_data(dataset):
-            dvf_data = dataset.DeformableRegistrationSequence[1].DeformableRegistrationGridSequence[0].VectorGridData
+            # See Dicom Dictionary on Git Repo homepage for explanations
+            dvf_data = {}
+            dvf_data["Image Position Patient"] = dataset.DeformableRegistrationSequence[1].DeformableRegistrationGridSequence[0].ImagePositionPatient
+            dvf_data["Image Orientation Patient"] = dataset.DeformableRegistrationSequence[1].DeformableRegistrationGridSequence[0].ImageOrientationPatient
+            dvf_data["Grid Dimensions"] = dataset.DeformableRegistrationSequence[1].DeformableRegistrationGridSequence[0].GridDimensions
+            dvf_data["Grid Resolution"] = dataset.DeformableRegistrationSequence[1].DeformableRegistrationGridSequence[0].GridResolution
+            dvf_data["Vector Grid Data"] = dataset.DeformableRegistrationSequence[1].DeformableRegistrationGridSequence[0].VectorGridData
             return dvf_data
 
         @staticmethod
         def dataset_to_array(dataset):
+            # Need to find useful parameters
+            #
             pixel_data = {}
             for key, value in dataset.items():
                 pixel_data[key] = value.pixel_array
             return pixel_data
 
-        @staticmethod
-        def load_patient(dvf_path, pct_path, petct_path):
-            dvf_ds, pct_ds, petct_ds = ReadData.load_patient_data(dvf_path, pct_path, petct_path)
-            return dvf_ds, pct_ds, petct_ds
+        # Think this function is useless
+        # @staticmethod
+        # def load_patient(dvf_path, pct_path, petct_path):
+        #     dvf_ds, pct_ds, petct_ds = ReadData.load_patient_data(dvf_path, pct_path, petct_path)
+        #     return dvf_ds, pct_ds, petct_ds
 
         @staticmethod
         def load_patient_array(dvf_path, pct_path, petct_path):
-            dvf_ds, pct_ds, petct_ds = ReadData.load_patient(dvf_path, pct_path, petct_path)
+            dvf_ds, pct_ds, petct_ds = ReadData.load_patient_data(dvf_path, pct_path, petct_path)
             # Extract pixel data into an pixel_array
             pct_data = ReadData.dataset_to_array(pct_ds)
             petct_data = ReadData.dataset_to_array(petct_ds)
