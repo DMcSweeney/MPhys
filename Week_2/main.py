@@ -39,15 +39,12 @@ def load_patients_array():
 def main(argv=None):
 
     pct_data, petct_data, dvf_data = ReadData.load_patient_array(dvf_path, pct_path, petct_path)
-    # # print(type(pct_data.get("HN-CHUM-001")))
-    # pixel_array = pct_data["HN-CHUM-001"]["000000.dcm"]
-    # print(type(pixel_array))
-    # print(pixel_array.shape)
-    # ImageReg.load_itk_image(pixel_array)
-    #
-    ReadData.write_dicom(pct_data, 'pct_data')
-    ReadData.write_dicom(petct_data, 'petct_data')
-    ReadData.write_dicom(dvf_data, 'dvf_data')
+    # ReadData.write_dicom(pct_data, 'pct_data')
+    # ReadData.write_dicom(petct_data, 'petct_data')
+    # ReadData.write_dicom(dvf_data, 'dvf_data')
+    pixel_array = pct_data["000000.dcm"]["Pixel Array"]
+    ImageReg.load_itk_image(pixel_array)
+
     print("Done Loading Patient Info")
 
 
