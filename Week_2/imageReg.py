@@ -49,32 +49,28 @@ class ImageReg(object):
         return img
 
     @staticmethod
-    def resample_image(fixed, moving):
+    def resample_image(fixed, moving, dvf):
+        # Takes fixed image, applies dvf should return moving image
         resample = sitk.ResampleImageFilter()
-        resample.SetReferenceImage(fixed)
-        resample.SetOutputOrigin(fixed.GetOrigin())
-        resample.SetOutputSpacing(moving.GetSpacing())
-        resample.SetSize(moving.GetSize())
-        resample.SetInterpolator(sitk.sitkBSpline)
-        resample.AddCommand(sitk.sitkProgressEvent, lambda: print("\rProgress: {0:03.1f}%...".format(100*resample.GetProgress()),end=''))
-        resample.AddCommand(sitk.sitkProgressEvent, lambda: sys.stdout.flush())
+        resample.SetReferenceImage(moving)
+        # resample.SetSize(fixed.GetSize())
+        # resample.SetOutputDirection(dvf.GetDirection())
+        # resample.SetOutputSpacing(dvf.GetSpacing())
+        # resample.SetOutputOrigin(fixed.GetOrigin())
+        dis_tx = sitk.DisplacementFieldTransform(sitk.Cast(dvf, sitk.sitkVectorFloat64))
+        resample.SetTransform(dis_tx)
         out = resample.Execute(moving)
-        print(type(out))
-        # vis = sitk.CheckerBoard(fixed, sitk.Compose([sitk.Cast(sitk.RescaleIntensity(out), sitk.sitkUInt8)]*3), checkerPattern =[15,10,1])
         return out
 
     @staticmethod
-    def myshow(img, title=None, margin=0.05, dpi=80):
+    def myshow(moving, fixed, title=None, margin=0.05, dpi=80):
         # Function to display image
-        nda = sitk.GetArrayFromImage(img)
-        print(np.shape(nda))
-        spacing = img.GetSpacing()
-        ysize = nda.shape[1]
-        xsize = nda.shape[2]
-        figsize = (1 + margin) * ysize / dpi, (1 + margin) * xsize / dpi
-        fig = plt.figure(title, figsize=figsize, dpi=dpi)
-        ax = fig.add_axes([margin, margin, 1 - 2*margin, 1 - 2*margin])
-        extent = (0, xsize*spacing[1], 0, ysize*spacing[0])
-        t = ax.imshow(nda, extent=extent, interpolation='hamming', cmap='gray')
-        if(title):
-            plt.title(title)
+        move_array = sitk.GetArrayFromImage(moving)
+        fix_array = sitk.GetArrayFromImage(fixed)
+        print(np.shape(move_array))
+        print(len(move_array))
+        for i in range(len(move_array)):
+            plt.imshow(fix_array[i], interpolation='spline16', extent=[0,1000,0,1000])
+            plt.imshow(move_array[i], alpha=0.5, cmap=plt.cm.spring, interpolation='spline16', extent=[0,1000,0,1000])
+            plt.pause(0.01)
+            plt.draw()
