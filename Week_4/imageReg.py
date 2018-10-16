@@ -55,22 +55,25 @@ class ImageReg(object):
     @staticmethod
     def resample_image(fixed_image, moving_image, dvf):
         # Takes fixed image, applies dvf should return moving imag
-        initial_transform = sitk.CenteredTransformInitializer(fixed_image,
-                                                              moving_image,
-                                                              sitk.Euler3DTransform(),
-                                                              sitk.CenteredTransformInitializerFilter.GEOMETRY)
-
-        moving_resampled = sitk.Resample(
-            moving_image, fixed_image, initial_transform, sitk.sitkLinear, 0.0, moving_image.GetPixelID())
-        resample = sitk.ResampleImageFilter()
-        resample.SetReferenceImage(moving_resampled)
-        # resample.SetSize(fixed.GetSize())
-        # resample.SetOutputDirection(fixed.GetDirection())
-        # resample.SetOutputSpacing(dvf.GetSpacing())
-        # resample.SetOutputOrigin(fixed.GetOrigin())
+        # initial_transform = sitk.CenteredTransformInitializer(fixed_image,
+        #                                                       moving_image,
+        #                                                       sitk.Euler3DTransform(),
+        #                                                       sitk.CenteredTransformInitializerFilter.GEOMETRY)
+        #
+        # moving_resampled = sitk.Resample(
+        #     moving_image, fixed_image, initial_transform, sitk.sitkLinear, 0.0, moving_image.GetPixelID())
+        # resample = sitk.ResampleImageFilter()
+        # resample.SetReferenceImage(fixed_image)
+        # # resample.SetSize(fixed.GetSize())
+        # # resample.SetOutputDirection(fixed.GetDirection())
+        # # resample.SetOutputSpacing(dvf.GetSpacing())
+        # # resample.SetOutputOrigin(fixed.GetOrigin())
         dis_tx = sitk.DisplacementFieldTransform(sitk.Cast(dvf, sitk.sitkVectorFloat64))
-        resample.SetTransform(dis_tx)
-        out = resample.Execute(moving_resampled)
+        # inv_dis_tx = dis_tx.GetInverse()
+        # resample.SetTransform(inv_dis_tx)
+        # out = resample.Execute(moving_resampled)
+        out = sitk.Resample(fixed_image, moving_image, dis_tx,
+                            sitk.sitkNearestNeighbor, 0.0, sitk.sitkUInt64)
         return out
 
     @staticmethod
