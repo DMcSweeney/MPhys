@@ -19,6 +19,10 @@ What do we aim to have completed by January? By June?
 [How to think like a Computer Scientist](http://interactivepython.org/runestone/static/thinkcspy/index.html)<br>
 [Python Machine Learning](https://ebookcentral.proquest.com/lib/manchester/detail.action?docID=4191233)<br>
 [Artificial Intelligence: A modern approach](http://thuvien.thanglong.edu.vn:8081/dspace/bitstream/DHTL_123456789/4010/1/CS503-2.pdf)<br>
+##### _Papers_
+[Unsupervised End-to-end Learning for Deformable Medical Image Registration](https://arxiv.org/pdf/1711.08608.pdf)
+[Loss Functions for Neural Networks for Image Processing](https://arxiv.org/abs/1511.08861)
+<br>
 ##### _Libraries_
 [Keras](https://keras.io/ "Keras Documentation") <br>
 [Medical Image Registration Library](https://pypi.org/project/SimpleElastix/0.10.0.post224/ "SimpleElastix")<br>
