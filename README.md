@@ -21,7 +21,8 @@ What do we aim to have completed by January? By June?
 [Artificial Intelligence: A modern approach](http://thuvien.thanglong.edu.vn:8081/dspace/bitstream/DHTL_123456789/4010/1/CS503-2.pdf)<br>
 ##### _Papers_
 [Unsupervised End-to-end Learning for Deformable Medical Image Registration](https://arxiv.org/pdf/1711.08608.pdf)<br>
-[Loss Functions for Neural Networks for Image Processing](https://arxiv.org/abs/1511.08861)
+[Loss Functions for Neural Networks for Image Processing](https://arxiv.org/abs/1511.08861)<br>
+[An Unsupervised Learning Model for Deformable Medical Image Registration](http://openaccess.thecvf.com/content_cvpr_2018/papers/Balakrishnan_An_Unsupervised_Learning_CVPR_2018_paper.pdf)
 <br>
 ##### _Libraries_
 [Keras](https://keras.io/ "Keras Documentation") <br>
