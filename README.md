@@ -20,7 +20,7 @@ What do we aim to have completed by January? By June?
 [Python Machine Learning](https://ebookcentral.proquest.com/lib/manchester/detail.action?docID=4191233)<br>
 [Artificial Intelligence: A modern approach](http://thuvien.thanglong.edu.vn:8081/dspace/bitstream/DHTL_123456789/4010/1/CS503-2.pdf)<br>
 ##### _Papers_
-[Unsupervised End-to-end Learning for Deformable Medical Image Registration](https://arxiv.org/pdf/1711.08608.pdf)
+[Unsupervised End-to-end Learning for Deformable Medical Image Registration](https://arxiv.org/pdf/1711.08608.pdf)<br>
 [Loss Functions for Neural Networks for Image Processing](https://arxiv.org/abs/1511.08861)
 <br>
 ##### _Libraries_
