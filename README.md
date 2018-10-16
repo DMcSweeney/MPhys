@@ -22,8 +22,8 @@ What do we aim to have completed by January? By June?
 ##### _Papers_
 [Unsupervised End-to-end Learning for Deformable Medical Image Registration](https://arxiv.org/pdf/1711.08608.pdf)<br>
 [Loss Functions for Neural Networks for Image Processing](https://arxiv.org/abs/1511.08861)<br>
-[An Unsupervised Learning Model for Deformable Medical Image Registration](http://openaccess.thecvf.com/content_cvpr_2018/papers/Balakrishnan_An_Unsupervised_Learning_CVPR_2018_paper.pdf)
-<br>
+[An Unsupervised Learning Model for Deformable Medical Image Registration](http://openaccess.thecvf.com/content_cvpr_2018/papers/Balakrishnan_An_Unsupervised_Learning_CVPR_2018_paper.pdf)<br>
+[Deep Learning: Image Registration](https://pdfs.semanticscholar.org/presentation/61da/25cb3abdd8d070b6ef84126fc760eb0254e5.pdf)<br>
 ##### _Libraries_
 [Keras](https://keras.io/ "Keras Documentation") <br>
 [Medical Image Registration Library](https://pypi.org/project/SimpleElastix/0.10.0.post224/ "SimpleElastix")<br>
