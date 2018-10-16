@@ -1,7 +1,7 @@
 # MPhys Project 
 ---
 Accurate and fast image registration using convolutional neural networks for head and neck cancer patients.<br>
-*Add further description* <br>
+<br>
 #### _Aims_
 What do we aim to have completed by January? By June?
 ### Weekly Progress
