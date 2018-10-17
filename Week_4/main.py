@@ -6,7 +6,6 @@ from imageReg import ImageReg
 from interact import Interact
 import SimpleITK as sitk
 
-
 # Change working directory such that it can access data
 os.chdir("..")
 # Print current working directory
@@ -57,9 +56,11 @@ def main(argv=None):
     #     ".\\Patients\\HN-CHUM-001\\08-27-1885-PANC. avec C.A. SPHRE ORL   tte et cou  -TP-74220\\3-StandardFull-07232\\", "petct_series")
     fixed = ImageReg.image_info("pct_series.mha")
     moving = ImageReg.image_info("petct_series.mha")
+    print(type(fixed))
     dvf = sitk.ReadImage("dvf.mhd")
-    transform_image = ImageReg.resample_image(fixed, moving, dvf)
-    ImageReg.myshow(transform_image, moving)
+    #ImageReg.resample_image(fixed, moving, dvf)
+    ImageReg.deform_reg(fixed, moving, "OutTransform")
+    #ImageReg.myshow(transform_image, moving)
     print("Done Loading Patient Info")
 
 
