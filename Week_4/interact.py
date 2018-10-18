@@ -12,7 +12,7 @@ class Interact(object):
         fig, ax = plt.subplots()
         ax.volume = volume
         ax.index = volume.shape[0] // 2
-        ax.imshow(volume[ax.index])
+        ax.imshow(volume[ax.index], cmap=plt.cm.bone)
         fig.canvas.mpl_connect('key_press_event', Interact.process_key)
         plt.show()
 
