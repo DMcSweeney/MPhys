@@ -1,13 +1,10 @@
 # MPHYS project main file to control image pre-processing
 import os
-import nrrd
 import numpy as np
 from readData import ReadData
 from imageReg import ImageReg
 from interact import Interact
 import SimpleITK as sitk
-import matplotlib.pyplot as plt
-from matplotlib import animation
 
 # Change working directory such that it can access data
 os.chdir("..")
@@ -18,10 +15,6 @@ print(cwd)
 pct_path = ".\\Patients\\HN-CHUM-001\\08-27-1885-TomoTherapy Patient Disease-00441\\112161818-kVCT Image Set-62659"
 dvf_path = ".\\Patients\\HN-CHUM-001\\08-27-1885-TomoTherapy Patient Disease-00441\\1-REGCTsim-CTPET-CT-43961"
 petct_path = ".\\Patients\\HN-CHUM-001\\08-27-1885-PANC. avec C.A. SPHRE ORL   tte et cou  -TP-74220\\3-StandardFull-07232"
-# Read series variables
-data_directory = os.path.dirname(
-    ".\\Patients\\HN-CHUM-001\\08-27-1885-TomoTherapy Patient Disease-00441\\112161818-kVCT Image Set-62659\\")
-series_ID = '1.3.6.1.4.1.14519.5.2.1.5168.2407.178959368858707198180439962659'
 
 ReadData = ReadData()
 ImageReg = ImageReg()
@@ -57,13 +50,17 @@ def load_patients_array():
 
 def main(argv=None):
     # read_dicom(".\\Patients\\HN-CHUM-001\\08-27-1885-TomoTherapy Patient Disease-00441\\1-REGCTsim-CTPET-CT-43961\\000000.dcm")
-    # ImageReg.load_series(".\\Patients\\HN-CHUM-001\\08-27-1885-TomoTherapy Patient Disease-00441\\112161818-kVCT Image Set-62659\\", "pct_series")
-    # ImageReg.load_series(".\\Patients\\HN-CHUM-001\\08-27-1885-PANC. avec C.A. SPHRE ORL   tte et cou  -TP-74220\\3-StandardFull-07232\\", "petct_series")
+    # ImageReg.load_series(
+    #     ".\\Patients\\HN-CHUM-001\\08-27-1885-TomoTherapy Patient Disease-00441\\112161818-kVCT Image Set-62659\\", "pct_series")
+    # ImageReg.load_series(
+    #     ".\\Patients\\HN-CHUM-001\\08-27-1885-PANC. avec C.A. SPHRE ORL   tte et cou  -TP-74220\\3-StandardFull-07232\\", "petct_series")
     fixed = ImageReg.image_info("pct_series.mha")
     moving = ImageReg.image_info("petct_series.mha")
+    print(type(fixed))
     dvf = sitk.ReadImage("dvf.mhd")
-    transform_image = ImageReg.resample_image(fixed, moving, dvf)
-    ImageReg.myshow(transform_image, moving)
+    #ImageReg.resample_image(fixed, moving, dvf)
+    ImageReg.deform_reg(fixed, moving, "OutTransform")
+    #ImageReg.myshow(transform_image, moving)
     print("Done Loading Patient Info")
 
 

@@ -7,6 +7,7 @@ class Interact(object):
 
     @staticmethod
     def multi_slice_viewer(volume):
+        # Main function to display results
         Interact.remove_keymap_conflicts({'j', 'k'})
         fig, ax = plt.subplots()
         ax.volume = volume
@@ -17,6 +18,7 @@ class Interact(object):
 
     @staticmethod
     def process_key(event):
+        # Function to process a key press
         fig = event.canvas.figure
         ax = fig.axes[0]
         if event.key == 'j':
@@ -27,6 +29,7 @@ class Interact(object):
 
     @staticmethod
     def previous_slice(ax):
+        # Function to move to previous slice
         volume = ax.volume
         ax.index = (ax.index - 1) % volume.shape[0]
         ax.images[0].set_array(volume[ax.index])
@@ -34,6 +37,7 @@ class Interact(object):
 
     @staticmethod
     def next_slice(ax):
+        # Move to next slice
         volume = ax.volume
         ax.index = (ax.index + 1) % volume.shape[0]
         ax.images[0].set_array(volume[ax.index])
@@ -41,6 +45,7 @@ class Interact(object):
 
     @staticmethod
     def remove_keymap_conflicts(new_keys_set):
+        # Matplotlib comes with default key bindings, this removes them
         for prop in plt.rcParams:
             if prop.startswith('keymap.'):
                 keys = plt.rcParams[prop]
