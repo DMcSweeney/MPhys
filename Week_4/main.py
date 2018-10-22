@@ -56,11 +56,11 @@ def main(argv=None):
     #     ".\\Patients\\HN-CHUM-001\\08-27-1885-PANC. avec C.A. SPHRE ORL   tte et cou  -TP-74220\\3-StandardFull-07232\\", "petct_series")
     fixed = ImageReg.image_info("pct_series.mha")
     moving = ImageReg.image_info("petct_series.mha")
-    print(type(fixed))
-    dvf = sitk.ReadImage("dvf.mhd")
-    #ImageReg.resample_image(fixed, moving, dvf)
-    ImageReg.deform_reg(fixed, moving, "OutTransform")
-    #ImageReg.myshow(transform_image, moving)
+    dvf = sitk.ReadImage("dvf.mhd", sitk.sitkVectorFloat64)
+    small_dvf = ImageReg.resize_image(dvf, fixed)
+    small_moving = ImageReg.resize_image(moving, fixed)
+    transform_img = ImageReg.resample_image(small_moving, fixed, small_dvf)
+    ImageReg.myshow(transform_img)
     print("Done Loading Patient Info")
 
 
