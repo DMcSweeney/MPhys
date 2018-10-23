@@ -84,8 +84,7 @@ class ImageReg(object):
         pre_theta_x = math.acos(pre_def[0, 0])
         pre_theta_y = math.acos(pre_def[1, 1])
         pre_theta_z = math.acos(pre_def[2, 2])
-        print(pre_theta_z)
-        pre_translation = list(pre_def[:3, 3])
+        pre_translation = list(pre_def[:3, 3]*10)
         print(pre_translation)
         pre_rigid = sitk.Euler3DTransform(
             pre_rigid_center, pre_theta_x, pre_theta_y, pre_theta_z, pre_translation)
@@ -96,13 +95,14 @@ class ImageReg(object):
         post_theta_x = math.acos(post_def[0, 0])
         post_theta_y = math.acos(post_def[1, 1])
         post_theta_z = math.acos(post_def[2, 2])
-        post_translation = post_def[: 3, 3]
+        post_translation = list(post_def[: 3, 3]*10)
         post_rigid = sitk.Euler3DTransform(
             post_rigid_center, post_theta_x, post_theta_y, post_theta_z, post_translation)
 
         composite_transform = sitk.Transform(post_rigid)
         composite_transform.AddTransform(dis_tx)
         composite_transform.AddTransform(pre_rigid)
+        sitk.WriteTransform(composite_transform, "composite.tfm")
         return composite_transform
 
     @staticmethod
@@ -112,6 +112,6 @@ class ImageReg(object):
         resample.SetReferenceImage(fixed_img)
         resample.SetTransform(transform)
         out = resample.Execute(moving_img)
-        #vis = sitk.CheckerBoard(fixed_img, out, checkerPattern=[15, 10, 1])
+        # vis = sitk.CheckerBoard(fixed_img, out, checkerPattern=[15, 10, 1])
         sitk.WriteImage(out, "transform_img.mha")
         return out
