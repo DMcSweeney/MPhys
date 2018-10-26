@@ -17,6 +17,7 @@ What do we aim to have completed by January? By June?
 [StackOverflow](https://stackoverflow.com/ "Stack Overflow")<br>
 [Dicom Keyword Dictionary](https://dicom.innolitics.com/ciods/pet-image/image-plane/00200032 "DICOM Dictionary")<br>
 [Non-rigid Image Registration in Python](http://pyimreg.github.io/)<br>
+[Slicer Python Scripting](https://www.slicer.org/wiki/Documentation/Nightly/Developers/Python_scripting)
 ##### _Ebooks_
 [How to think like a Computer Scientist](http://interactivepython.org/runestone/static/thinkcspy/index.html)<br>
 [Python Machine Learning](https://ebookcentral.proquest.com/lib/manchester/detail.action?docID=4191233)<br>
