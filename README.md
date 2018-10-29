@@ -36,17 +36,7 @@ Segmentation from Sparse Annotation](https://lmb.informatik.uni-freiburg.de/Publ
 [NiftyNet](https://niftynet.readthedocs.io/en/dev/)
 
 ---
-### To-Do
-
-
-### Ideas
-Have a look at GitHub Marketplace for apps.
-Implement continuous integration?
 
 ### Requirements
 Python version: 3.6.6<br>
 Add other libraries used.<br>
-
-
-
-### References
