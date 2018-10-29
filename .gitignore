@@ -105,7 +105,7 @@ venv.bak/
 
 #Patient data
 Patients/
-
+HN-CHUM-001/
 #Generated files
 *.mha
 *.mhd
