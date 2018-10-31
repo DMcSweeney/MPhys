@@ -34,7 +34,7 @@ class ReadData(object):
 
         # use .get() if not sure the item exists, and want a default value if missing
         print("Slice location...:", dataset.get('SliceLocation', "(missing)"))
-        ReadData.write_dicom(dataset, '1')
+        ReadData.write_dicom(dataset, 'read_dicom')
         return dataset
 
     @staticmethod

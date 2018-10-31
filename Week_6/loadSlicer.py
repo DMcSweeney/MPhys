@@ -4,6 +4,7 @@ Returns transformed image, transform and execution time.
 """
 import os
 import json
+import numpy as np
 import SimpleITK as sitk
 import pyelastix as pyx
 from imageReg import ImageReg
@@ -39,20 +40,40 @@ def load_series(pet_path, pct_path, patient_path_list):
 
 
 def register_img(pet_series, pct_series):
+    """
+    Perform registration using pyelastix library. Input image series and outputs transformed image
+    and transformation field. Both written to text file.
+    Output Format: image_array = str(dict{patient: arrays})
+                   transform_array = str(dict{patient: arrays})
+
+    """
     pet_image = {key: sitk.GetArrayFromImage(value) for key, value in pet_series.items()}
     pct_image = {key: sitk.GetArrayFromImage(value) for key, value in pct_series.items()}
     params = pyx.get_default_params()
-    transform = {key: pyx.register(pet_image[key], fixed, params, exact_params=False, verbose=2)
-                 for key, fixed in pct_image.items()}
-    with open("transform_data.txt", "w") as f:
-        f.write(json.dumps(transform))
-    return transform
+    transform_img = {}
+    transform_field = {}
+    transform_array = {}
+    for key, value in pct_image.items():
+        transform_img[key], transform_field[key] = pyx.register(
+            pet_image[key], value, params, exact_params=False, verbose=1)
+    print("Registration Done")
+    image_array = {key: np.array(value).tolist() for key, value in transform_img.items()}
+    transform_array = {key: np.array(value).tolist() for key, value in transform_field.items()}
+    for key, value in transform_array.items():
+        with open(".\\Transform_Fields\\{}.json".format(key), "w+") as f:
+            json.dump(value, f, indent=4, separators=(',', ':'))
+    for key, value in image_array.items():
+        with open(".\\Transform_Images\\{}.json".format(key), "w+") as f:
+            json.dump(value, f, indent=4, separators=(',', ':'))
+    print("Done Writing Files")
+    return image_array, transform_array
 
 
 def main(argv=None):
     pet_path, pct_path, patient_path_list = load_files(".\Patients")
     pet_series, pct_series = load_series(pet_path, pct_path, patient_path_list)
-    transform = register_img(pet_series, pct_series)
+    transform_img, transform_field = register_img(pet_series, pct_series)
+    print(type(transform_field))
     print("Done Transform")
 
 
