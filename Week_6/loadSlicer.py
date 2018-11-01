@@ -11,6 +11,8 @@ import numpy as np
 import SimpleITK as sitk
 import pyelastix as pyx
 from imageReg import ImageReg
+import timeit
+
 os.chdir('..')
 cwd = os.getcwd()
 print(cwd)
@@ -82,9 +84,14 @@ def register_img(pet_series, pct_series):
     transform_img = {}
     transform_field = {}
     transform_array = {}
+    reg_time = {}
     for key, value in pct_image.items():
+        toc = timeit.default_timer()
         transform_img[key], transform_field[key] = pyx.register(
             pet_image[key], value, params, exact_params=False, verbose=1)
+        tic = timeit.default_timer()
+        reg_time[key] = tic - toc
+
     print("Registration Done")
     image_array = {key: np.array(value).tolist() for key, value in transform_img.items()}
     transform_array = {key: np.array(value).tolist() for key, value in transform_field.items()}
@@ -94,8 +101,16 @@ def register_img(pet_series, pct_series):
     for key, value in image_array.items():
         with open(".\\Transform_Images\\{}.json".format(key), "w+") as f:
             json.dump(value, f, indent=4, separators=(',', ':'))
+    with open("registration_file.json", "w+") as f:
+        json.dump(reg_time, f, indent=4, separators=(',', ':'))
     print("Done Writing Files")
     return image_array, transform_array
+
+
+def read_reg(filepath):
+    with open(filepath) as f:
+        data = json.load(f)
+    return data
 
 
 def main(argv=None):
