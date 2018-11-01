@@ -37,6 +37,12 @@ def load_series(pet_path, pct_path, patient_path_list):
         pct_series[patient] = ImageReg.load_series_no_write(pct_path[i])
     return pet_series, pct_series
 
+def pretransformed_pet(pet_series, pct_series):
+    transformed_pet_series = {}
+    for key, petvalue in pet_series.items():
+            print(type(petvalue))
+            transformed_pet_series[key] = ImageReg.initial_transform(pct_series[key] ,petvalue)
+    return transformed_pet_series
 
 def register_img(pet_series, pct_series):
     pet_image = {key: sitk.GetArrayFromImage(value) for key, value in pet_series.items()}
@@ -50,9 +56,10 @@ def register_img(pet_series, pct_series):
 
 
 def main(argv=None):
-    pet_path, pct_path, patient_path_list = load_files(".\Patients")
+    pet_path, pct_path, patient_path_list = load_files(".\\Patients")
     pet_series, pct_series = load_series(pet_path, pct_path, patient_path_list)
-    transform = register_img(pet_series, pct_series)
+    transformed_pet_series = pretransformed_pet(pet_series, pct_series)
+    transform = register_img(transformed_pet_series, pct_series)
     print("Done Transform")
 
 
