@@ -105,6 +105,8 @@ venv.bak/
 
 #Patient data
 Patients/
+Transform_Fields/
+Transform_Images/
 HN-CHUM-001/
 #Generated files
 *.mha
