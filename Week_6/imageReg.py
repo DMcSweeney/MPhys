@@ -151,6 +151,7 @@ class ImageReg(object):
         # registration_method.SetMetricMovingMask(floatingMask)
 
          registration_method.SetInterpolator(sitk.sitkLinear)
+
          # Optimizer settings.
          registration_method.SetOptimizerAsGradientDescent(learningRate=1.0, numberOfIterations=100, convergenceMinimumValue=1e-6, convergenceWindowSize=10)
          registration_method.SetOptimizerScalesFromPhysicalShift()
