@@ -103,14 +103,18 @@ venv.bak/
 # mypy
 .mypy_cache/
 
-#Patient data
+#Data Directories
 Patients/
 Transform_Fields/
 Transform_Images/
 HN-CHUM-001/
+Transform_Images/
+Transform_Fields/
+
 #Generated files
 *.mha
 *.mhd
 *.raw
 *.txt
 *.tfm
+*.json

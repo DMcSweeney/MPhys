@@ -33,6 +33,19 @@ class ImageReg(object):
         sitk.WriteImage(original_image, output_filename)
 
     @staticmethod
+    def load_series_no_write(data_directory):
+        # Function to read dicom series and write to .mha file
+        for filename in os.listdir(data_directory):
+            data_path = os.path.join(data_directory, filename)
+            ds = pydicom.dcmread(data_path)
+            series_ID = ds.SeriesInstanceUID
+        # Get the list of files belonging to a specific series IDself
+        reader = sitk.ImageSeriesReader()
+        # Use the functional interface to read the image series.
+        original_image = sitk.ReadImage(reader.GetGDCMSeriesFileNames(data_directory, series_ID))
+        return original_image
+
+    @staticmethod
     def image_info(img_series):
         # Function to read .mha file into a sitk.Image format
         img = sitk.ReadImage(img_series, sitk.sitkFloat32)
