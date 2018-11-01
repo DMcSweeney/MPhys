@@ -3,12 +3,14 @@ Script that loads PETCT and Planning CT into slicer and perform registration.
 Returns transformed image, transform and execution time.
 """
 import os
-import json
+try:
+    import simplejson as json
+except ImportError:
+    import json
 import numpy as np
 import SimpleITK as sitk
 import pyelastix as pyx
 from imageReg import ImageReg
-
 os.chdir('..')
 cwd = os.getcwd()
 print(cwd)
@@ -16,26 +18,54 @@ print(cwd)
 ImageReg = ImageReg()
 
 
-def load_files(patient_dir, reverse=False):
-    patient_path_list = [os.path.join(patient_dir, f) for f in os.listdir(patient_dir)]
-    folders = [os.path.join(patient, file)
-               for patient in patient_path_list for file in os.listdir(patient)]
-    pet_folders = folders[::2]
-    pct_folders = folders[1::2]
-    pet_path = [os.path.join(path, folder) for path in pet_folders for folder in os.listdir(
-        path) if 'StandardFull' in folder]
-    pct_path = [os.path.join(path, folder) for path in pct_folders for folder in os.listdir(
-        path) if 'kVCT Image Set' in folder]
-    return pet_path, pct_path, patient_path_list
+def load_files(patient_dir):
+    """
+        Function that takes the patient directory and navigates through the
+        tree to find relevant files
+        File paths are returned as dict with key = Patient filename
+        and value = path to scan folders
+    """
+    pet_paths = {}
+    pct_paths = {}
+    for f in os.listdir(patient_dir):
+        patient_path_list = os.path.join(patient_dir, f)
+        folders = [os.path.join(patient_path_list, file) for file in os.listdir(patient_path_list)]
+        folders.sort(key=get_size, reverse=True)
+        pet_path = folders[0]  # Inside patient folder
+        pct_path = folders[1]
+        # Organise PET and CT folders, by number of files per folder and size
+        pet_files = [os.path.join(pet_path, folder) for folder in os.listdir(pet_path)]
+        pct_files = [os.path.join(pct_path, folder) for folder in os.listdir(pct_path)]
+        pet_files.sort(key=lambda t: (get_number_files, get_size), reverse=True)
+        pct_files.sort(key=get_number_files, reverse=True)
+        pet_paths[f] = pet_files[2]
+        pct_paths[f] = pct_files[0]
+    return pet_paths, pct_paths, patient_path_list
 
 
-def load_series(pet_path, pct_path, patient_path_list):
-    patient_list = [os.path.split(path)[1] for path in patient_path_list]
+def get_number_files(start_path):
+    # print(os.listdir(start_path))
+    number_files = len([file for file in os.listdir(start_path)])
+    print("Number of files:", number_files)
+    return number_files
+
+
+def get_size(start_path):
+    total_size = 0
+    for path, dirs, files in os.walk(start_path):
+        for f in files:
+            fp = os.path.join(path, f)
+            total_size += os.path.getsize(fp)
+    print("Directory size: " + str(total_size))
+    return total_size
+
+
+def load_series(pet_paths, pct_paths):
     pet_series = {}
     pct_series = {}
-    for i, patient in enumerate(patient_list):
-        pet_series[patient] = ImageReg.load_series_no_write(pet_path[i])
-        pct_series[patient] = ImageReg.load_series_no_write(pct_path[i])
+    for key, value in pet_paths.items():
+        pet_series[key] = ImageReg.load_series_no_write(value)
+        pct_series[key] = ImageReg.load_series_no_write(pct_paths[key])
     return pet_series, pct_series
 
 
@@ -45,7 +75,6 @@ def register_img(pet_series, pct_series):
     and transformation field. Both written to text file.
     Output Format: image_array = str(dict{patient: arrays})
                    transform_array = str(dict{patient: arrays})
-
     """
     pet_image = {key: sitk.GetArrayFromImage(value) for key, value in pet_series.items()}
     pct_image = {key: sitk.GetArrayFromImage(value) for key, value in pct_series.items()}
@@ -70,11 +99,11 @@ def register_img(pet_series, pct_series):
 
 
 def main(argv=None):
-    pet_path, pct_path, patient_path_list = load_files(".\Patients")
-    pet_series, pct_series = load_series(pet_path, pct_path, patient_path_list)
+    pet_paths, pct_paths, patient_path_list = load_files(".\Patients")
+    print("Found Scans")
+    pet_series, pct_series = load_series(pet_paths, pct_paths)
+    print("Image Series Read")
     transform_img, transform_field = register_img(pet_series, pct_series)
-    print(type(transform_field))
-    print("Done Transform")
 
 
 if __name__ == '__main__':
