@@ -24,12 +24,12 @@ Interact = Interact()
 def read_dicom(dicom_path):
     # Function that reads a dicom file and writes to a text file
     dataset = ReadData.read_dicom(dicom_path)
-    vector_grid = dataset.DeformableRegistrationSequence[1].DeformableRegistrationGridSequence[0].VectorGridData
-    vector_grid = np.array(vector_grid).astype(np.float64)
-
-    with open("dvf.raw", "wb") as f:
-        f.write(vector_grid)
-    ReadData.write_dicom(dataset, "dvf")
+    #vector_grid = dataset.DeformableRegistrationSequence[1].DeformableRegistrationGridSequence[0].VectorGridData
+    # vector_grid = np.array(vector_grid).astype(np.float64)
+    #
+    # with open("dvf.raw", "wb") as f:
+    #     f.write(vector_grid)
+    ReadData.write_dicom(dataset, "pet")
 
 
 def load_patients_array():
@@ -49,7 +49,7 @@ def load_patients_array():
 
 
 def main(argv=None):
-    # read_dicom(".\\Patients\\HN-CHUM-001\\08-27-1885-TomoTherapy Patient Disease-00441\\1-REGCTsim-CTPET-CT-43961\\000000.dcm")
+    read_dicom(".\\Patients\\HN-CHUM-001\\08-27-1885-PANC. avec C.A. SPHRE ORL   tte et cou  -TP-74220\\3-StandardFull-07232\\000000.dcm")
     # ImageReg.load_series(
     #     ".\\Patients\\HN-CHUM-001\\08-27-1885-TomoTherapy Patient Disease-00441\\112161818-kVCT Image Set-62659\\", "pct_series")
     # ImageReg.load_series(
