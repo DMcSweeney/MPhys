@@ -60,7 +60,6 @@ class ImageReg(object):
     def myshow(moving, title=None, margin=0.05, dpi=80):
         # Function to display image
         # Move_Array contains the transformed image we wish to analyse
-        # Fix_Array contains the original that we want to compare the moving image to
         print(moving.GetOrigin())
         move_array = sitk.GetArrayFromImage(moving)
         print(np.shape(move_array))

@@ -12,6 +12,7 @@ import SimpleITK as sitk
 import pyelastix as pyx
 from imageReg import ImageReg
 import timeit
+import matplotlib.pyplot as plt
 
 os.chdir('..')
 cwd = os.getcwd()
@@ -80,7 +81,12 @@ def register_img(pet_series, pct_series):
     """
     pet_image = {key: sitk.GetArrayFromImage(value) for key, value in pet_series.items()}
     pct_image = {key: sitk.GetArrayFromImage(value) for key, value in pct_series.items()}
-    params = pyx.get_default_params()
+    print(type(pet_image["HN-CHUM-001"]))
+    print(np.shape(pet_image["HN-CHUM-001"]))
+    rigid_params = pyx.get_default_params(type='RIGID')
+    spline_params = pyx.get_default_params(type='BSPLINE')
+    params = rigid_params + spline_params
+    print(params)
     transform_img = {}
     transform_field = {}
     transform_array = {}
@@ -91,10 +97,10 @@ def register_img(pet_series, pct_series):
             pet_image[key], value, params, exact_params=False, verbose=1)
         tic = timeit.default_timer()
         reg_time[key] = tic - toc
-
     print("Registration Done")
     image_array = {key: np.array(value).tolist() for key, value in transform_img.items()}
     transform_array = {key: np.array(value).tolist() for key, value in transform_field.items()}
+    show_image(image_array["HN-CHUM-001"])
     for key, value in transform_array.items():
         with open(".\\Transform_Fields\\{}.json".format(key), "w+") as f:
             json.dump(value, f, indent=4, separators=(',', ':'))
@@ -110,7 +116,6 @@ def register_img(pet_series, pct_series):
 def pretransformed_pet(pet_series, pct_series):
     transformed_pet_series = {}
     for key, petvalue in pet_series.items():
-        print(type(petvalue))
         transformed_pet_series[key] = ImageReg.initial_transform(pct_series[key], petvalue)
     return transformed_pet_series
 
@@ -121,14 +126,27 @@ def read_reg(filepath):
     return data
 
 
-def main(argv=None):
+def write_data():
     pet_paths, pct_paths, patient_path_list = load_files(".\Patients")
     print("Found Scans")
     pet_series, pct_series = load_series(pet_paths, pct_paths)
     print("Image Series Read")
     transformed_pet_series = pretransformed_pet(pet_series, pct_series)
-    print(type(transformed_pet_series))
-    transform_img, transform_field = register_img(transformed_pet_series, pct_series)
+    transform_img, transform_field = register_img(pet_series, pct_series)
+    return transform_img, transform_field
+
+
+def show_image(image_array):
+    data = np.asarray(image_array).astype(np.float64)
+    image = sitk.GetImageFromArray(data)
+    ImageReg.myshow(image)
+    sitk.WriteImage(image, "imagetest.mha")
+
+
+def main(argv=None):
+    transform_img, transform_field = write_data()
+    #data = read_reg(".\\Transform_Images\\HN-CHUM-001.json")
+    # show_image(data)
 
 
 if __name__ == '__main__':
