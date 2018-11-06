@@ -1,7 +1,12 @@
-# MPhys Project 
+# MPhys Project
 ---
 Accurate and fast image registration using convolutional neural networks for head and neck cancer patients.<br>
 
+# TODO
+Read DICOM in Python.<br>
+Write to .nii file.<br>
+Registration in elastix using bash script.<br>
+Practice using NiftyNet.<br>
 #### _Aims_
 What do we aim to have completed by January? By June?
 ### Weekly Progress
@@ -14,7 +19,7 @@ What do we aim to have completed by January? By June?
 ---
 ### Useful Links
 ##### _General Help_
-[Python Homepage](https://www.python.org/ "Python Documentation") <br> 
+[Python Homepage](https://www.python.org/ "Python Documentation") <br>
 [StackOverflow](https://stackoverflow.com/ "Stack Overflow")<br>
 [Dicom Keyword Dictionary](https://dicom.innolitics.com/ciods/pet-image/image-plane/00200032 "DICOM Dictionary")<br>
 [Non-rigid Image Registration in Python](http://pyimreg.github.io/)<br>

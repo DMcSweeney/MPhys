@@ -60,7 +60,6 @@ class ImageReg(object):
     def myshow(moving, title=None, margin=0.05, dpi=80):
         # Function to display image
         # Move_Array contains the transformed image we wish to analyse
-        # Fix_Array contains the original that we want to compare the moving image to
         print(moving.GetOrigin())
         move_array = sitk.GetArrayFromImage(moving)
         print(np.shape(move_array))
@@ -128,3 +127,47 @@ class ImageReg(object):
         vis = sitk.CheckerBoard(fixed_img, out, checkerPattern=[15, 10, 1])
         sitk.WriteImage(out, "transform_img.mha")
         return out
+
+    @staticmethod
+    def initial_transform(referenceImage, floating):
+        # referenceImage = sitk.ReadImage(referenceImage ,sitk.sitkFloat32)
+        # floating = sitk.ReadImage(floating, sitk.sitkFloat32)
+        # Start rigid registration
+        initial_transform = sitk.CenteredTransformInitializer(
+            referenceImage, floating, sitk.Euler3DTransform(), sitk.CenteredTransformInitializerFilter.GEOMETRY)
+        floating_resampled = sitk.Resample(
+            floating, referenceImage, initial_transform, sitk.sitkLinear, 0.0, referenceImage.GetPixelID())
+
+        # Now do proper affine registration
+        registration_method = sitk.ImageRegistrationMethod()
+
+        # Similarity metric settings.
+        registration_method.SetMetricAsMattesMutualInformation(numberOfHistogramBins=128)
+        #     registration_method.SetMetricAsCorrelation()
+        registration_method.SetMetricSamplingStrategy(registration_method.RANDOM)
+        registration_method.SetMetricSamplingPercentage(0.05)
+        # registration_method.SetMetricFixedMask(referenceMask)
+        # registration_method.SetMetricMovingMask(floatingMask)
+
+        registration_method.SetInterpolator(sitk.sitkLinear)
+        # Optimizer settings.
+        registration_method.SetOptimizerAsGradientDescent(
+            learningRate=1.0, numberOfIterations=100, convergenceMinimumValue=1e-6, convergenceWindowSize=10)
+        registration_method.SetOptimizerScalesFromPhysicalShift()
+
+        # Setup for the multi-resolution framework.
+        registration_method.SetShrinkFactorsPerLevel(shrinkFactors=[4, 2, 1])
+        registration_method.SetSmoothingSigmasPerLevel(smoothingSigmas=[2, 1, 0])
+        registration_method.SmoothingSigmasAreSpecifiedInPhysicalUnitsOn()
+
+        # Don't optimize in-place, we would possibly like to run this cell multiple times.
+        registration_method.SetInitialTransform(initial_transform, inPlace=False)
+
+        final_transform = registration_method.Execute(
+            sitk.Cast(referenceImage, sitk.sitkFloat32), sitk.Cast(floating, sitk.sitkFloat32))
+
+        floating_resampled_affine = sitk.Resample(
+            floating, referenceImage, final_transform, sitk.sitkBSpline, 0.0, referenceImage.GetPixelID())
+
+        # sitk.WriteImage(floating_resampled_affine,'floating_resampled_affine.mhd')
+        return floating_resampled_affine
