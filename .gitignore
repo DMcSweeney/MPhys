@@ -110,6 +110,7 @@ Transform_Images/
 HN-CHUM-001/
 Transform_Images/
 Transform_Fields/
+NiftyPatients/
 
 #Generated files
 *.mha
