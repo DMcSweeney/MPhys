@@ -14,7 +14,8 @@ What do we aim to have completed by January? By June?
 [Week 2](https://github.com/DMcSweeney/MPhys/tree/master/Week_2 "Week 2")<br>
 [Week 3](https://github.com/DMcSweeney/MPhys/tree/master/Week_3 "Week 3")<br>
 [Week 4](https://github.com/DMcSweeney/MPhys/tree/master/Week_4 "Week 4")<br>
-[Week 5](https://github.com/DMcSweeney/MPhys/tree/master/Week_5 "Week 5")
+[Week 5](https://github.com/DMcSweeney/MPhys/tree/master/Week_5 "Week 5")<br>
+[Week 6](https://github.com/DMcSweeney/MPhys/tree/master/Week_6 "Week 6")
 ---
 ### Useful Links
 ##### _General Help_
