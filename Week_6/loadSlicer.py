@@ -132,7 +132,7 @@ def write_data():
     pet_series, pct_series = load_series(pet_paths, pct_paths)
     print("Image Series Read")
     transformed_pet_series = pretransformed_pet(pet_series, pct_series)
-    transform_img, transform_field = register_img(pet_series, pct_series)
+    transform_img, transform_field = register_img(transformed_pet_series, pct_series)
     return transform_img, transform_field
 
 
