@@ -111,6 +111,7 @@ HN-CHUM-001/
 Transform_Images/
 Transform_Fields/
 NiftyPatients/
+RegNet/
 
 #Generated files
 *.mha
