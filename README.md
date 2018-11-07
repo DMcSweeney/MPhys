@@ -41,7 +41,8 @@ Segmentation from Sparse Annotation](https://lmb.informatik.uni-freiburg.de/Publ
 [Medical Image Registration Library](https://pypi.org/project/SimpleElastix/0.10.0.post224/ "SimpleElastix")<br>
 [Iterative Closest Point Algorithm](https://pypi.org/project/ICP/2.1.1/ "ICP")<br>
 [Elastix](http://elastix.isi.uu.nl/)<br>
-[NiftyNet](https://niftynet.readthedocs.io/en/dev/)
+[NiftyNet](https://niftynet.readthedocs.io/en/dev/)<br>
+[RegNet](https://github.com/hsokooti/RegNet)
 
 ---
 
