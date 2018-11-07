@@ -34,7 +34,8 @@ What do we aim to have completed by January? By June?
 [An Unsupervised Learning Model for Deformable Medical Image Registration](http://openaccess.thecvf.com/content_cvpr_2018/papers/Balakrishnan_An_Unsupervised_Learning_CVPR_2018_paper.pdf)<br>
 [3D U-Net: Learning Dense Volumetric
 Segmentation from Sparse Annotation](https://lmb.informatik.uni-freiburg.de/Publications/2016/CABR16/cicek16miccai.pdf)<br>
-[HomographyNet](https://arxiv.org/abs/1606.03798)
+[HomographyNet](https://arxiv.org/abs/1606.03798)<br>
+[Multi-Temporal Remote Sensing Image Registration Using Deep Convolutional Features](https://ieeexplore.ieee.org/document/8404075) [Github](https://github.com/yzhq97/cnn-registration)<br>
 ##### _Libraries_
 [Keras](https://keras.io/ "Keras Documentation") <br>
 [Medical Image Registration Library](https://pypi.org/project/SimpleElastix/0.10.0.post224/ "SimpleElastix")<br>
