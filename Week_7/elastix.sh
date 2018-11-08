@@ -1,8 +1,8 @@
 #!/bin/sh
 echo \# Bash script to perform registration using elastix
 
-cwd="/mnt/d/Documents/GitHub/MPhys"
-base_dir="/mnt/d/Documents/GitHub/MPhys/NiftyPatients"
+cwd="/mnt/e/Mphys/"
+base_dir="/mnt/e/Mphys/NiftyPatients"
 fixed_ref="PlanningCT"
 moving_ref="PET"
 out_dir="/mnt/e/Mphys/ElastixReg"

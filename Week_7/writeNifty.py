@@ -4,12 +4,26 @@ can be performed.
 """
 import os
 from imageReg import ImageReg
-
+from optparse import OptionParser
+from pathlib import PureWindowsPath
 os.chdir('..')
 cwd = os.getcwd()
 print(cwd)
 
 ImageReg = ImageReg()
+parser = OptionParser()
+
+parser.add_option("--patient_dir", dest="patient_dir",
+                  help="Directory containing all patient folders", metavar="DIRECTORY")
+parser.add_option("--pet_outdir", dest="pet_outdir",
+                  help="Directory .nii pet scan should be written to", metavar="DIRECTORY")
+parser.add_option("--planning_outdir", dest="planning_outdir",
+                  help="Directory .nii planning ct should be written to", metavar="DIRECTORY")
+(opt, args) = parser.parse_args()
+
+patient_dir = PureWindowsPath(opt.patient_dir)
+pet_outdir = PureWindowsPath(opt.pet_outdir)
+planning_outdir = PureWindowsPath(opt.planning_outdir)
 
 
 def load_files(patient_dir):
@@ -19,6 +33,7 @@ def load_files(patient_dir):
         File paths are returned as dict with key = Patient filename
         and value = path to scan folders
     """
+
     pet_paths = {}
     pct_paths = {}
     for f in os.listdir(patient_dir):
@@ -61,13 +76,17 @@ def write_nifty(pet_paths, pct_paths):
     pet_series = {}
     pct_series = {}
     for key, value in pet_paths.items():
-        pet_series[key] = ImageReg.load_series(value, 'PET\\{}'.format(key))
-        pct_series[key] = ImageReg.load_series(pct_paths[key], 'PlanningCT\\{}'.format(key))
+        pet_series[key] = ImageReg.load_series(value, 'patient_{}'.format(key))
+        pct_series[key] = ImageReg.load_series(
+            pct_paths[key], 'patient_{}'.format(key))
     return pet_series, pct_series
 
 
 def main(argv=None):
-    pet_paths, pct_paths, patient_path_list = load_files('.\\Patients\\')
+    try:
+        pet_paths, pct_paths, patient_path_list = load_files(patient_dir)
+    except FileNotFoundError:
+        print("Inconsistent file format")
     write_nifty(pet_paths, pct_paths)
 
 

@@ -29,7 +29,7 @@ class ImageReg(object):
         # Use the functional interface to read the image series.
         original_image = sitk.ReadImage(reader.GetGDCMSeriesFileNames(data_directory, series_ID))
         # Write the image.
-        output_filename = os.path.join('..\\MPhys\\NiftyPatients\\',
+        output_filename = os.path.join('..\\MPhys\\',
                                        '{}.nii'.format(output_filename))
         sitk.WriteImage(original_image, output_filename)
 
