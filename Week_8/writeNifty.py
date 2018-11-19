@@ -5,16 +5,18 @@ can be performed.
 import os
 import pydicom
 from imageReg import ImageReg
+from readMasks import ReadMasks
 
 os.chdir('..')
 cwd = os.getcwd()
 print(cwd)
 
 ImageReg = ImageReg()
+ReadMasks = ReadMasks()
 
 patient_dir = "E:\\Mphys\\Patients\\"
-pet_outdir = "E:\\Mphys\\NiftyPatients\\PET\\"
-planning_outdir = "E:\\Mphys\\NiftyPatients\\PlanningCT\\"
+#pet_outdir = "E:\\Mphys\\NiftyPatients\\PET\\"
+#planning_outdir = "E:\\Mphys\\NiftyPatients\\PlanningCT\\"
 
 
 def load_files(patient_dir):
@@ -27,6 +29,7 @@ def load_files(patient_dir):
 
     pet_paths = {}
     pct_paths = {}
+    struct_path = {}
     for f in os.listdir(patient_dir):
         try:
             patient_path_list = os.path.join(patient_dir, f)
@@ -41,6 +44,8 @@ def load_files(patient_dir):
                 pct_files = [os.path.join(pct_path, folder) for folder in os.listdir(pct_path)]
                 pet_files.sort(key=lambda t: (get_number_files, get_size), reverse=True)
                 pct_files.sort(key=get_number_files, reverse=True)
+                struct_path[f] = [os.path.join(pct_files[index], folder) for index, folder in enumerate(os.listdir(
+                    pct_path)) if 'Structure' in folder]
                 pet_paths[f] = pet_files[2]
                 pct_paths[f] = pct_files[0]
             else:
@@ -48,14 +53,14 @@ def load_files(patient_dir):
         except IndexError:
             print("Too few files")
             pass
-    return pet_paths, pct_paths, patient_path_list
+    return pet_paths, pct_paths, patient_path_list, struct_path
 
 
 def get_number_files(start_path):
     # Function that returns number of files in directory
     # print(os.listdir(start_path))
     number_files = len([file for file in os.listdir(start_path)])
-    print("Number of files:", number_files)
+    #print("Number of files:", number_files)
     return number_files
 
 
@@ -66,7 +71,7 @@ def get_size(start_path):
         for f in files:
             fp = os.path.join(path, f)
             total_size += os.path.getsize(fp)
-    print("Directory size: " + str(total_size))
+    #print("Directory size: " + str(total_size))
     return total_size
 
 
@@ -84,11 +89,20 @@ def write_nifty(pet_paths, pct_paths):
     return pet_series, pct_series
 
 
+def write_masks(patient_dir, contour_path, image_path, index, img_format='nii'):
+    for folder in os.listdir(patient_dir):
+        print(contour_path[folder])
+        ReadMasks.create_image_mask_files(
+            folder, contour_path[folder], image_path[folder], index, img_format)
+    print("Done Writing masks")
+
+
 def main(argv=None):
-    pet_paths, pct_paths, patient_path_list = load_files(patient_dir)
-    print(pet_paths)
-    print(len(pet_paths))
-    write_nifty(pet_paths, pct_paths)
+    pet_paths, pct_paths, patient_path_list, struct_path = load_files(patient_dir)
+    write_masks(patient_dir, struct_path, pct_paths, 0)
+    # print(pet_paths)
+    # print(len(pet_paths))
+    # write_nifty(pet_paths, pct_paths)
 
 
 if __name__ == '__main__':
