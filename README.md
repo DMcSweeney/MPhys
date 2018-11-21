@@ -3,10 +3,8 @@
 Accurate and fast image registration using convolutional neural networks for head and neck cancer patients.<br>
 
 # TODO
-Read DICOM in Python.<br>
-Write to .nii file.<br>
-Registration in elastix using bash script.<br>
-Practice using NiftyNet.<br>
+Load more masks<br>
+Train Net.<br>
 #### _Aims_
 What do we aim to have completed by January? By June?
 ### Weekly Progress
