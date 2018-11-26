@@ -92,9 +92,13 @@ def write_nifty(pet_paths, pct_paths):
 def write_masks(patient_dir, contour_path, image_path, index, img_format='nii'):
     for folder, path in contour_path.items():
         print(contour_path[folder])
-        if contour_path[folder] is not None:
-            ReadMasks.create_image_mask_files(
-                folder, contour_path[folder][0], image_path[folder], index, img_format)
+        if contour_path[folder] is not None and image_path is not None:
+            try:
+                ReadMasks.create_image_mask_files(
+                    folder, contour_path[folder][0], image_path[folder], index, img_format)
+            except PermissionError:
+                print("No Permission")
+                pass
         else:
             print("No Structure Set found")
     print("Done Writing masks")
@@ -103,7 +107,7 @@ def write_masks(patient_dir, contour_path, image_path, index, img_format='nii'):
 def main(argv=None):
     pet_paths, pct_paths, patient_path_list, struct_path = load_files(patient_dir)
     print(struct_path)
-    write_masks(patient_dir, struct_path, pct_paths, 0)
+    write_masks(patient_dir, struct_path, pct_paths, 1)
     # print(pet_paths)
     # print(len(pet_paths))
     # write_nifty(pet_paths, pct_paths)

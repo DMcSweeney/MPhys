@@ -70,6 +70,7 @@ class ReadMasks(object):
         contour_file = self.get_contour_file(contour_path)
         # Find contour data
         contour_data = pydicom.read_file(contour_path + '/' + contour_file)
+
         # Get ROI names
         print(get_roi_names(contour_data))
         # get slice orders
@@ -259,19 +260,15 @@ class ReadMasks(object):
         # Extract Arrays from DICOM
         X, Y = self.get_data(contour_path, image_path, index)
         Y = np.array([fill_contour(y) if y.max() == 1 else y for y in Y])
-
         # Create images and masks folders
-        new_path = 'E:/Mphys/MaskPatients/{}'.format(patient)
-        os.makedirs(new_path)
+        new_path = 'E:/Mphys/PatientMasks/'
+        # os.makedirs(new_path)
         # os.makedirs(new_path + '/images/', exist_ok=True)
-        os.makedirs(new_path + '/masks/', exist_ok=True)
+        os.makedirs(new_path + '/PlanningCT/', exist_ok=True)
         # image_outdir = os.path.join(new_path, 'images')
-        masks_outdir = os.path.join(new_path, 'masks')
-        X_img = {}
-        Y_img = {}
+        masks_outdir = os.path.join(new_path, 'PlanningCT')
         Y = Y.astype(np.int8)
-        for i in range(len(X)):
-            # X_img[i] = sitk.GetImageFromArray(X[i, :, :])
-            Y_img[i] = sitk.GetImageFromArray(Y[i, :, :])
-            # sitk.WriteImage(X_img[i], '{}/image_{}.{}'.format(image_outdir, i, img_format))
-            sitk.WriteImage(Y_img[i], '{}/mask_{}.{}'.format(masks_outdir, i, img_format))
+        # X_img[i] = sitk.GetImageFromArray(X[i, :, :])
+        Y_img = sitk.GetImageFromArray(Y)
+        # sitk.WriteImage(X_img[i], '{}/image_{}.{}'.format(image_outdir, i, img_format))
+        sitk.WriteImage(Y_img, '{}/{}.{}'.format(masks_outdir, patient, img_format))
