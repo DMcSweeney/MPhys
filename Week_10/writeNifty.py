@@ -107,7 +107,7 @@ def write_masks(patient_dir, contour_path, image_path, index, img_format='nii'):
 def main(argv=None):
     pet_paths, pct_paths, patient_path_list, struct_path = load_files(patient_dir)
     print(struct_path)
-    write_masks(patient_dir, struct_path, pct_paths, 0)
+    write_masks(patient_dir, struct_path, pct_paths, 1)
     # print(pet_paths)
     # print(len(pet_paths))
     # write_nifty(pet_paths, pct_paths)

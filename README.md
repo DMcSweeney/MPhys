@@ -3,10 +3,8 @@
 Accurate and fast image registration using convolutional neural networks for head and neck cancer patients.<br>
 
 # TODO
-Read DICOM in Python.<br>
-Write to .nii file.<br>
-Registration in elastix using bash script.<br>
-Practice using NiftyNet.<br>
+Load more masks<br>
+Train Net.<br>
 #### _Aims_
 What do we aim to have completed by January? By June?
 ### Weekly Progress
@@ -15,7 +13,11 @@ What do we aim to have completed by January? By June?
 [Week 3](https://github.com/DMcSweeney/MPhys/tree/master/Week_3 "Week 3")<br>
 [Week 4](https://github.com/DMcSweeney/MPhys/tree/master/Week_4 "Week 4")<br>
 [Week 5](https://github.com/DMcSweeney/MPhys/tree/master/Week_5 "Week 5")<br>
-[Week 6](https://github.com/DMcSweeney/MPhys/tree/master/Week_6 "Week 6")
+[Week 6](https://github.com/DMcSweeney/MPhys/tree/master/Week_6 "Week 6")<br>
+[Week 7](https://github.com/DMcSweeney/MPhys/tree/master/Week_7 "Week 7")<br>
+[Week 8](https://github.com/DMcSweeney/MPhys/tree/master/Week_8 "Week 8")<br>
+[Week 9](https://github.com/DMcSweeney/MPhys/tree/master/Week_9 "Week 9")<br>
+[Week 10](https://github.com/DMcSweeney/MPhys/tree/master/Week_10 "Week 10")
 ---
 ### Useful Links
 ##### _General Help_
