@@ -95,8 +95,8 @@ for step in range(config['Train']['total_iterations']):
         loss_similarity_train, loss_regulariser_train, dice_train, dist_train = sess.run(
             [loss_similarity,
              loss_regulariser,
-             dice,
-             dist],
+             # dice,
+             # dist],
             feed_dict=trainFeed)
 
         # print('----- Training -----')
