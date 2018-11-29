@@ -19,7 +19,7 @@ reader_moving_image, reader_fixed_image, reader_ddf_label = helper.get_data_read
     config['Data']['ddf_label'])
 
 
-# 2 - graph
+# 2 - graph -----DATA AUGMENTATION
 ph_moving_image = tf.placeholder(
     tf.float32, [config['Train']['minibatch_size']]+reader_moving_image.data_shape+[1])
 ph_fixed_image = tf.placeholder(
@@ -32,14 +32,14 @@ input_fixed_image = util.warp_image_affine(ph_fixed_image, ph_fixed_affine)  # d
 # predicting ddf
 reg_net = network.build_network(network_type=config['Network']['network_type'],
                                 minibatch_size=config['Train']['minibatch_size'],
-                                image_moving=input_moving_image,
-                                image_fixed=input_fixed_image)
+                                image_moving=reader_moving_image,
+                                image_fixed=reader_fixed_image)
 
 # loss
-ph_moving_label = tf.placeholder(
-    tf.float32, [config['Train']['minibatch_size']]+reader_moving_image.data_shape+[1])
-ph_fixed_label = tf.placeholder(
-    tf.float32, [config['Train']['minibatch_size']]+reader_fixed_image.data_shape+[1])
+# ph_moving_label = tf.placeholder(
+#     tf.float32, [config['Train']['minibatch_size']]+reader_moving_image.data_shape+[1])
+# ph_fixed_label = tf.placeholder(
+#     tf.float32, [config['Train']['minibatch_size']]+reader_fixed_image.data_shape+[1])
 
 # Comment out for our purposes
 # input_moving_label = util.warp_image_affine(ph_moving_label, ph_moving_affine)  # data augmentation
@@ -47,6 +47,8 @@ ph_fixed_label = tf.placeholder(
 #
 # warped_moving_label = reg_net.warp_image(input_moving_label)  # warp the moving label with the predicted ddf
 
+# Warp moving image with predicted ddf_
+# warped_moving_image = reg_net.warp_image(ph_moving_image)
 # ------------------LOSS -------------------------------
 loss_similarity, loss_regulariser = loss.build_loss(similarity_type=config['Loss']['similarity_type'],
                                                     similarity_scales=config['Loss']['similarity_scales'],
@@ -60,12 +62,12 @@ train_op = tf.train.AdamOptimizer(config['Train']['learning_rate']).minimize(
     loss_similarity+loss_regulariser)
 # --------------------------------------------------
 # utility nodes - for information only
-dice = util.compute_binary_dice(warped_moving_label, input_fixed_label)
-dist = util.compute_centroid_distance(warped_moving_label, input_fixed_label)
+# dice = util.compute_binary_dice(warped_moving_label, input_fixed_label)
+# dist = util.compute_centroid_distance(warped_moving_label, input_fixed_label)
 
 # 3 - training
-num_minibatch = int(reader_moving_label.num_data/config['Train']['minibatch_size'])
-train_indices = [i for i in range(reader_moving_label.num_data)]
+num_minibatch = int(reader_ddf_label.num_data/config['Train']['minibatch_size'])
+train_indices = [i for i in range(reader_ddf_label.num_data)]
 
 saver = tf.train.Saver(max_to_keep=1)
 sess = tf.Session()
