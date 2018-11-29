@@ -96,7 +96,8 @@ for step in range(config['Train']['total_iterations']):
             [loss_similarity,
              loss_regulariser,
              # dice,
-             # dist],
+             # dist
+             ],
             feed_dict=trainFeed)
 
         # print('----- Training -----')
