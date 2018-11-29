@@ -84,7 +84,7 @@ for step in range(config['Train']['total_iterations']):
 
     trainFeed = {ph_moving_image: reader_moving_image.get_data(case_indices),
                  ph_fixed_image: reader_fixed_image.get_data(case_indices),
-                 ph_moving_label: reader_ddf_label.get_data(case_indices, label_indices),
+                 # ph_moving_label: reader_ddf_label.get_data(case_indices, label_indices),
                  ph_moving_affine: helper.random_transform_generator(config['Train']['minibatch_size']),
                  ph_fixed_affine: helper.random_transform_generator(config['Train']['minibatch_size'])}
 
