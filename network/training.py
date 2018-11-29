@@ -2,6 +2,7 @@ import tensorflow as tf
 import sys
 import random
 import time
+import numpy as np
 
 import labelreg.helpers as helper
 import labelreg.networks as network
@@ -32,15 +33,15 @@ input_fixed_image = util.warp_image_affine(ph_fixed_image, ph_fixed_affine)  # d
 # predicting ddf
 reg_net = network.build_network(network_type=config['Network']['network_type'],
                                 minibatch_size=config['Train']['minibatch_size'],
-                                image_moving=reader_moving_image,
-                                image_fixed=reader_fixed_image)
+                                image_moving=input_moving_image,
+                                image_fixed=input_fixed_image)
 
 # loss
 # ph_moving_label = tf.placeholder(
 #     tf.float32, [config['Train']['minibatch_size']]+reader_moving_image.data_shape+[1])
 # ph_fixed_label = tf.placeholder(
 #     tf.float32, [config['Train']['minibatch_size']]+reader_fixed_image.data_shape+[1])
-
+ph_ddf_label = tf.placeholder(tf.float32, reader_ddf_label.data_shape)
 # Comment out for our purposes
 # input_moving_label = util.warp_image_affine(ph_moving_label, ph_moving_affine)  # data augmentation
 # input_fixed_label = util.warp_image_affine(ph_fixed_label, ph_fixed_affine)  # data augmentation
@@ -54,7 +55,7 @@ loss_similarity, loss_regulariser = loss.build_loss(similarity_type=config['Loss
                                                     similarity_scales=config['Loss']['similarity_scales'],
                                                     regulariser_type=config['Loss']['regulariser_type'],
                                                     regulariser_weight=config['Loss']['regulariser_weight'],
-                                                    ddf_label=config['Data']['ddf_label'],
+                                                    ddf_label=ph_ddf_label,
                                                     network_type=config['Network']['network_type'],
                                                     ddf=reg_net.ddf)
 
@@ -84,9 +85,11 @@ for step in range(config['Train']['total_iterations']):
 
     trainFeed = {ph_moving_image: reader_moving_image.get_data(case_indices),
                  ph_fixed_image: reader_fixed_image.get_data(case_indices),
+                 ph_ddf_label: reader_ddf_label.get_data(case_indices, label_indices)
                  # ph_moving_label: reader_ddf_label.get_data(case_indices, label_indices),
-                 ph_moving_affine: helper.random_transform_generator(config['Train']['minibatch_size']),
-                 ph_fixed_affine: helper.random_transform_generator(config['Train']['minibatch_size'])}
+                 # ph_moving_affine: helper.random_transform_generator(config['Train']['minibatch_size']),
+                 # ph_fixed_affine: helper.random_transform_generator(config['Train']['minibatch_size'])
+                 }
 
     sess.run(train_op, feed_dict=trainFeed)
 
@@ -94,7 +97,8 @@ for step in range(config['Train']['total_iterations']):
         current_time = time.asctime(time.gmtime())
         loss_similarity_train, loss_regulariser_train, dice_train, dist_train = sess.run(
             [loss_similarity,
-             loss_regulariser,
+             loss_regulariser
+             # ,
              # dice,
              # dist
              ],

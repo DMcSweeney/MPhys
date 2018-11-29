@@ -22,7 +22,8 @@ class BaseNet:
         self.grid_warped = tf.zeros_like(self.grid_ref)  # initial zeros are safer for debug
         self.image_moving = image_moving
         self.image_fixed = image_fixed
-        self.input_layer = tf.concat([layer.resize_volume(image_moving, self.image_size), image_fixed], axis=4)
+        self.input_layer = tf.concat([layer.resize_volume(
+            image_moving, self.image_size), image_fixed], axis=4)
 
     def warp_image(self, input_):
         if input_ is None:
@@ -39,17 +40,22 @@ class LocalNet(BaseNet):
         self.num_channel_initial = 32
 
         nc = [int(self.num_channel_initial*(2**i)) for i in range(5)]
-        h0, hc0 = layer.downsample_resnet_block(self.input_layer, 2, nc[0], k_conv0=[7, 7, 7], name='local_down_0')
+        h0, hc0 = layer.downsample_resnet_block(self.input_layer, 2, nc[0], k_conv0=[
+                                                7, 7, 7], name='local_down_0')
         h1, hc1 = layer.downsample_resnet_block(h0, nc[0], nc[1], name='local_down_1')
         h2, hc2 = layer.downsample_resnet_block(h1, nc[1], nc[2], name='local_down_2')
         h3, hc3 = layer.downsample_resnet_block(h2, nc[2], nc[3], name='local_down_3')
         hm = [layer.conv3_block(h3, nc[3], nc[4], name='local_deep_4')]
 
         min_level = min(self.ddf_levels)
-        hm += [layer.upsample_resnet_block(hm[0], hc3, nc[4], nc[3], name='local_up_3')] if min_level < 4 else []
-        hm += [layer.upsample_resnet_block(hm[1], hc2, nc[3], nc[2], name='local_up_2')] if min_level < 3 else []
-        hm += [layer.upsample_resnet_block(hm[2], hc1, nc[2], nc[1], name='local_up_1')] if min_level < 2 else []
-        hm += [layer.upsample_resnet_block(hm[3], hc0, nc[1], nc[0], name='local_up_0')] if min_level < 1 else []
+        hm += [layer.upsample_resnet_block(hm[0], hc3, nc[4], nc[3],
+                                           name='local_up_3')] if min_level < 4 else []
+        hm += [layer.upsample_resnet_block(hm[1], hc2, nc[3], nc[2],
+                                           name='local_up_2')] if min_level < 3 else []
+        hm += [layer.upsample_resnet_block(hm[2], hc1, nc[2], nc[1],
+                                           name='local_up_1')] if min_level < 2 else []
+        hm += [layer.upsample_resnet_block(hm[3], hc0, nc[1], nc[0],
+                                           name='local_up_0')] if min_level < 1 else []
 
         self.ddf = tf.reduce_sum(tf.stack([layer.ddf_summand(hm[4-idx], nc[idx], self.image_size, name='sum_%d' % idx)
                                            for idx in self.ddf_levels],
@@ -66,7 +72,8 @@ class GlobalNet(BaseNet):
         self.transform_initial = [1., 0., 0., 0., 0., 1., 0., 0., 0., 0., 1., 0.]
 
         nc = [int(self.num_channel_initial_global * (2 ** i)) for i in range(5)]
-        h0, hc0 = layer.downsample_resnet_block(self.input_layer, 2, nc[0], k_conv0=[7, 7, 7], name='global_down_0')
+        h0, hc0 = layer.downsample_resnet_block(self.input_layer, 2, nc[0], k_conv0=[
+                                                7, 7, 7], name='global_down_0')
         h1, hc1 = layer.downsample_resnet_block(h0, nc[0], nc[1], name='global_down_1')
         h2, hc2 = layer.downsample_resnet_block(h1, nc[1], nc[2], name='global_down_2')
         h3, hc3 = layer.downsample_resnet_block(h2, nc[2], nc[3], name='global_down_3')

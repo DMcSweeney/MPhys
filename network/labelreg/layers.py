@@ -1,7 +1,9 @@
 import tensorflow as tf
-
+import numpy as np
 
 # variables
+
+
 def var_conv_kernel(ch_in, ch_out, k_conv=None, initialiser=None, name='W'):
     with tf.variable_scope(name):
         if k_conv is None:
@@ -79,7 +81,8 @@ def ddf_summand(input_, ch_in, shape_out, name='ddf_summand'):
     initial_bias_local = 0.0
     initial_std_local = 0.0
     with tf.variable_scope(name):
-        w = var_conv_kernel(ch_in, 3, initialiser=tf.random_normal_initializer(0, initial_std_local))
+        w = var_conv_kernel(
+            ch_in, 3, initialiser=tf.random_normal_initializer(0, initial_std_local))
         b = var_bias([3], initialiser=tf.constant_initializer(initial_bias_local))
         if input_.get_shape() == shape_out:
             return tf.nn.conv3d(input_, w, strides1, "SAME") + b
@@ -106,7 +109,10 @@ def additive_up_sampling(input_, size, stride=2, name='additive_upsampling'):
 def resize_volume(image, size, method=0, name='resize_volume'):
     # size is [depth, height width]
     # image is Tensor with shape [batch, depth, height, width, channels]
+    print(type(image))
+    print(size)
     shape = image.get_shape().as_list()
+    print(shape)
     with tf.variable_scope(name):
         reshaped2d = tf.reshape(image, [-1, shape[2], shape[3], shape[4]])
         resized2d = tf.image.resize_images(reshaped2d, [size[1], size[2]], method)
