@@ -1,17 +1,18 @@
 
 import numpy as np
 import nibabel as nib
+
 import os
 import configparser
 
 
-def get_data_readers(dir_image0, dir_image1, dir_label0=None, dir_label1=None):
+def get_data_readers(dir_image0, dir_image1, dir_label0=None):
 
     reader_image0 = DataReader(dir_image0)
     reader_image1 = DataReader(dir_image1)
 
     reader_label0 = DataReader(dir_label0) if dir_label0 is not None else None
-    reader_label1 = DataReader(dir_label1) if dir_label1 is not None else None
+    # reader_label1 = DataReader(dir_label1) if dir_label1 is not None else None
 
     # some checks
     if not (reader_image0.num_data == reader_image1.num_data):
@@ -19,18 +20,18 @@ def get_data_readers(dir_image0, dir_image1, dir_label0=None, dir_label1=None):
     if dir_label0 is not None:
         if not (reader_image0.num_data == reader_label0.num_data):
             raise Exception('Unequal num_data between images0 and labels0!')
-        if not (reader_image0.data_shape == reader_label0.data_shape):
-            raise Exception('Unequal data_shape between images0 and labels0!')
-    if dir_label1 is not None:
-        if not (reader_image1.num_data == reader_label1.num_data):
-            raise Exception('Unequal num_data between images1 and labels1!')
-        if not (reader_image1.data_shape == reader_label1.data_shape):
-            raise Exception('Unequal data_shape between images1 and labels1!')
-        if dir_label0 is not None:
-            if not (reader_label0.num_labels == reader_label1.num_labels):
-                raise Exception('Unequal num_labels between labels0 and labels1!')
+        # if not (reader_image0.data_shape == reader_label0.data_shape):
+        #     raise Exception('Unequal data_shape between images0 and labels0!')
+    # if dir_label1 is not None:
+    #     if not (reader_image1.num_data == reader_label1.num_data):
+    #         raise Exception('Unequal num_data between images1 and labels1!')
+    #     if not (reader_image1.data_shape == reader_label1.data_shape):
+    #         raise Exception('Unequal data_shape between images1 and labels1!')
+    #     if dir_label0 is not None:
+    #         if not (reader_label0.num_labels == reader_label1.num_labels):
+    #             raise Exception('Unequal num_labels between labels0 and labels1!')
 
-    return reader_image0, reader_image1, reader_label0, reader_label1
+    return reader_image0, reader_image1, reader_label0
 
 
 class DataReader:
@@ -41,12 +42,13 @@ class DataReader:
         self.files.sort()
         self.num_data = len(self.files)
 
-        self.file_objects = [nib.load(os.path.join(dir_name, self.files[i])) for i in range(self.num_data)]
+        self.file_objects = [nib.load(os.path.join(dir_name, self.files[i]))
+                             for i in range(self.num_data)]
         self.num_labels = [self.file_objects[i].shape[3] if len(self.file_objects[i].shape) == 4
                            else 1
                            for i in range(self.num_data)]
 
-        self.data_shape = list(self.file_objects[0].shape[0:3])
+        self.data_shape = list(np.shape(self.file_objects[0]))
 
     def get_num_labels(self, case_indices):
         return [self.num_labels[i] for i in case_indices]
@@ -60,10 +62,12 @@ class DataReader:
         else:
             if len(label_indices) == 1:
                 label_indices *= self.num_data
-            data = [self.file_objects[i].dataobj[..., j] if self.num_labels[i] > 1
-                    else np.asarray(self.file_objects[i].dataobj)
-                    for (i, j) in zip(case_indices, label_indices)]
-        return np.expand_dims(np.stack(data, axis=0), axis=4)
+                data = [self.file_objects[i].dataobj[..., j] if self.num_labels[i] > 1
+                        else np.asarray(self.file_objects[i].dataobj)
+                        for (i, j) in zip(case_indices, label_indices)]
+
+        # return np.expand_dims(np.stack(data, axis=0), axis=4)
+        return np.stack(data, axis=0)
 
 
 def random_transform_generator(batch_size, corner_scale=.1):
@@ -123,7 +127,8 @@ class ConfigParser:
                 exit()
             filename_ = argv[1]
         else:
-            filename_ = os.path.abspath(os.path.join(os.path.dirname(os.path.realpath(__file__)), "../config_demo.ini"))
+            filename_ = os.path.abspath(os.path.join(os.path.dirname(
+                os.path.realpath(__file__)), "../config_demo.ini"))
             print('Reading default config file in: %s.' % filename_)
 
         self.config_file = configparser.ConfigParser()
@@ -144,7 +149,8 @@ class ConfigParser:
                 for key, value in self.config[section_key].items():
                     if key in self.config_file[section_key] and self.config_file[section_key][key]:
                         if type(value) == str:
-                            self.config[section_key][key] = os.path.expanduser(self.config_file[section_key][key])
+                            self.config[section_key][key] = os.path.expanduser(
+                                self.config_file[section_key][key])
                         else:
                             self.config[section_key][key] = eval(self.config_file[section_key][key])
                     # else:
@@ -158,8 +164,8 @@ class ConfigParser:
     def print(self):
         print('')
         for section_key, section_value in self.config.items():
-                for key, value in section_value.items():
-                    print('[''%s'']: %s: %s' % (section_key, key, value))
+            for key, value in section_value.items():
+                print('[''%s'']: %s: %s' % (section_key, key, value))
         print('')
 
     def get_defaults(self):
@@ -170,8 +176,9 @@ class ConfigParser:
 
         data = {'dir_moving_image': os.path.join(home_dir, 'data/train/mr_images'),
                 'dir_fixed_image': os.path.join(home_dir, 'data/train/us_images'),
-                'dir_moving_label': os.path.join(home_dir, 'data/train/mr_labels'),
-                'dir_fixed_label': os.path.join(home_dir, 'data/train/us_labels')}
+                'ddf_label': os.path.join(home_dir, 'data/train/mr_labels'),
+                # 'dir_fixed_label': os.path.join(home_dir, 'data/train/us_labels')
+                }
 
         loss = {'similarity_type': 'dice',
                 'similarity_scales': [0, 1, 2, 4, 8, 16],
@@ -189,15 +196,17 @@ class ConfigParser:
                      'dir_moving_image': os.path.join(home_dir, 'data/test/mr_images'),
                      'dir_fixed_image': os.path.join(home_dir, 'data/test/us_images'),
                      'dir_save': os.path.join(home_dir, 'data/'),
-                     'dir_moving_label': '',
-                     'dir_fixed_label': ''}
+                     'ddf_label': ''
+                     # , 'dir_fixed_label': ''
+                     }
 
         if self.config_type == 'training':
             config = {'Data': data, 'Network': network, 'Loss': loss, 'Train': train}
         elif self.config_type == 'inference':
             config = {'Network': network, 'Inference': inference}
         else:
-            config = {'Data': data, 'Network': network, 'Loss': loss, 'Train': train, 'Inference': inference}
+            config = {'Data': data, 'Network': network,
+                      'Loss': loss, 'Train': train, 'Inference': inference}
 
         return config
 
