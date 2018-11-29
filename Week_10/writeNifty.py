@@ -4,12 +4,10 @@ can be performed.
 """
 import os
 import pydicom
+import shutil
 from imageReg import ImageReg
 from readMasks import ReadMasks
 
-os.chdir('..')
-cwd = os.getcwd()
-print(cwd)
 
 ImageReg = ImageReg()
 ReadMasks = ReadMasks()
@@ -104,13 +102,40 @@ def write_masks(patient_dir, contour_path, image_path, index, img_format='nii'):
     print("Done Writing masks")
 
 
+def organise_scans(input_path, rigid_output_path, dvf_output_path):
+    for folder in os.listdir(input_path):
+        print(folder)
+        if folder == 'Rigid':
+            rigid_path = os.path.join(input_path, folder)
+            for patient_path in os.listdir(rigid_path):
+                patient = patient_path.split('/')[-1]
+                print(patient)
+                patient_path = os.path.join(rigid_path, patient)
+                for file in os.listdir(patient_path):
+                    if file.endswith('.nii'):
+                        rigid_filepath = os.path.join(patient_path, file)
+                        rigid_out_filepath = os.path.join(
+                            rigid_output_path, '{}.nii'.format(patient))
+                        shutil.copy(rigid_filepath, rigid_out_filepath)
+        if folder == 'DVF':
+            dvf_path = os.path.join(input_path, folder)
+            for patient_path in os.listdir(dvf_path):
+                patient = patient_path.split('/')[-1]
+                print(patient)
+                patient_path = os.path.join(dvf_path, patient)
+                for file in os.listdir(patient_path):
+                    if file.endswith('.nii'):
+                        dvf_filepath = os.path.join(patient_path, file)
+                        print(dvf_output_path)
+                        dvf_out_filepath = os.path.join(dvf_output_path, '{}.nii'.format(patient))
+                        shutil.copy(dvf_filepath, dvf_out_filepath)
+        else:
+            print('No important info')
+
+
 def main(argv=None):
-    pet_paths, pct_paths, patient_path_list, struct_path = load_files(patient_dir)
-    print(struct_path)
-    write_masks(patient_dir, struct_path, pct_paths, 1)
-    # print(pet_paths)
-    # print(len(pet_paths))
-    # write_nifty(pet_paths, pct_paths)
+    organise_scans('E:/Mphys/ElastixReg', rigid_output_path='E:/Mphys/NiftyPatients/PET_Rigid',
+                   dvf_output_path='E:/Mphys/NiftyPatients/DVF')
 
 
 if __name__ == '__main__':

@@ -13,7 +13,7 @@ cwd = os.getcwd()
 print(cwd)
 # Paths
 pct_path = ".\\Patients\\HN-CHUM-001\\08-27-1885-TomoTherapy Patient Disease-00441\\112161818-kVCT Image Set-62659\\000000.dcm"
-dvf_path = ".\\Patients\\HN-CHUM-001\\08-27-1885-TomoTherapy Patient Disease-00441\\1-REGCTsim-CTPET-CT-43961\\000000.dcm"
+dvf_path = "E:\\Mphys\\ElastixReg\\DVF\\HN-CHUM-001\\deformationField.nii"
 petct_path = ".\\Patients\\HN-CHUM-001\\08-27-1885-PANC. avec C.A. SPHRE ORL   tte et cou  -TP-74220\\3-StandardFull-07232"
 struct_path = '.\\Patients\\HN-CHUM-001\\08-27-1885-TomoTherapy Patient Disease-00441\\114120634-TomoTherapy Structure Set-68567\\000000.dcm'
 ReadData = ReadData()
@@ -50,7 +50,14 @@ def load_patients_array():
 
 def main(argv=None):
 
-    read_dicom(pct_path)
+    # read_dicom(pct_path)
+    dvf = sitk.ReadImage(dvf_path)
+    dvf_array = sitk.GetArrayFromImage(dvf)
+    print(type(dvf_array))
+    print(np.shape(dvf_array))
+    print("X:", dvf_array[:, :, :, 0])
+    # with open("dvf_nii.txt", 'w') as f:
+    #     f.write(str(dvf_array))
     # ImageReg.load_series(
     #     ".\\Patients\\HN-CHUM-001\\08-27-1885-TomoTherapy Patient Disease-00441\\112161818-kVCT Image Set-62659\\", "pct_series")
     # ImageReg.load_series(

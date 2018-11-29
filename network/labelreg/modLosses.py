@@ -17,9 +17,17 @@ def build_loss(similarity_type, similarity_scales, regulariser_type, regulariser
             ddf, regulariser_type, regulariser_weight))
     return tf.reduce_mean(label_similarity), ddf_regularisation
 
+# Loss function to calculate rms error on ddf
+
 
 def displacement_loss(ddf_label, ddf):
-    ddf_error = tf.reduce_mean(tf.squared_difference(ddf_label, ddf), axis=[1, 2, 3])
+    ddf_error_x = tf.reduce_mean(tf.squared_difference(
+        ddf_label[:, :, :, 0], ddf[:, :, :, 0]), axis=[3])
+    ddf_error_y = tf.reduce_mean(tf.squared_difference(
+        ddf_label[:, :, :, 1], ddf[:, :, :, 1]), axis=[3])
+    ddf_error_z = tf.reduce_mean(tf.squared_difference(
+        ddf_label[:, :, :, 2], ddf[:, :, :, 2]), axis=[3])
+    ddf_error = tf.reduce_mean(ddf_error_x**2, ddf_error_y**2, ddf_error_z**2)
     return ddf_error
 
 

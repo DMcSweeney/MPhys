@@ -13,11 +13,10 @@ import labelreg.modLosses as loss
 config = helper.ConfigParser(sys.argv, 'training')
 
 # 1 - data
-reader_moving_image, reader_fixed_image, reader_moving_label, reader_fixed_label = helper.get_data_readers(
+reader_moving_image, reader_fixed_image, reader_ddf_label = helper.get_data_readers(
     config['Data']['dir_moving_image'],
     config['Data']['dir_fixed_image'],
-    config['Data']['dir_moving_label'],
-    config['Data']['dir_fixed_label'])
+    config['Data']['ddf_label'])
 
 
 # 2 - graph
@@ -53,8 +52,7 @@ loss_similarity, loss_regulariser = loss.build_loss(similarity_type=config['Loss
                                                     similarity_scales=config['Loss']['similarity_scales'],
                                                     regulariser_type=config['Loss']['regulariser_type'],
                                                     regulariser_weight=config['Loss']['regulariser_weight'],
-                                                    label_moving=warped_moving_label,
-                                                    label_fixed=input_fixed_label,
+                                                    ddf_label=config['Data']['ddf_label'],
                                                     network_type=config['Network']['network_type'],
                                                     ddf=reg_net.ddf)
 
@@ -80,12 +78,11 @@ for step in range(config['Train']['total_iterations']):
     minibatch_idx = step % num_minibatch
     case_indices = train_indices[
         minibatch_idx*config['Train']['minibatch_size']:(minibatch_idx+1)*config['Train']['minibatch_size']]
-    label_indices = [random.randrange(reader_moving_label.num_labels[i]) for i in case_indices]
+    label_indices = [random.randrange(reader_ddf_label.num_labels[i]) for i in case_indices]
 
     trainFeed = {ph_moving_image: reader_moving_image.get_data(case_indices),
                  ph_fixed_image: reader_fixed_image.get_data(case_indices),
-                 ph_moving_label: reader_moving_label.get_data(case_indices, label_indices),
-                 ph_fixed_label: reader_fixed_label.get_data(case_indices, label_indices),
+                 ph_moving_label: reader_ddf_label.get_data(case_indices, label_indices),
                  ph_moving_affine: helper.random_transform_generator(config['Train']['minibatch_size']),
                  ph_fixed_affine: helper.random_transform_generator(config['Train']['minibatch_size'])}
 
