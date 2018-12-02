@@ -114,7 +114,7 @@ for step in range(config['Train']['total_iterations']):
         loss_similarity_train, loss_regulariser_train = sess.run(
             [loss_similarity, loss_regulariser], feed_dict=trainFeed)
 
-        # print('----- Training -----')
+        print('----- Training -----')
         print('Step %d [%s]: Loss=%f (similarity=%f, regulariser=%f)' %
               (step,
                current_time,
