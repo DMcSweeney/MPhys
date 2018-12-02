@@ -30,13 +30,14 @@ ph_moving_affine = tf.placeholder(tf.float32, [config['Train']['minibatch_size']
 ph_fixed_affine = tf.placeholder(tf.float32, [config['Train']['minibatch_size']]+[1, 12])
 input_moving_image = util.warp_image_affine(ph_moving_image, ph_moving_affine)  # data augmentation
 input_fixed_image = util.warp_image_affine(ph_fixed_image, ph_fixed_affine)  # data augmentation
+print(type(input_moving_image))
 
 print("Pre Build Net")
 # predicting ddf
 reg_net = network.build_network(network_type=config['Network']['network_type'],
                                 minibatch_size=config['Train']['minibatch_size'],
-                                image_moving=input_moving_image,
-                                image_fixed=input_fixed_image)
+                                image_moving=ph_moving_image,
+                                image_fixed=ph_fixed_image)
 print("Post Build Net")
 # loss
 # ph_moving_label = tf.placeholder(
