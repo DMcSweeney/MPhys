@@ -76,7 +76,8 @@ num_minibatch = int(reader_ddf_label.num_data/config['Train']['minibatch_size'])
 train_indices = [i for i in range(reader_ddf_label.num_data)]
 
 saver = tf.train.Saver(max_to_keep=1)
-sess = tf.Session()
+sess = tf.Session(config=tf.ConfigProto(log_device_placement=True))
+# sess = tf.Session()
 sess.run(tf.global_variables_initializer())
 for step in range(config['Train']['total_iterations']):
 
@@ -98,7 +99,7 @@ for step in range(config['Train']['total_iterations']):
                  # ph_moving_affine: helper.random_transform_generator(config['Train']['minibatch_size']),
                  # ph_fixed_affine: helper.random_transform_generator(config['Train']['minibatch_size'])
                  }
-    sess.run(train_op, feed_dict=trainFeed)
+    print(sess.run(train_op, feed_dict=trainFeed))
 
     if step in range(0, config['Train']['total_iterations'], config['Train']['freq_info_print']):
         current_time = time.asctime(time.gmtime())
