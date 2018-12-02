@@ -21,6 +21,7 @@ reader_moving_image, reader_fixed_image, reader_ddf_label = helper.get_data_read
 
 
 # 2 - graph -----DATA AUGMENTATION
+
 ph_moving_image = tf.placeholder(
     tf.float32, [config['Train']['minibatch_size']]+reader_moving_image.data_shape+[1])
 ph_fixed_image = tf.placeholder(
@@ -30,18 +31,21 @@ ph_fixed_affine = tf.placeholder(tf.float32, [config['Train']['minibatch_size']]
 input_moving_image = util.warp_image_affine(ph_moving_image, ph_moving_affine)  # data augmentation
 input_fixed_image = util.warp_image_affine(ph_fixed_image, ph_fixed_affine)  # data augmentation
 
+print("Pre Build Net")
 # predicting ddf
 reg_net = network.build_network(network_type=config['Network']['network_type'],
                                 minibatch_size=config['Train']['minibatch_size'],
                                 image_moving=input_moving_image,
                                 image_fixed=input_fixed_image)
-
+print("Post Build Net")
 # loss
 # ph_moving_label = tf.placeholder(
 #     tf.float32, [config['Train']['minibatch_size']]+reader_moving_image.data_shape+[1])
 # ph_fixed_label = tf.placeholder(
 #     tf.float32, [config['Train']['minibatch_size']]+reader_fixed_image.data_shape+[1])
-ph_ddf_label = tf.placeholder(tf.float32, reader_ddf_label.data_shape)
+print(reader_ddf_label.data_shape)
+ph_ddf_label = tf.placeholder(
+    tf.float32, [config['Train']['minibatch_size']] + reader_ddf_label.data_shape + [1])
 # Comment out for our purposes
 # input_moving_label = util.warp_image_affine(ph_moving_label, ph_moving_affine)  # data augmentation
 # input_fixed_label = util.warp_image_affine(ph_fixed_label, ph_fixed_affine)  # data augmentation
@@ -82,6 +86,9 @@ for step in range(config['Train']['total_iterations']):
     case_indices = train_indices[
         minibatch_idx*config['Train']['minibatch_size']:(minibatch_idx+1)*config['Train']['minibatch_size']]
     label_indices = [random.randrange(reader_ddf_label.num_labels[i]) for i in case_indices]
+    print(case_indices)
+    print(label_indices)
+    print(reader_moving_image.get_data(case_indices))
 
     trainFeed = {ph_moving_image: reader_moving_image.get_data(case_indices),
                  ph_fixed_image: reader_fixed_image.get_data(case_indices),
@@ -90,19 +97,20 @@ for step in range(config['Train']['total_iterations']):
                  # ph_moving_affine: helper.random_transform_generator(config['Train']['minibatch_size']),
                  # ph_fixed_affine: helper.random_transform_generator(config['Train']['minibatch_size'])
                  }
-
     sess.run(train_op, feed_dict=trainFeed)
 
     if step in range(0, config['Train']['total_iterations'], config['Train']['freq_info_print']):
         current_time = time.asctime(time.gmtime())
-        loss_similarity_train, loss_regulariser_train, dice_train, dist_train = sess.run(
-            [loss_similarity,
-             loss_regulariser
-             # ,
-             # dice,
-             # dist
-             ],
-            feed_dict=trainFeed)
+        # loss_similarity_train, loss_regulariser_train, dice_train, dist_train = sess.run(
+        #     [loss_similarity,
+        #      loss_regulariser
+        #      # ,
+        #      # dice,
+        #      # dist
+        #      ],
+        #     feed_dict=trainFeed)
+        loss_similarity_train, loss_regulariser_train = sess.run(
+            [loss_similarity, loss_regulariser], feed_dict=trainFeed)
 
         # print('----- Training -----')
         print('Step %d [%s]: Loss=%f (similarity=%f, regulariser=%f)' %
@@ -111,8 +119,8 @@ for step in range(config['Train']['total_iterations']):
                loss_similarity_train+loss_regulariser_train,
                1-loss_similarity_train,
                loss_regulariser_train))
-        print('  Dice: %s' % dice_train)
-        print('  Distance: %s' % dist_train)
+        # print('  Dice: %s' % dice_train)
+        # print('  Distance: %s' % dist_train)
         print('  Image-label indices: %s - %s' % (case_indices, label_indices))
 
     if step in range(0, config['Train']['total_iterations'], config['Train']['freq_model_save']):
