@@ -76,7 +76,9 @@ num_minibatch = int(reader_ddf_label.num_data/config['Train']['minibatch_size'])
 train_indices = [i for i in range(reader_ddf_label.num_data)]
 
 saver = tf.train.Saver(max_to_keep=1)
-sess = tf.Session()
+config = tf.ConfigProto()
+config.gpu_options.allow_growth = True
+sess = tf.Session(config=config)
 sess.run(tf.global_variables_initializer())
 for step in range(config['Train']['total_iterations']):
 
