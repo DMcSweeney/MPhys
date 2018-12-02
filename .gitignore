@@ -120,6 +120,6 @@ RegNet/
 *.txt
 *.tfm
 *.json
-*.jpg
+*.JPG
 #Config file
 *.ini

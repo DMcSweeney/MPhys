@@ -15,8 +15,10 @@ reader_moving_image, reader_fixed_image, _, _ = helper.get_data_readers(config['
 
 # 2 - graph
 # network for predicting ddf only
-ph_moving_image = tf.placeholder(tf.float32, [reader_moving_image.num_data]+reader_moving_image.data_shape+[1])
-ph_fixed_image = tf.placeholder(tf.float32, [reader_fixed_image.num_data]+reader_fixed_image.data_shape+[1])
+ph_moving_image = tf.placeholder(
+    tf.float32, [reader_moving_image.num_data]+reader_moving_image.data_shape+[1])
+ph_fixed_image = tf.placeholder(
+    tf.float32, [reader_fixed_image.num_data]+reader_fixed_image.data_shape+[1])
 
 reg_net = network.build_network(network_type=config['Network']['network_type'],
                                 minibatch_size=reader_moving_image.num_data,
@@ -41,6 +43,7 @@ helper.write_images(warped_images, config['Inference']['dir_save'], 'warped_imag
 
 # warp test labels of gland segmentation, i.e. label_indices=0
 if config['Inference']['dir_moving_label']:
-    data_moving_label = helper.DataReader(config['Inference']['dir_moving_label']).get_data(label_indices=[0])
+    data_moving_label = helper.DataReader(
+        config['Inference']['dir_moving_label']).get_data(label_indices=[0])
     warped_labels = app.warp_volumes_by_ddf(data_moving_label, ddf)
     helper.write_images(warped_labels, config['Inference']['dir_save'], 'warped_label')

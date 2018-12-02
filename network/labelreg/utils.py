@@ -10,7 +10,8 @@ def warp_grid(grid, theta):
     num_batch = int(theta.get_shape()[0])
     theta = tf.cast(tf.reshape(theta, (-1, 3, 4)), 'float32')
     size = grid.get_shape().as_list()
-    grid = tf.concat([tf.transpose(tf.reshape(grid, [-1, 3])), tf.ones([1, size[0]*size[1]*size[2]])], axis=0)
+    grid = tf.concat([tf.transpose(tf.reshape(grid, [-1, 3])),
+                      tf.ones([1, size[0]*size[1]*size[2]])], axis=0)
     grid = tf.reshape(tf.tile(tf.reshape(grid, [-1]), [num_batch]), [num_batch, 4, -1])
     grid_warped = tf.matmul(theta, grid)
     return tf.reshape(tf.transpose(grid_warped, [0, 2, 1]), [num_batch, size[0], size[1], size[2], 3])
@@ -32,14 +33,17 @@ def resample_linear(inputs, sample_coords):
                             for idx, x in enumerate(index_voxel_coords)]
 
     weight = [tf.expand_dims(x - tf.cast(i, tf.float32), -1) for x, i in zip(xy, spatial_coords)]
-    weight_c = [tf.expand_dims(tf.cast(i, tf.float32) - x, -1) for x, i in zip(xy, spatial_coords_plus1)]
+    weight_c = [tf.expand_dims(tf.cast(i, tf.float32) - x, -1)
+                for x, i in zip(xy, spatial_coords_plus1)]
 
     sz = spatial_coords[0].get_shape().as_list()
     batch_coords = tf.tile(tf.reshape(tf.range(sz[0]), [sz[0]] + [1] * (len(sz) - 1)), [1] + sz[1:])
     sc = (spatial_coords, spatial_coords_plus1)
-    binary_codes = [[int(c) for c in format(i, '0%ib' % spatial_rank)] for i in range(2**spatial_rank)]
+    binary_codes = [[int(c) for c in format(i, '0%ib' % spatial_rank)]
+                    for i in range(2**spatial_rank)]
 
-    make_sample = lambda bc: tf.gather_nd(inputs, tf.stack([batch_coords] + [sc[c][i] for i, c in enumerate(bc)], -1))
+    def make_sample(bc): return tf.gather_nd(inputs, tf.stack(
+        [batch_coords] + [sc[c][i] for i, c in enumerate(bc)], -1))
     samples = [make_sample(bc) for bc in binary_codes]
 
     def pyramid_combination(samples0, weight0, weight_c0):
@@ -47,7 +51,7 @@ def resample_linear(inputs, sample_coords):
             return samples0[0]*weight_c0[0]+samples0[1]*weight0[0]
         else:
             return pyramid_combination(samples0[::2], weight0[:-1], weight_c0[:-1]) * weight_c0[-1] + \
-                   pyramid_combination(samples0[1::2], weight0[:-1], weight_c0[:-1]) * weight0[-1]
+                pyramid_combination(samples0[1::2], weight0[:-1], weight_c0[:-1]) * weight0[-1]
 
     return pyramid_combination(samples, weight, weight_c)
 
