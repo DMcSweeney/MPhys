@@ -35,6 +35,7 @@ def build_loss(similarity_type, similarity_scales, regulariser_type, regulariser
 
 
 def displacement_loss(ddf_label, ddf):
+    ddf_label = tf.squeeze(ddf_label)
     label_loss_all = tf.stack(tf.reduce_mean(tf.squared_difference(
         ddf_label, ddf), axis=[1, 2, 3, 4]), axis=1)
     return tf.reduce_mean(label_loss_all, axis=1)
