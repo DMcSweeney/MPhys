@@ -134,8 +134,8 @@ def organise_scans(input_path, rigid_output_path, dvf_output_path):
 
 
 def main(argv=None):
-    organise_scans('E:/Mphys/ElastixReg', rigid_output_path='E:/Mphys/NiftyPatients/PET_Rigid',
-                   dvf_output_path='E:/Mphys/NiftyPatients/DVF')
+    organise_scans('E:/Mphys/resample_data', rigid_output_path='E:/Mphys/DataResampled/PET_Rigid',
+                   dvf_output_path='E:/Mphys/DataResampled/DVF')
 
 
 if __name__ == '__main__':
