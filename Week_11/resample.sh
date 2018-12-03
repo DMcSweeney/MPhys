@@ -2,10 +2,10 @@
 echo \# Bash script to perform resampling to coarser image
 
 # cwd="/mnt/e/Mphys/" # Dir from which script is run
-base_dir="/hepgpu3-data1/dmcsween/data_short" # Directory containing files to resample
-fixed_ref="PlanningCT_short"
-moving_ref="PET_Rigid_short"
-out_dir="/hepgpu3-data1/dmcsween/resample_data_short" #Dir to which we should write
+base_dir="/hepgpu3-data1/dmcsween/data" # Directory containing files to resample
+fixed_ref="PlanningCT"
+moving_ref="PET_Rigid"
+out_dir="/hepgpu3-data1/dmcsween/resample_data" #Dir to which we should write
 
 if [ -d ${out_dir}  ]; then
   rm -rf ${out_dir}
@@ -22,10 +22,10 @@ for filepath in `(ls -f ${base_dir}/${fixed_ref}/*.nii )`; do
   filename=$(basename -- "$filepath")
   image="${filename%.*}"
   echo $image
-  # Make required directories
-  mkdir ${out_dir}/DVF/${image}
-  mkdir ${out_dir}/Rigid/${image}
-  mkdir ${out_dir}/Non-Rigid/${image}
+  # # Make required directories
+  # mkdir ${out_dir}/DVF/${image}
+  # mkdir ${out_dir}/Rigid/${image}
+  # mkdir ${out_dir}/Non-Rigid/${image}
   #Resample Images
   python resample_image.py --input_image ${base_dir}/${fixed_ref}/${image} --output_image ${out_dir}/${fixed_ref}/${image}.nii
   python resample_image.py --input_image ${base_dir}/${moving_ref}/${image} --output_image ${out_dir}/${moving_ref}/${image}.nii
