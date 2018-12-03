@@ -27,8 +27,8 @@ for filepath in `(ls -f ${base_dir}/${fixed_ref}/*.nii )`; do
   mkdir ${out_dir}/Rigid/${image}
   mkdir ${out_dir}/Non-Rigid/${image}
   #Resample Images
-  python resample_image.py --input_image ${base_dir}/${fixed_ref}/${image} --output_image ${out_dir}/{fixed_ref}/${image}.nii
-  python resample_image.py --input_image ${base_dir}/${moving_ref}/${image} --output_image ${out_dir}/{moving_ref}/${image}.nii
+  python resample_image.py --input_image ${base_dir}/${fixed_ref}/${image} --output_image ${out_dir}/${fixed_ref}/${image}.nii
+  python resample_image.py --input_image ${base_dir}/${moving_ref}/${image} --output_image ${out_dir}/${moving_ref}/${image}.nii
 
   # Perform Registration, first affine then b-spline
   # elastix -f ${base_dir}/${fixed_ref}/${image} -m ${base_dir}/${moving_ref}/${image} -p ${cwd}/Affine-parameter-file.txt  -out ${out_dir}/Rigid/${image}
