@@ -1,11 +1,11 @@
 #!/bin/sh
 echo \# Bash script to perform registration using elastix
 
-cwd="/hepgpu3-data1/dmcsween/MPhys/"
-base_dir="/hepgpu3-data1/dmcsween/resample_data"
+cwd="/mnt/d/Documents/GitHub/MPhys/"
+base_dir="/mnt/e/Mphys/resample_data"
 fixed_ref="PlanningCT"
 moving_ref="PET_Rigid"
-out_dir="/hepgpu3-data1/dmcsween/resample_data"
+out_dir="/mnt/e/Mphys/resample_data"
 
 # if [ -d ${out_dir}  ]; then
 #   rm -rf ${out_dir}
