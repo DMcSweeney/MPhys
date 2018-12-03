@@ -1,19 +1,19 @@
 #!/bin/sh
 echo \# Bash script to perform registration using elastix
 
-cwd="/mnt/e/Mphys/"
-base_dir="/mnt/e/Mphys/NiftyPatients"
+cwd="/hepgpu3-data1/dmcsween/MPhys/"
+base_dir="/hepgpu3-data1/dmcsween/resample_data"
 fixed_ref="PlanningCT"
-moving_ref="PET"
-out_dir="/mnt/e/Mphys/ElastixReg"
+moving_ref="PET_Rigid"
+out_dir="/hepgpu3-data1/dmcsween/resample_data"
 
-if [ -d ${out_dir}  ]; then
-  rm -rf ${out_dir}
-fi
-mkdir ${out_dir}
-mkdir ${out_dir}/Rigid/
-mkdir ${out_dir}/Non-Rigid/
-mkdir ${out_dir}/DVF/
+# if [ -d ${out_dir}  ]; then
+#   rm -rf ${out_dir}
+# fi
+# mkdir ${out_dir}
+# mkdir ${out_dir}/Rigid/
+# mkdir ${out_dir}/Non-Rigid/
+# mkdir ${out_dir}/DVF/
 # Loop over all patients saved in Nifty Patients
 for filepath in `(ls -f ${base_dir}/${fixed_ref}/*.nii )`; do
   #  Get patient name from filename
