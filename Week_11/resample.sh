@@ -1,11 +1,11 @@
 #!/bin/sh
 echo \# Bash script to perform resampling to coarser image
 
-cwd="/mnt/e/Mphys/" # Dir from which script is run
-base_dir="/mnt/e/Mphys/NiftyPatients" # Directory containing files to resample
+# cwd="/mnt/e/Mphys/" # Dir from which script is run
+base_dir="/hepgpu3-data1/dmcsween/data_short" # Directory containing files to resample
 fixed_ref="PlanningCT_short"
 moving_ref="PET_Rigid_short"
-out_dir="/mnt/e/Mphys/ResampleReg" #Dir to which we should write
+out_dir="/hepgpu3-data1/dmcsween/resample_data_short" #Dir to which we should write
 
 if [ -d ${out_dir}  ]; then
   rm -rf ${out_dir}
