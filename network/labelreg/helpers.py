@@ -48,7 +48,7 @@ class DataReader:
                            else 1
                            for i in range(self.num_data)]
 
-        self.data_shape = list(np.shape(np.squeeze(self.file_objects[0].dataobj[:64, :64, :100])))
+        self.data_shape = list(np.shape(np.squeeze(self.file_objects[0].dataobj[:64, :64, :64])))
 
     def get_num_labels(self, case_indices):
         return [self.num_labels[i] for i in case_indices]
