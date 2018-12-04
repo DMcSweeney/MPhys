@@ -77,7 +77,6 @@ train_indices = [i for i in range(reader_ddf_label.num_data)]
 
 saver = tf.train.Saver(max_to_keep=1)
 sess = tf.Session()
-# sess = tf.Session()
 sess.run(tf.global_variables_initializer())
 for step in range(config['Train']['total_iterations']):
 
