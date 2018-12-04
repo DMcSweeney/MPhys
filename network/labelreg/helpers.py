@@ -48,7 +48,7 @@ class DataReader:
                            else 1
                            for i in range(self.num_data)]
 
-        self.data_shape = list(np.shape(np.squeeze(self.file_objects[0].dataobj[:, :, :100])))
+        self.data_shape = list(np.shape(np.squeeze(self.file_objects[0].dataobj[:, :, :64])))
 
     def get_num_labels(self, case_indices):
         return [self.num_labels[i] for i in case_indices]
@@ -59,7 +59,7 @@ class DataReader:
         # todo: check the supplied label_indices smaller than num_labels
         if label_indices is None:  # e.g. images only
             data = [np.asarray(self.file_objects[i].dataobj) for i in case_indices]
-            data_sliced = [data[i][:, :, :100] for i in range(len(data))]
+            data_sliced = [data[i][:, :, :64] for i in range(len(data))]
             outval = np.expand_dims(np.stack(data_sliced, axis=0), axis=4)
             # print(type(data[0]))
             # print(data[0].shape)
@@ -69,7 +69,7 @@ class DataReader:
             data = [self.file_objects[i].dataobj[..., j] if self.num_labels[i] > 1
                     else np.asarray(self.file_objects[i].dataobj)
                     for (i, j) in zip(case_indices, label_indices)]
-            data_sliced = np.squeeze([data[i][:, :, :100] for i in range(len(data))])
+            data_sliced = np.squeeze([data[i][:, :, :64] for i in range(len(data))])
             outval = np.expand_dims(np.stack(data_sliced, axis=0), axis=5)
 
         print("Shape:", np.shape(outval))
