@@ -82,7 +82,7 @@ for step in range(config['Train']['total_iterations']):
 
     if step in range(0, config['Train']['total_iterations'], num_minibatch):
         random.shuffle(train_indices)
-
+    print("Shuffle")
     minibatch_idx = step % num_minibatch
     case_indices = train_indices[
         minibatch_idx*config['Train']['minibatch_size']:(minibatch_idx+1)*config['Train']['minibatch_size']]
@@ -95,10 +95,12 @@ for step in range(config['Train']['total_iterations']):
                  # ph_moving_affine: helper.random_transform_generator(config['Train']['minibatch_size']),
                  # ph_fixed_affine: helper.random_transform_generator(config['Train']['minibatch_size'])
                  }
+    print("trainFeed")
     print(sess.run(train_op, feed_dict=trainFeed))
-
+    print("step")
     if step in range(0, config['Train']['total_iterations'], config['Train']['freq_info_print']):
         current_time = time.asctime(time.gmtime())
+        print("Time")
         # loss_similarity_train, loss_regulariser_train, dice_train, dist_train = sess.run(
         #     [loss_similarity,
         #      loss_regulariser
@@ -122,5 +124,6 @@ for step in range(config['Train']['total_iterations']):
         print('  Image-label indices: %s - %s' % (case_indices, label_indices))
 
     if step in range(0, config['Train']['total_iterations'], config['Train']['freq_model_save']):
+        print("Save")
         save_path = saver.save(sess, config['Train']['file_model_save'], write_meta_graph=False)
         print("Model saved in: %s" % save_path)
