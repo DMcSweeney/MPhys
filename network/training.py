@@ -76,7 +76,7 @@ num_minibatch = int(reader_ddf_label.num_data/config['Train']['minibatch_size'])
 train_indices = [i for i in range(reader_ddf_label.num_data)]
 
 saver = tf.train.Saver(max_to_keep=1)
-sess = tf.Session(config=tf.ConfigProto(log_device_placement=True))
+sess = tf.Session()
 # sess = tf.Session()
 sess.run(tf.global_variables_initializer())
 for step in range(config['Train']['total_iterations']):
@@ -88,9 +88,6 @@ for step in range(config['Train']['total_iterations']):
     case_indices = train_indices[
         minibatch_idx*config['Train']['minibatch_size']:(minibatch_idx+1)*config['Train']['minibatch_size']]
     label_indices = [random.randrange(reader_ddf_label.num_labels[i]) for i in case_indices]
-    print(case_indices)
-    print(label_indices)
-    print(reader_moving_image.get_data(case_indices))
 
     trainFeed = {ph_moving_image: reader_moving_image.get_data(case_indices),
                  ph_fixed_image: reader_fixed_image.get_data(case_indices),
