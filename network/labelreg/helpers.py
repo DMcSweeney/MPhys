@@ -70,6 +70,7 @@ class DataReader:
             data = [self.file_objects[i].dataobj[..., j] if self.num_labels[i] > 1
                     else np.asarray(self.file_objects[i].dataobj)
                     for (i, j) in zip(case_indices, label_indices)]
+            print("DVF Shape:", np.shape(data[i]) for i in range(len(data)))
             data_sliced = np.squeeze([data[i][:, :, :100] for i in range(len(data))])
             outval = np.expand_dims(np.stack(data_sliced, axis=0), axis=5)
 
