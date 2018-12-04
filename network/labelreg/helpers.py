@@ -59,7 +59,7 @@ class DataReader:
         # todo: check the supplied label_indices smaller than num_labels
         if label_indices is None:  # e.g. images only
             data = [np.asarray(self.file_objects[i].dataobj) for i in case_indices]
-            print("Data Shape:", np.shape(data[i]) for i in range(len(data)))
+            print("Data Shape:", [np.shape(data[i]) for i in range(len(data))])
             data_sliced = [data[i][:, :, :100] for i in range(len(data))]
             outval = np.expand_dims(np.stack(data_sliced, axis=0), axis=4)
             # print(type(data[0]))
@@ -70,7 +70,7 @@ class DataReader:
             data = [self.file_objects[i].dataobj[..., j] if self.num_labels[i] > 1
                     else np.asarray(self.file_objects[i].dataobj)
                     for (i, j) in zip(case_indices, label_indices)]
-            print("DVF Shape:", np.shape(data[i]) for i in range(len(data)))
+            print("DVF Shape:", [np.shape(data[i]) for i in range(len(data))])
             data_sliced = np.squeeze([data[i][:, :, :100] for i in range(len(data))])
             outval = np.expand_dims(np.stack(data_sliced, axis=0), axis=5)
 
