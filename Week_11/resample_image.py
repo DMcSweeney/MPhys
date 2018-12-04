@@ -14,7 +14,7 @@ inputImage = opt.input_image
 outputImage = opt.output_image
 # Load the image. Must be a simpleITK image for this stage to work!
 startImage = sitk.ReadImage(inputImage)
-
+startArray = sitk.GetArrayFromImage(startImage)
 # factors to downsize by, this will take a 512x512x118 image to 128x128x118
 factors = [4, 4, 1]
 # NB, if you wanted to resample to a uniform number of slices, you could figure out what the 1 at the end should be
