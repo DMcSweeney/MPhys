@@ -20,21 +20,36 @@ def build_loss(similarity_type, similarity_scales, regulariser_type, regulariser
 # Loss function to calculate rms error on ddf
 
 
+# def displacement_loss(ddf_label, ddf):
+# Original test loss
+#     ddf_label = tf.squeeze(ddf_label)
+#     print("Label:", ddf_label.get_shape().as_list())
+#     print("Predict:", ddf.get_shape().as_list())
+#     ddf_error_x = tf.reduce_mean(tf.squared_difference(
+#         ddf_label[:, :, :, 0, :], ddf[:, :, :, 0, :]), axis=0)
+#     ddf_error_y = tf.reduce_mean(tf.squared_difference(
+#         ddf_label[:, :, :, 1, :], ddf[:, :, :, 1, :]), axis=0)
+#     ddf_error_z = tf.reduce_mean(tf.squared_difference(
+#         ddf_label[:, :, :, 2, :], ddf[:, :, :, 2, :]), axis=0)
+#     ddf_error = tf.reduce_mean(tf.sqrt(ddf_error_x**2 + ddf_error_y**2 + ddf_error_z**2))
+#     return ddf_error
+
 def displacement_loss(ddf_label, ddf):
+    # Tom's Loss
     ddf_label = tf.squeeze(ddf_label)
-    print("Label:", ddf_label.get_shape().as_list())
-    print("Predict:", ddf.get_shape().as_list())
-    ddf_error_x = tf.reduce_mean(tf.squared_difference(
-        ddf_label[:, :, :, 0, :], ddf[:, :, :, 0, :]), axis=0)
-    ddf_error_y = tf.reduce_mean(tf.squared_difference(
-        ddf_label[:, :, :, 1, :], ddf[:, :, :, 1, :]), axis=0)
-    ddf_error_z = tf.reduce_mean(tf.squared_difference(
-        ddf_label[:, :, :, 2, :], ddf[:, :, :, 2, :]), axis=0)
-    ddf_error = tf.reduce_mean(tf.sqrt(ddf_error_x**2 + ddf_error_y**2 + ddf_error_z**2))
-    return ddf_error
+    # ddf_flat[0] = batch size, ddf_flat[1] = size
+    ddf_flat = tf.contrib.layers.flatten(ddf)
+    ddf_label_flat = tf.contrib.layers.flatten(ddf_label)
+    ddf_error = []
+    for batch in ddf_flat[0]:
+        ms = tf.subtract(ddf_flat[batch], ddf_label_flat[batch])
+        rms = tf.abs(ms)
+        ddf_error.append(tf.reduce_sum(rms))
+    return tf.reduce_mean(ddf_error)
 
 
 # def displacement_loss(ddf_label, ddf):
+# test loss based on mean-squared already implemented
 #     ddf_label = tf.squeeze(ddf_label)
 #     label_loss_all = tf.stack(tf.reduce_mean(tf.squared_difference(
 #         ddf_label, ddf), axis=[1, 2, 3, 4]), axis=1)
