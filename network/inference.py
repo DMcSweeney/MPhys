@@ -10,8 +10,8 @@ import labelreg.apps as app
 config = helper.ConfigParser(sys.argv, 'inference')
 
 # 1 - images to register
-reader_moving_image, reader_fixed_image = helper.get_data_readers(config['Inference']['dir_moving_image'],
-                                                                  config['Inference']['dir_fixed_image'])
+reader_moving_image, reader_fixed_image, _ = helper.get_data_readers(config['Inference']['dir_moving_image'],
+                                                                     config['Inference']['dir_fixed_image'])
 
 
 # 2 - graph
