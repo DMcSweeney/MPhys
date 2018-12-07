@@ -36,8 +36,8 @@ class LocalNet(BaseNet):
     def __init__(self, ddf_levels=None, **kwargs):
         BaseNet.__init__(self, **kwargs)
         # defaults
-        # self.ddf_levels = [0, 1, 2, 3, 4] if ddf_levels is None else ddf_levels
-        self.ddf_levels = [0, 1] if ddf_levels is None else ddf_levels
+        self.ddf_levels = [0, 1, 2, 3, 4] if ddf_levels is None else ddf_levels
+        # self.ddf_levels = [0, 1] if ddf_levels is None else ddf_levels
         self.num_channel_initial = 32
 
         nc = [int(self.num_channel_initial*(2**i)) for i in range(5)]
