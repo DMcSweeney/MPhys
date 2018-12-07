@@ -121,5 +121,6 @@ RegNet/
 *.tfm
 *.json
 *.JPG
+*.nii
 #Config file
 *.ini
