@@ -79,6 +79,7 @@ saver = tf.train.Saver(max_to_keep=1)
 sess = tf.Session()
 sess.run(tf.global_variables_initializer())
 # Tensorboard abs
+merged_summary = tf.summary.merge_all()
 writer = tf.summary.FileWriter("/hepgpu3-data1/dmcsween/MPhys/NetworkOutputs ")
 writer.add_graph(sess.graph)
 for step in range(config['Train']['total_iterations']):
@@ -101,7 +102,7 @@ for step in range(config['Train']['total_iterations']):
     sess.run(train_op, feed_dict=trainFeed)
     if step in range(0, config['Train']['total_iterations'], config['Train']['freq_info_print']):
         current_time = time.asctime(time.gmtime())
-
+        
         # loss_similarity_train, loss_regulariser_train, dice_train, dist_train = sess.run(
         #     [loss_similarity,
         #      loss_regulariser
@@ -123,6 +124,7 @@ for step in range(config['Train']['total_iterations']):
         # print('  Dice: %s' % dice_train)
         # print('  Distance: %s' % dist_train)
         print('  Image-label indices: %s - %s' % (case_indices, label_indices))
+        s = sess.run(merged_summary , feed_dict= trainfeed)
 
     if step in range(0, config['Train']['total_iterations'], config['Train']['freq_model_save']):
         save_path = saver.save(sess, config['Train']['file_model_save'], write_meta_graph=False)
