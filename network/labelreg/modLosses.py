@@ -44,7 +44,7 @@ def displacement_loss(ddf_label, ddf):
     ms = tf.subtract(ddf_flat, ddf_label_flat)
     rms = tf.abs(ms)
     ddf_error.append(tf.reduce_sum(rms, axis=1))
-    tf.summary.scalar(tf.reduce_mean(ddf_error), "Loss")
+    tf.summary.scalar("Loss", tf.reduce_mean(ddf_error))
     return tf.reduce_mean(ddf_error)
 
 
