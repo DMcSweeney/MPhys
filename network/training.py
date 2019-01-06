@@ -114,7 +114,7 @@ for step in range(config['Train']['total_iterations']):
         #      # dist
         #      ],
         #     feed_dict=trainFeed)
-        loss_similarity_train, loss_regulariser_train = sess.run(
+        loss_similarity_train, loss_train = sess.run(
             [loss_similarity, loss_regulariser], feed_dict=trainFeed)
 
         print('----- Training -----')
@@ -127,8 +127,7 @@ for step in range(config['Train']['total_iterations']):
         # print('  Dice: %s' % dice_train)
         # print('  Distance: %s' % dist_train)
         print('  Image-label indices: %s - %s' % (case_indices, label_indices))
-        loss = tf.summary.scalar("Loss", loss_similarity_train)
-        writer.add_summary(loss, step)
+        writer.add_summary(loss_train, step)
         s = sess.run(merged_summary, feed_dict=trainFeed)
 
     if step in range(0, config['Train']['total_iterations'], config['Train']['freq_model_save']):
