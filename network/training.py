@@ -75,6 +75,7 @@ train_op = tf.train.AdamOptimizer(config['Train']['learning_rate']).minimize(
 num_minibatch = int(reader_ddf_label.num_data/config['Train']['minibatch_size'])
 train_indices = [i for i in range(reader_ddf_label.num_data)]
 
+
 saver = tf.train.Saver(max_to_keep=1)
 sess = tf.Session()
 sess.run(tf.global_variables_initializer())
@@ -83,6 +84,7 @@ merged_summary = tf.summary.merge_all()
 #writer = tf.summary.FileWriter("/hepgpu3-data1/dmcsween/MPhys/NetworkOutputs")
 writer = tf.summary.FileWriter("/hepgpu3-data1/dmcsween/MPhys/NetworkOutputs", sess.graph)
 writer.add_graph(sess.graph)
+
 for step in range(config['Train']['total_iterations']):
 
     if step in range(0, config['Train']['total_iterations'], num_minibatch):
@@ -125,6 +127,8 @@ for step in range(config['Train']['total_iterations']):
         # print('  Dice: %s' % dice_train)
         # print('  Distance: %s' % dist_train)
         print('  Image-label indices: %s - %s' % (case_indices, label_indices))
+        loss = tf.summary.scalar("Loss", loss_similarity_train)
+        writer.add_summary(loss, step)
         s = sess.run(merged_summary, feed_dict=trainFeed)
 
     if step in range(0, config['Train']['total_iterations'], config['Train']['freq_model_save']):
