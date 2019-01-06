@@ -116,7 +116,9 @@ for step in range(config['Train']['total_iterations']):
         #     feed_dict=trainFeed)
         loss_similarity_train, loss_regulariser_train = sess.run(
             [loss_similarity, loss_regulariser], feed_dict=trainFeed)
-        loss = tf.summary.scalar("Loss", loss_similarity)
+        print("Loss Sim:", type(loss_similarity_train))
+        loss = tf.summary.scalar("Loss", loss_similarity_train)
+        print("Loss:", type(loss))
         print('----- Training -----')
         print('Step %d [%s]: Loss=%f (similarity=%f, regulariser=%f)' %
               (step,
