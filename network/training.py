@@ -119,7 +119,7 @@ for step in range(config['Train']['total_iterations']):
         print("Loss Sim:", type(loss_similarity_train))
         loss_val = loss_similarity_train+loss_regulariser_train
         print("Loss_val:", loss_val)
-        loss = tf.Summary(value=[tf.Summary.Value(tag="summary_tag", simple_value=loss_val), ])
+        loss = tf.Summary(value=[tf.Summary.Value(tag="Loss", simple_value=loss_val), ])
         # loss = tf.summary.scalar("Loss", loss_similarity_train)
         print("Loss:", type(loss))
         print('----- Training -----')
