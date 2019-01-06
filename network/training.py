@@ -81,7 +81,7 @@ sess = tf.Session()
 sess.run(tf.global_variables_initializer())
 # Tensorboard abs
 merged_summary = tf.summary.merge_all()
-#writer = tf.summary.FileWriter("/hepgpu3-data1/dmcsween/MPhys/NetworkOutputs")
+# writer = tf.summary.FileWriter("/hepgpu3-data1/dmcsween/MPhys/NetworkOutputs")
 writer = tf.summary.FileWriter("/hepgpu3-data1/dmcsween/MPhys/NetworkOutputs", sess.graph)
 writer.add_graph(sess.graph)
 
@@ -127,7 +127,7 @@ for step in range(config['Train']['total_iterations']):
         # print('  Dice: %s' % dice_train)
         # print('  Distance: %s' % dist_train)
         print('  Image-label indices: %s - %s' % (case_indices, label_indices))
-        loss = tf.summary.scalar("Loss", loss_similarity_train)
+        loss = tf.summary.scalar("Loss", loss_similarity)
         writer.add_summary(loss, step)
         s = sess.run(merged_summary, feed_dict=trainFeed)
 
