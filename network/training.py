@@ -121,9 +121,9 @@ for step in range(config['Train']['total_iterations']):
         print('Step %d [%s]: Loss=%f (similarity=%f, regulariser=%f)' %
               (step,
                current_time,
-               loss_similarity_train+loss_regulariser_train,
+               loss_similarity_train+loss_train,
                1-loss_similarity_train,
-               loss_regulariser_train))
+               loss_train))
         # print('  Dice: %s' % dice_train)
         # print('  Distance: %s' % dist_train)
         print('  Image-label indices: %s - %s' % (case_indices, label_indices))
