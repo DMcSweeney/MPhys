@@ -10,13 +10,12 @@ def build_loss(similarity_type, similarity_scales, regulariser_type, regulariser
     # label_similarity = multi_scale_loss(
     #     label_fixed, label_moving, similarity_type.lower(), similarity_scales)
     label_similarity = displacement_loss(ddf_label, ddf)
-    loss = tf.summary.scalar("Loss", label_similarity)
     if network_type.lower() == 'global':
         ddf_regularisation = tf.constant(0.0)
     else:
         ddf_regularisation = tf.reduce_mean(local_displacement_energy(
             ddf, regulariser_type, regulariser_weight))
-    return tf.reduce_mean(label_similarity), loss
+    return tf.reduce_mean(label_similarity), ddf_regularisation
 
 # Loss function to calculate rms error on ddf
 
