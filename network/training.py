@@ -81,7 +81,7 @@ sess.run(tf.global_variables_initializer())
 # Tensorboard abs
 merged_summary = tf.summary.merge_all()
 #writer = tf.summary.FileWriter("/hepgpu3-data1/dmcsween/MPhys/NetworkOutputs")
-writer = tf.train.SummaryWriter("/hepgpu3-data1/dmcsween/MPhys/NetworkOutputs", sess.graph)
+writer = tf.summary.FileWriter("/hepgpu3-data1/dmcsween/MPhys/NetworkOutputs", sess.graph)
 writer.add_graph(sess.graph)
 for step in range(config['Train']['total_iterations']):
 
