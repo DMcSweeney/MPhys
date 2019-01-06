@@ -80,7 +80,7 @@ saver = tf.train.Saver(max_to_keep=1)
 sess = tf.Session()
 sess.run(tf.global_variables_initializer())
 # Tensorboard abs
-merged_summary = tf.summary.merge_all()
+# merged_summary = tf.summary.merge_all()
 # writer = tf.summary.FileWriter("/hepgpu3-data1/dmcsween/MPhys/NetworkOutputs")
 writer = tf.summary.FileWriter("/hepgpu3-data1/dmcsween/MPhys/NetworkOutputs", sess.graph)
 writer.add_graph(sess.graph)
@@ -116,7 +116,7 @@ for step in range(config['Train']['total_iterations']):
         #     feed_dict=trainFeed)
         loss_similarity_train, loss_regulariser_train = sess.run(
             [loss_similarity, loss_regulariser], feed_dict=trainFeed)
-
+        loss = tf.summary.scalar("Loss", loss_similarity)
         print('----- Training -----')
         print('Step %d [%s]: Loss=%f (similarity=%f, regulariser=%f)' %
               (step,
@@ -127,9 +127,8 @@ for step in range(config['Train']['total_iterations']):
         # print('  Dice: %s' % dice_train)
         # print('  Distance: %s' % dist_train)
         print('  Image-label indices: %s - %s' % (case_indices, label_indices))
-        loss = tf.summary.scalar("Loss", loss_similarity)
-        writer.add_summary(loss, step)
-        s = sess.run(merged_summary, feed_dict=trainFeed)
+        writer.add_summary(loss, step).eval()
+        #s = sess.run(merged_summary, feed_dict=trainFeed)
 
     if step in range(0, config['Train']['total_iterations'], config['Train']['freq_model_save']):
         save_path = saver.save(sess, config['Train']['file_model_save'], write_meta_graph=False)
