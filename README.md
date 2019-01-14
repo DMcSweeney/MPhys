@@ -5,6 +5,9 @@ Accurate and fast image registration using convolutional neural networks for hea
 # TODO
 
 #### _Aims_
+Apply DVFs from database to visualise registration<br>
+Train CNN using available DVFs as labels<br>
+Perform image registration on unseen data to produce high-quality DVFs<br>
 
 ### Weekly Progress
 [Week 1](https://github.com/DMcSweeney/MPhys/tree/master/Week_1 "Week 1")<br>
