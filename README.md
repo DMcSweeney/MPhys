@@ -50,4 +50,5 @@ Segmentation from Sparse Annotation](https://lmb.informatik.uni-freiburg.de/Publ
 
 ### Requirements
 Python version: 3.6.6<br>
-Add other libraries used.<br>
+bash 4.4.19, elastix 4.9, pydicom 1.2.1, SimpleITK
+1.1.0, pyelastix 1.1, 3D Slicer 4.10 and SimpleElastix 1.1.
