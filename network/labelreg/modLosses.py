@@ -35,7 +35,7 @@ def build_loss(similarity_type, similarity_scales, regulariser_type, regulariser
 #     return ddf_error
 
 def displacement_loss(ddf_label, ddf):
-    # Tom's Loss
+    # DVF Loss
     ddf_label = tf.squeeze(ddf_label)
     # ddf_flat[0] = batch size, ddf_flat[1] = size
     ddf_flat = tf.contrib.layers.flatten(ddf)
