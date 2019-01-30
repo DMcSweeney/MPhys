@@ -5,6 +5,9 @@ Accurate and fast image registration using convolutional neural networks for hea
 # TODO
 
 #### _Aims_
+Apply DVFs from database to visualise registration<br>
+Train CNN using available DVFs as labels<br>
+Perform image registration on unseen data to produce high-quality DVFs<br>
 
 ### Weekly Progress
 [Week 1](https://github.com/DMcSweeney/MPhys/tree/master/Week_1 "Week 1")<br>
@@ -45,9 +48,11 @@ Segmentation from Sparse Annotation](https://lmb.informatik.uni-freiburg.de/Publ
 [Elastix](http://elastix.isi.uu.nl/)<br>
 [NiftyNet](https://niftynet.readthedocs.io/en/dev/)<br>
 [RegNet](https://github.com/hsokooti/RegNet)<br>
-
 ---
-
+##### _Reports_
+[Donal Report](https://github.com/DMcSweeney/MPhys/tree/master/Report.pdf)
+---
 ### Requirements
 Python version: 3.6.6<br>
-Add other libraries used.<br>
+bash 4.4.19, elastix 4.9, pydicom 1.2.1, SimpleITK
+1.1.0, pyelastix 1.1, 3D Slicer 4.10 and SimpleElastix 1.1.

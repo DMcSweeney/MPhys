@@ -49,6 +49,7 @@ def build_loss(similarity_type, similarity_scales, regulariser_type, regulariser
 
 def displacement_loss(ddf_label, ddf):
     # Donal Loss
+
     ddf_label = tf.squeeze(ddf_label)
     loss = tf.reduce_mean(tf.squared_difference(ddf_label, ddf))
     return loss
