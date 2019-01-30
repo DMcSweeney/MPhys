@@ -34,17 +34,24 @@ def build_loss(similarity_type, similarity_scales, regulariser_type, regulariser
 #     ddf_error = tf.reduce_mean(tf.sqrt(ddf_error_x**2 + ddf_error_y**2 + ddf_error_z**2))
 #     return ddf_error
 
+# def displacement_loss(ddf_label, ddf):
+#     # Tom's Loss
+#     ddf_label = tf.squeeze(ddf_label)
+#     # ddf_flat[0] = batch size, ddf_flat[1] = size
+#     ddf_flat = tf.contrib.layers.flatten(ddf)
+#     ddf_label_flat = tf.contrib.layers.flatten(ddf_label)
+#     ddf_error = []
+#     ms = tf.subtract(ddf_flat, ddf_label_flat)
+#     rms = tf.abs(ms)
+#     ddf_error.append(tf.reduce_sum(rms, axis=1))
+#     return tf.reduce_mean(ddf_error)
+
+
 def displacement_loss(ddf_label, ddf):
-    # Tom's Loss
+    # Donal Loss
     ddf_label = tf.squeeze(ddf_label)
-    # ddf_flat[0] = batch size, ddf_flat[1] = size
-    ddf_flat = tf.contrib.layers.flatten(ddf)
-    ddf_label_flat = tf.contrib.layers.flatten(ddf_label)
-    ddf_error = []
-    ms = tf.subtract(ddf_flat, ddf_label_flat)
-    rms = tf.abs(ms)
-    ddf_error.append(tf.reduce_sum(rms, axis=1))
-    return tf.reduce_mean(ddf_error)
+    loss = tf.reduce_mean(tf.squared_difference(ddf_label, ddf))
+    return loss
 
 
 # def displacement_loss(ddf_label, ddf):
