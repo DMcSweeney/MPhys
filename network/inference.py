@@ -36,6 +36,7 @@ saver.restore(sess, config['Inference']['file_model_saved'])
 testFeed = {ph_moving_image: reader_moving_image.get_data(),
             ph_fixed_image: reader_fixed_image.get_data()}
 ddf = sess.run(reg_net.ddf, feed_dict=testFeed)
+print("Shape:", ddf.shape)
 helper.write_images(ddf, config['Inference']['dir_save'], 'ddf')
 
 # warp the test images
