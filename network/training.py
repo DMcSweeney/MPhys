@@ -13,13 +13,17 @@ import labelreg.modLosses as loss
 # 0 - get configs
 config = helper.ConfigParser(sys.argv, 'training')
 
-# 1 - data
+# 1 - Training data
 reader_moving_image, reader_fixed_image, reader_ddf_label = helper.get_data_readers(
     config['Data']['dir_moving_image'],
     config['Data']['dir_fixed_image'],
     config['Data']['ddf_label'])
 
-
+# Validation data
+reader_moving_image_valid, reader_fixed_image_valid, reader_ddf_label_valid = helper.get_data_readers(
+    config['Validation']['dir_moving_image'],
+    config['Validation']['dir_fixed_image'],
+    config['Validation']['ddf_label'])
 # 2 - graph -----DATA AUGMENTATION
 
 ph_moving_image = tf.placeholder(
@@ -72,9 +76,12 @@ train_op = tf.train.AdamOptimizer(config['Train']['learning_rate']).minimize(
 # dist = util.compute_centroid_distance(warped_moving_label, input_fixed_label)
 
 # 3 - training
-num_minibatch = int(reader_ddf_label.num_data/config['Train']['minibatch_size'])
+num_minibatch_test = int(reader_ddf_label.num_data/config['Train']['minibatch_size'])
 train_indices = [i for i in range(reader_ddf_label.num_data)]
 
+# Validation
+num_minibatch_valid = int(reader_ddf_label_valid.num_data/config['Train']['minibatch_size'])
+valid_indices = [i for i in range(reader_ddf_label_valid.num_data)]
 
 saver = tf.train.Saver(max_to_keep=1)
 sess = tf.Session()
@@ -87,12 +94,18 @@ writer.add_graph(sess.graph)
 
 for step in range(config['Train']['total_iterations']):
 
-    if step in range(0, config['Train']['total_iterations'], num_minibatch):
+    if step in range(0, config['Train']['total_iterations'], num_minibatch_test):
+        # Train
         random.shuffle(train_indices)
-    minibatch_idx = step % num_minibatch
+    minibatch_idx = step % num_minibatch_test
     case_indices = train_indices[
         minibatch_idx*config['Train']['minibatch_size']:(minibatch_idx+1)*config['Train']['minibatch_size']]
     label_indices = [random.randrange(reader_ddf_label.num_labels[i]) for i in case_indices]
+
+    case_indices_valid = train_indices[
+        minibatch_idx*config['Train']['minibatch_size']:(minibatch_idx+1)*config['Train']['minibatch_size']]
+    label_indices_valid = [random.randrange(
+        reader_ddf_label_valid.num_labels[i]) for i in case_indices_valid]
 
     trainFeed = {ph_moving_image: reader_moving_image.get_data(case_indices),
                  ph_fixed_image: reader_fixed_image.get_data(case_indices),
@@ -101,9 +114,14 @@ for step in range(config['Train']['total_iterations']):
                  # ph_moving_affine: helper.random_transform_generator(config['Train']['minibatch_size']),
                  # ph_fixed_affine: helper.random_transform_generator(config['Train']['minibatch_size'])
                  }
+    validFeed = {ph_moving_image: reader_moving_image_valid.get_data(case_indices_valid),
+                 ph_fixed_image: reader_fixed_image_valid.get_data(case_indices_valid),
+                 ph_ddf_label: reader_ddf_label.get_data(case_indices_valid, label_indices_valid)
+                 }
 
     sess.run(train_op, feed_dict=trainFeed)
     if step in range(0, config['Train']['total_iterations'], config['Train']['freq_info_print']):
+        # Print info on screen
         current_time = time.asctime(time.gmtime())
 
         # loss_similarity_train, loss_regulariser_train, dice_train, dist_train = sess.run(
@@ -117,11 +135,12 @@ for step in range(config['Train']['total_iterations']):
         loss_similarity_train, loss_regulariser_train = sess.run(
             [loss_similarity, loss_regulariser], feed_dict=trainFeed)
         print("Loss Sim:", type(loss_similarity_train))
-        loss_val = loss_similarity_train+loss_regulariser_train
-        print("Loss_val:", loss_val)
-        loss = tf.Summary(value=[tf.Summary.Value(tag="Loss", simple_value=loss_val), ])
+        training_loss_val = loss_similarity_train+loss_regulariser_train
+        print("Loss_val:", training_loss_val)
+        training_loss = tf.Summary(value=[tf.Summary.Value(
+            tag="Training_Loss", simple_value=training_loss_val), ])
         # loss = tf.summary.scalar("Loss", loss_similarity_train)
-        print("Loss:", type(loss))
+        print("Loss:", type(training_loss))
         print('----- Training -----')
         print('Step %d [%s]: Loss=%f (similarity=%f, regulariser=%f)' %
               (step,
@@ -132,9 +151,19 @@ for step in range(config['Train']['total_iterations']):
         # print('  Dice: %s' % dice_train)
         # print('  Distance: %s' % dist_train)
         print('  Image-label indices: %s - %s' % (case_indices, label_indices))
-        writer.add_summary(loss, step)
+        writer.add_summary(training_loss, step)
         #s = sess.run(merged_summary, feed_dict=trainFeed)
 
+    if step in range(0, config['Train']['total iterations'], config['Validation']['freq_validation']):
+        loss_similarity_valid, loss_regulariser_valid = sess.run(
+            [loss_similarity, loss_regulariser], feed_dict=validFeed)
+        valid_loss_val = loss_similarity_valid + loss_regulariser_valid
+        print("Valid Loss:", valid_loss_val)
+        valid_loss = tf.Summary(value=[tf.Summary.Value(
+            tag="Valid_Loss", simple_value=valid_loss_val), ])
+        writer.add_summary(valid_loss)
+
     if step in range(0, config['Train']['total_iterations'], config['Train']['freq_model_save']):
+        # Save information
         save_path = saver.save(sess, config['Train']['file_model_save'], write_meta_graph=False)
         print("Model saved in: %s" % save_path)
