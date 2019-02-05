@@ -163,7 +163,7 @@ for step in range(config['Train']['total_iterations']):
         print("Valid Loss:", valid_loss_val)
         valid_loss = tf.Summary(value=[tf.Summary.Value(
             tag="Valid_Loss", simple_value=valid_loss_val), ])
-        writer.add_summary(valid_loss)
+        writer.add_summary(valid_loss, step)
 
     if step in range(0, config['Train']['total_iterations'], config['Train']['freq_model_save']):
         # Save information
