@@ -154,7 +154,7 @@ for step in range(config['Train']['total_iterations']):
         writer.add_summary(training_loss, step)
         #s = sess.run(merged_summary, feed_dict=trainFeed)
 
-    if step in range(0, config['Train']['total iterations'], config['Validation']['freq_validation']):
+    if step in range(0, config['Train']['total_iterations'], config['Validation']['freq_validation']):
         loss_similarity_valid, loss_regulariser_valid = sess.run(
             [loss_similarity, loss_regulariser], feed_dict=validFeed)
         valid_loss_val = loss_similarity_valid + loss_regulariser_valid
