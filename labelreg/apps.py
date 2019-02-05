@@ -1,7 +1,6 @@
 """
 This is a tutorial example.
 """
-
 import tensorflow as tf
 import labelreg.utils as util
 

@@ -112,7 +112,6 @@ Transform_Images/
 Transform_Fields/
 NiftyPatients/
 RegNet/
-labelreg/
 
 #Generated files
 *.mha
