@@ -102,7 +102,7 @@ for step in range(config['Train']['total_iterations']):
         minibatch_idx*config['Train']['minibatch_size']:(minibatch_idx+1)*config['Train']['minibatch_size']]
     label_indices = [random.randrange(reader_ddf_label.num_labels[i]) for i in case_indices]
 
-    case_indices_valid = train_indices[
+    case_indices_valid = valid_indices[
         minibatch_idx*config['Train']['minibatch_size']:(minibatch_idx+1)*config['Train']['minibatch_size']]
     label_indices_valid = [random.randrange(
         reader_ddf_label_valid.num_labels[i]) for i in case_indices_valid]
