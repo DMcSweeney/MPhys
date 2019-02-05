@@ -7,8 +7,8 @@ import SimpleITK as sitk
 import utils as util
 import helpers as helper
 
-moving_path = 'E:\\MPhys\\DataSplit\\ValidationSet\\PET\\HN-CHUM-001'
-ddf_path = 'E:\\MPhys\\DataSplit\\ValidationSet\\DVF\\HN-CHUM-001'
+moving_path = 'E:\\MPhys\\DataSplit\\ValidationSet\\PET'
+ddf_path = 'E:\\MPhys\\DataSplit\\ValidationSet\\DVF'
 save_path = 'E:\\MPhys'
 
 
@@ -21,13 +21,11 @@ def warp_volumes_by_ddf(input_, ddf):
 
 
 def main(argv=None):
-    moving_array = sitk.GetArrayFromImage(sitk.ReadImage(moving_path))
-    ddf_array = sitk.GetArrayFromImage(sitk.ReadImage(ddf_path))
+    moving_image, ddf, _ = helper.get_data_readers(moving_path, ddf_path)
     # Expand dims for batches
-    moving_array = np.expand_dims(moving_array, axis=0)
-    ddf_array = np.expand_dims(ddf_array, axis=0)
-    warped_image = warp_volumes_by_ddf(moving_array, ddf_array)
-    helper.write_images(warped_images, save_path, 'warped_image')
+    print(moving_image.get_data().shape)
+    warped_image = warp_volumes_by_ddf(moving_image.get_data(), ddf.get_data())
+    helper.write_images(warped_image, save_path, 'warped_image')
 
 
 if __name__ == '__main__':
