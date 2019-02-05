@@ -80,7 +80,7 @@ num_minibatch_test = int(reader_ddf_label.num_data/config['Train']['minibatch_si
 train_indices = [i for i in range(reader_ddf_label.num_data)]
 
 # Validation
-num_minibatch_valid = int(reader_ddf_label_valid.num_data/config['Train']['minibatch_size'])
+num_minibatch_valid = int(reader_ddf_label_valid.num_data/config['Validation']['minibatch_size'])
 valid_indices = [i for i in range(reader_ddf_label_valid.num_data)]
 
 saver = tf.train.Saver(max_to_keep=1)
@@ -97,13 +97,15 @@ for step in range(config['Train']['total_iterations']):
     if step in range(0, config['Train']['total_iterations'], num_minibatch_test):
         # Train
         random.shuffle(train_indices)
-    minibatch_idx = step % num_minibatch_test
+        random.shuffle(valid_indices)
+    test_minibatch_idx = step % num_minibatch_test
     case_indices = train_indices[
-        minibatch_idx*config['Train']['minibatch_size']:(minibatch_idx+1)*config['Train']['minibatch_size']]
+        test_minibatch_idx*config['Train']['minibatch_size']:(test_minibatch_idx+1)*config['Train']['minibatch_size']]
     label_indices = [random.randrange(reader_ddf_label.num_labels[i]) for i in case_indices]
 
+    valid_minibatch_idx = step % num_minibatch_valid
     case_indices_valid = valid_indices[
-        minibatch_idx*config['Train']['minibatch_size']:(minibatch_idx+1)*config['Train']['minibatch_size']]
+        valid_minibatch_idx*config['Validation']['minibatch_size']:(valid_minibatch_idx+1)*config['Validation']['minibatch_size']]
     label_indices_valid = [random.randrange(
         reader_ddf_label_valid.num_labels[i]) for i in case_indices_valid]
 
