@@ -1,17 +1,23 @@
 import tensorflow as tf
 import sys
+import os
 
 import labelreg.helpers as helper
 import labelreg.networks as network
 import labelreg.apps as app
 
 
+
+
 # 0 - get configs
+os.environ["CUDA_VISIBLE_DEVICES"]="-1"
 config = helper.ConfigParser(sys.argv, 'inference')
 
 # 1 - images to register
 reader_moving_image, reader_fixed_image, _, _ = helper.get_data_readers(config['Inference']['dir_moving_image'],
                                                                         config['Inference']['dir_fixed_image'])
+
+
 
 # 2 - graph
 # network for predicting ddf only
@@ -35,7 +41,7 @@ saver.restore(sess, config['Inference']['file_model_saved'])
 testFeed = {ph_moving_image: reader_moving_image.get_data(),
             ph_fixed_image: reader_fixed_image.get_data()}
 ddf = sess.run(reg_net.ddf, feed_dict=testFeed)
-helper.write_images(ddf, config['Inference']['dir_save'], 'ddf')
+helper.write_images_mod(reader_moving_image, ddf, config['Inference']['dir_save'], 'ddf')
 
 # warp the test images
 warped_images = app.warp_volumes_by_ddf(reader_moving_image.get_data(), ddf)

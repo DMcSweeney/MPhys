@@ -41,6 +41,8 @@ class DataReader:
         self.files = os.listdir(dir_name)
         self.files.sort()
         self.num_data = len(self.files)
+        self.getaffine = [self.file_objects[i].affine
+                            for i in range(self.num_data)]
 
         self.file_objects = [nib.load(os.path.join(dir_name, self.files[i]))
                              for i in range(self.num_data)]
@@ -126,6 +128,15 @@ def write_images(input_, file_path=None, file_prefix=''):
                                file_prefix + '%s.nii' % idx))
          for idx in range(batch_size)]
 
+
+def write_images_mod(affine_moving_image,input_, file_path=None, file_prefix=''):
+    if file_path is not None:
+        batch_size = input_.shape[0]
+        affine = reader_moving_image.getaffine
+        [nib.save(nib.Nifti1Image(input_[idx, ...], affine),
+                  os.path.join(file_path,
+                               file_prefix + '%s.nii' % idx))
+         for idx in range(batch_size)]
 
 class ConfigParser:
     def __init__(self, argv='', config_type='all'):
