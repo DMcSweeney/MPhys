@@ -203,6 +203,10 @@ class ConfigParser:
                  'freq_model_save': 500,
                  'file_model_save': os.path.join(home_dir, 'data/model.ckpt')}
 
+        validation = {'dir_moving_image': os.path.join(home_dir, 'data/test/mr_images'),
+                      'dir_fixed_image': os.path.join(home_dir, 'data/test/us_images'),
+                      'ddf_label': os.path.join(home_dir, 'data/test/mr_labels')}
+
         inference = {'file_model_saved': train['file_model_save'],
                      'dir_moving_image': os.path.join(home_dir, 'data/test/mr_images'),
                      'dir_fixed_image': os.path.join(home_dir, 'data/test/us_images'),
@@ -217,7 +221,7 @@ class ConfigParser:
             config = {'Network': network, 'Inference': inference}
         else:
             config = {'Data': data, 'Network': network,
-                      'Loss': loss, 'Train': train, 'Inference': inference}
+                      'Loss': loss, 'Train': train, 'Validation': validation, 'Inference': inference}
 
         return config
 
