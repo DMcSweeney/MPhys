@@ -216,7 +216,8 @@ class ConfigParser:
                      }
 
         if self.config_type == 'training':
-            config = {'Data': data, 'Network': network, 'Loss': loss, 'Train': train}
+            config = {'Data': data, 'Network': network, 'Loss': loss,
+                      'Train': train, 'Validation': validation}
         elif self.config_type == 'inference':
             config = {'Network': network, 'Inference': inference}
         else:
