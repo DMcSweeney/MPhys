@@ -44,6 +44,10 @@ class DataReader:
 
         self.file_objects = [nib.load(os.path.join(dir_name, self.files[i]))
                              for i in range(self.num_data)]
+
+        self.getaffine = [self.file_objects[i].affine
+                            for i in range(self.num_data)]
+
         self.num_labels = [self.file_objects[i].shape[3] if len(self.file_objects[i].shape) == 4
                            else 1
                            for i in range(self.num_data)]
@@ -122,6 +126,15 @@ def write_images(input_, file_path=None, file_prefix=''):
     if file_path is not None:
         batch_size = input_.shape[0]
         affine = [[1, 0, 0, 0], [0, 1, 0, 0], [0, 0, 1, 0], [0, 0, 0, 0]]
+        [nib.save(nib.Nifti1Image(input_[idx, ...], affine),
+                  os.path.join(file_path,
+                               file_prefix + '%s.nii' % idx))
+         for idx in range(batch_size)]
+
+def mod_write_images(input_, file_path=None, file_prefix=''):
+    if file_path is not None:
+        batch_size = input_.shape[0]
+        affine = reader_moving_image.getaffine
         [nib.save(nib.Nifti1Image(input_[idx, ...], affine),
                   os.path.join(file_path,
                                file_prefix + '%s.nii' % idx))
