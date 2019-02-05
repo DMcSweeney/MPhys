@@ -205,7 +205,8 @@ class ConfigParser:
 
         validation = {'dir_moving_image': os.path.join(home_dir, 'data/test/mr_images'),
                       'dir_fixed_image': os.path.join(home_dir, 'data/test/us_images'),
-                      'ddf_label': os.path.join(home_dir, 'data/test/mr_labels')}
+                      'ddf_label': os.path.join(home_dir, 'data/test/mr_labels'),
+                      'freq_validation': 250}
 
         inference = {'file_model_saved': train['file_model_save'],
                      'dir_moving_image': os.path.join(home_dir, 'data/test/mr_images'),
