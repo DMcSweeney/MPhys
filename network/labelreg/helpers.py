@@ -135,7 +135,8 @@ def write_images(input_, file_path=None, file_prefix=''):
 def mod_write_images(input_, base_affine, file_path=None, file_prefix=''):
     if file_path is not None:
         batch_size = input_.shape[0]
-        affine = base_affine.getaffine
+        #affine = [base_affine[i].getaffine for i in range(base_affine.num_data)]
+        affine = [[10, 0, 0, 0], [0, 10, 0, 0], [0, 0, 10, 0], [0, 0, 0, 0]]
         [nib.save(nib.Nifti1Image(input_[idx, ...], affine),
                   os.path.join(file_path,
                                file_prefix + '%s.nii' % idx))
