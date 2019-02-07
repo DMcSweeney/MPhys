@@ -53,6 +53,7 @@ class LocalNet(BaseNet):
         min_level = min(self.ddf_levels)
         # hm += [layer.upsample_resnet_block(hm[0], hc3, nc[4], nc[3],
         # name = 'local_up_3')] if min_level < 4 else []
+        # Change hm[idx] to start above
         hm += [layer.upsample_resnet_block(hm[0], hc2, nc[3], nc[2],
                                            name='local_up_2')] if min_level < 3 else []
         hm += [layer.upsample_resnet_block(hm[1], hc1, nc[2], nc[1],
@@ -60,10 +61,12 @@ class LocalNet(BaseNet):
         hm += [layer.upsample_resnet_block(hm[2], hc0, nc[1], nc[0],
                                            name='local_up_0')] if min_level < 1 else []
 
-        self.ddf = tf.reduce_sum(tf.stack([layer.ddf_summand(hm[4-idx], nc[idx], self.image_size, name='sum_%d' % idx)
+        # self.ddf = tf.reduce_sum(tf.stack([layer.ddf_summand(hm[4-idx], nc[idx], self.image_size, name='sum_%d' % idx)
+        #                                   for idx in self.ddf_levels],
+        #                                  axis=5), axis=5)
+        self.ddf = tf.reduce_sum(tf.stack([layer.ddf_summand(hm[3-idx], nc[idx], self.image_size, name='sum_%d' % idx)
                                            for idx in self.ddf_levels],
                                           axis=5), axis=5)
-
         self.grid_warped = self.grid_ref + self.ddf
 
 
