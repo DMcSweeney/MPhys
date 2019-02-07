@@ -53,11 +53,11 @@ class LocalNet(BaseNet):
         min_level = min(self.ddf_levels)
         # hm += [layer.upsample_resnet_block(hm[0], hc3, nc[4], nc[3],
         # name = 'local_up_3')] if min_level < 4 else []
-        hm += [layer.upsample_resnet_block(hm[1], hc2, nc[3], nc[2],
+        hm += [layer.upsample_resnet_block(hm[0], hc2, nc[3], nc[2],
                                            name='local_up_2')] if min_level < 3 else []
-        hm += [layer.upsample_resnet_block(hm[2], hc1, nc[2], nc[1],
+        hm += [layer.upsample_resnet_block(hm[1], hc1, nc[2], nc[1],
                                            name='local_up_1')] if min_level < 2 else []
-        hm += [layer.upsample_resnet_block(hm[3], hc0, nc[1], nc[0],
+        hm += [layer.upsample_resnet_block(hm[2], hc0, nc[1], nc[0],
                                            name='local_up_0')] if min_level < 1 else []
 
         self.ddf = tf.reduce_sum(tf.stack([layer.ddf_summand(hm[4-idx], nc[idx], self.image_size, name='sum_%d' % idx)
