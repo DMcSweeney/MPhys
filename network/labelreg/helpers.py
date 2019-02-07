@@ -125,7 +125,7 @@ def get_padded_shape(size, stride):
 def write_images(input_, file_path=None, file_prefix=''):
     if file_path is not None:
         batch_size = input_.shape[0]
-        affine = [[1, 0, 0, 0], [0, 1, 0, 0], [0, 0, 1, 0], [0, 0, 0, 0]]
+        affine = [[-8, 0, 0, 260], [0, -8, 0, 220], [0, 0, 4, 130], [0, 0, 0, 1]]
         [nib.save(nib.Nifti1Image(input_[idx, ...], affine),
                   os.path.join(file_path,
                                file_prefix + '%s.nii' % idx))
