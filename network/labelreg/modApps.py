@@ -2,8 +2,6 @@
 Modified script to tet warp volumes function
 """
 import tensorflow as tf
-import numpy as np
-import SimpleITK as sitk
 import utils as util
 import helpers as helper
 

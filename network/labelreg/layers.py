@@ -47,6 +47,7 @@ def downsample_resnet_block(input_, ch_in, ch_out, k_conv0=None, use_pooling=Tru
         k_conv0 = [3, 3, 3]
     strides1 = [1, 1, 1, 1, 1]
     strides2 = [1, 2, 2, 2, 1]
+    # Give name to this layer of graph with tf.variable_scope
     with tf.variable_scope(name):
         h0 = conv3_block(input_, ch_in, ch_out, k_conv0, name='W0')
         r1 = conv3_block(h0, ch_out, ch_out, name='WR1')
