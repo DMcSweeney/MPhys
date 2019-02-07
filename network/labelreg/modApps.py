@@ -5,9 +5,9 @@ import tensorflow as tf
 import utils as util
 import helpers as helper
 
-moving_path = 'E:\\MPhys\\DataSplit\\ValidationSet\\PET'
-ddf_path = 'E:\\MPhys\\DataSplit\\ValidationSet\\DVF'
-save_path = 'E:\\MPhys'
+moving_path = 'D:\\Mphys\\Nifty\\PET'
+ddf_path = 'D:\\Mphys\\Nifty\\DVF'
+save_path = 'D:\\MPhys'
 
 
 def warp_volumes_by_ddf(input_, ddf):
@@ -23,7 +23,7 @@ def main(argv=None):
     # Expand dims for batches
     print(moving_image.get_data().shape)
     warped_image = warp_volumes_by_ddf(moving_image.get_data(), ddf.get_data())
-    helper.write_images(warped_image, save_path, 'warped_image')
+    helper.mod_write_images(warped_image, save_path, 'warped_image')
 
 
 if __name__ == '__main__':
