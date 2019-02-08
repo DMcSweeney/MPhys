@@ -38,11 +38,11 @@ testFeed = {ph_moving_image: reader_moving_image.get_data(),
 
 ddf = sess.run(reg_net.ddf, feed_dict=testFeed)
 print("Shape:", ddf.shape)
-helper.write_images(ddf, reader_moving_image, config['Inference']['dir_save'], 'ddf')
+helper.write_images(ddf, config['Inference']['dir_save'], 'ddf')
 
 # warp the test images
 warped_images = app.warp_volumes_by_ddf(reader_moving_image.get_data(), ddf)
-helper.write_images(warped_images, reader_moving_image, config['Inference']
+helper.write_images(warped_images, config['Inference']
                     ['dir_save'], 'warped_image')
 
 # # warp test labels of gland segmentation, i.e. label_indices=0
