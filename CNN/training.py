@@ -14,11 +14,11 @@ PETList = []
 for filename in glob.glob('D:\\Mphys\\Nifty\\PET\\*.nii'):
     inputPET = nib.load(filename)
     inputPETNumpy = np.array(inputPET.dataobj)
-    PETList_TF = tf.convert_to_tensor(inputPETNumpy, dtype=tf.float32)
+    PETList.append(inputPETNumpy)
+    PETArray = np.asarray(PETList)
 
-    PETList.append(PETList_TF)
 
-print(PETList)
+print(PETArray.shape)
 
 
 PCTList = []
@@ -26,10 +26,11 @@ PCTList = []
 for filename in glob.glob('D:\\Mphys\\Nifty\\PCT\\*.nii'):
     inputPCT = nib.load(filename)
     inputPCTNumpy = np.array(inputPCT.dataobj)
-    PCTList_TF = tf.convert_to_tensor(inputPCTNumpy, dtype=tf.float32)
-    PCTList.append(PCTList_TF)
+    PCTList.append(inputPCTNumpy)
+    PCTArray = np.asarray(PCTList)
 
-print(PCTList)
+
+print(PCTArray.shape)
 
 
 DVFList = []
@@ -38,6 +39,9 @@ for filename in glob.glob('D:\\Mphys\\Nifty\\DVF\\*.nii'):
     inputDVF = nib.load(filename)
     inputDVFNumpy = np.array(inputDVF.dataobj)
     DVFList.append(inputDVFNumpy)
+    DVFArray = np.asarray(DVFList)
+
+print(DVFArray.shape)
 
 
 
