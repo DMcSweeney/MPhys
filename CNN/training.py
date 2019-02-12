@@ -70,10 +70,10 @@ def train():
 
     print(model.summary())
     model.compile(optimizer='Adam', loss='mean_squared_error', metrics=["accuracy"])
-    model.fit([train_fixed, train_moving], [train_dvf], epochs=50, batch_size=24, verbose=1)
+    model.fit([train_fixed, train_moving], [train_dvf], epochs=50, batch_size=4, verbose=1)
     model.save('model.h5')
     accuracy = model.evaluate(x=[validation_fixed, validation_moving],
-                              y=validation_dvf, batch_size=24)
+                              y=validation_dvf, batch_size=4)
     print("Accuracy:", accuracy[1])
 
 
