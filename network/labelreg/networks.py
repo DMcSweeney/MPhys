@@ -60,7 +60,7 @@ class LocalNet(BaseNet):
         hm += [layer.upsample_resnet_block(hm[1], hc0, nc[1], nc[0],
                                            name='local_up_0')] if min_level < 1 else []
 
-        self.ddf = tf.reduce_sum(tf.stack([layer.ddf_summand(hm[4-idx], nc[idx], self.image_size, name='sum_%d' % idx)
+        self.ddf = tf.reduce_sum(tf.stack([layer.ddf_summand(hm[2-idx], nc[idx], self.image_size, name='sum_%d' % idx)
                                            for idx in self.ddf_levels],
                                           axis=5), axis=5)
 
