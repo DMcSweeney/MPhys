@@ -6,6 +6,7 @@ import glob
 import os
 import numpy as np
 import nibabel as nib
+import tensorflow as tf
 
 # Load DATA
 PETList = []
@@ -13,18 +14,23 @@ PETList = []
 for filename in glob.glob('D:\\Mphys\\Nifty\\PET\\*.nii'):
     inputPET = nib.load(filename)
     inputPETNumpy = np.array(inputPET.dataobj)
-    PETList.append(inputPETNumpy)
+    PETList_TF = tf.convert_to_tensor(inputPETNumpy, dtype=tf.float32)
+
+    PETList.append(PETList_TF)
 
 print(PETList)
+
 
 PCTList = []
 
 for filename in glob.glob('D:\\Mphys\\Nifty\\PCT\\*.nii'):
     inputPCT = nib.load(filename)
     inputPCTNumpy = np.array(inputPCT.dataobj)
-    PCTList.append(inputPCTNumpy)
+    PCTList_TF = tf.convert_to_tensor(inputPCTNumpy, dtype=tf.float32)
+    PCTList.append(PCTList_TF)
 
 print(PCTList)
+
 
 DVFList = []
 
@@ -33,8 +39,8 @@ for filename in glob.glob('D:\\Mphys\\Nifty\\DVF\\*.nii'):
     inputDVFNumpy = np.array(inputDVF.dataobj)
     DVFList.append(inputDVFNumpy)
 
-print(DVFList)
-'''
+
+
 # CNN Structure
 fixed_image = Input(shape=image_shape)  # Change shape
 moving_image = Input(shape=image_shape)
@@ -65,4 +71,3 @@ merge1 = concatenate([x1, y1], axis=-1)
 # Output DVF + Loss calc
 model = Model(input=[fixed_image, moving_image], outputs=dvf)
 # Train
-'''
