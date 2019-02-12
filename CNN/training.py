@@ -2,11 +2,39 @@
 
 from keras.layers import Input, Conv3D, MaxPooling3D, concatenate, UpSampling3D, Conv3DTranspose
 from keras.models import Model
-
+import glob
+import os
+import numpy as np
+import nibabel as nib
 
 # Load DATA
+PETList = []
 
+for filename in glob.glob('D:\\Mphys\\Nifty\\PET\\*.nii'):
+    inputPET = nib.load(filename)
+    inputPETNumpy = np.array(inputPET.dataobj)
+    PETList.append(inputPETNumpy)
 
+print(PETList)
+
+PCTList = []
+
+for filename in glob.glob('D:\\Mphys\\Nifty\\PCT\\*.nii'):
+    inputPCT = nib.load(filename)
+    inputPCTNumpy = np.array(inputPCT.dataobj)
+    PCTList.append(inputPCTNumpy)
+
+print(PCTList)
+
+DVFList = []
+
+for filename in glob.glob('D:\\Mphys\\Nifty\\DVF\\*.nii'):
+    inputDVF = nib.load(filename)
+    inputDVFNumpy = np.array(inputDVF.dataobj)
+    DVFList.append(inputDVFNumpy)
+
+print(DVFList)
+'''
 # CNN Structure
 fixed_image = Input(shape=image_shape)  # Change shape
 moving_image = Input(shape=image_shape)
@@ -33,7 +61,8 @@ y1 = Conv3DTranspose(64, (3, 3, 3), activation='relu', padding='same')(x)
 merge1 = concatenate([x1, y1], axis=-1)
 
 # Use merge 1 as input to DVF calc
-dvf =  # Some operation to get DVF
+#dvf =  # Some operation to get DVF
 # Output DVF + Loss calc
 model = Model(input=[fixed_image, moving_image], outputs=dvf)
 # Train
+'''
