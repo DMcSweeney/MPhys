@@ -51,9 +51,6 @@ class DataLoader:
 
 
 def split_data(fixed_image, moving_image, dvf_label, validation_ratio):
-    np.random.shuffle(fixed_image)
-    np.random.shuffle(moving_image)
-    np.random.shuffle(dvf_label)
     validation_size = int(validation_ratio*fixed_image.shape[0])
 
     validation_fixed = fixed_image[:validation_size, ...]
