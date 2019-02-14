@@ -9,9 +9,9 @@ import dataLoader as load
 import numpy as np
 
 # If on server
-fixed_dir = "/hepgpu3-data1/dmcsween/DataSplit/TrainingSet/PCT"
-moving_dir = "/hepgpu3-data1/dmcsween/DataSplit/TrainingSet/PET"
-dvf_dir = "/hepgpu3-data1/dmcsween/DataSplit/TrainingSet/DVF"
+fixed_dir = "/hepgpu3-data1/dmcsween/ResampleData/PlanningCT"
+moving_dir = "/hepgpu3-data1/dmcsween/ResampleData/PET_Rigid"
+dvf_dir = "/hepgpu3-data1/dmcsween/ResampleData/DVF"
 
 # If on laptop
 """
