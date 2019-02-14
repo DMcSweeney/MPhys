@@ -40,7 +40,6 @@ def generator(inputs, label, batch_size=4):
     print("label shape:", label.shape)
     while True:
         for i in range(batch_size):
-
             # Random index from dataset
             index = np.random.choice(len(label), 1)
             print(inputs[0].shape, inputs[1].shape)
@@ -48,7 +47,7 @@ def generator(inputs, label, batch_size=4):
             batch_fixed[i], batch_moving[i] = inputs[0][index, ...], inputs[1][index, ...]
             batch_label[i] = label[index, ...]
             print(batch_fixed.shape, batch_label.shape)
-        yield [batch_fixed, batch_moving], batch_label
+        yield ({'input_1': batch_fixed, 'input_2': batch_moving}, {'output': batch_label})
 
 
 def train():
