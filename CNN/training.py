@@ -1,4 +1,4 @@
-"""Training CNN for registration in Keras"""
+"""Training CNN for registration in Keras. Assumes all inputs are same shape."""
 
 from keras.layers import Input, Conv3D, MaxPooling3D, concatenate, UpSampling3D
 from keras.layers import Conv3DTranspose, BatchNormalization
@@ -30,13 +30,14 @@ def shuffle_inplace(fixed, moving, dvf):
 
 
 def generator(inputs, label, batch_size=4):
-    batch_inputs = [np.zeros((batch_size, inputs[0].shape[1:])),
-                    np.zeros((batch_size, inputs[0].shape[1:]))]
-    batch_label = np.zeros((batch_size, label.shape[1:]))
+    x_dim, y_dim, z_dim = inputs[0].shape[1:]
+    batch_inputs = [np.zeros((batch_size, x_dim, y_dim, z_dim)),
+                    np.zeros((batch_size, x_dim, y_dim, z_dim))]
+    batch_label = np.zeros((batch_size, x_dim, y_dim, z_dim))
     while True:
         for i in range(batch_size):
             # Random index from dataset
-            index = np.random.choice(len(features), 1)
+            index = np.random.choice(len(label), 1)
             batch_inputs[i] = [inputs[0][index], inputs[1][index]]
             batch_label[i] = label[index]
         yield batch_inputs, batch_label
