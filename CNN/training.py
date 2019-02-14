@@ -35,6 +35,7 @@ def generator(inputs, label, batch_size=4):
                     np.zeros((batch_size, x_dim, y_dim, z_dim))]
     # add 3 due to 3D vector
     batch_label = np.zeros((batch_size, x_dim, y_dim, z_dim, 3))
+    print("Len label:", len(label))
     while True:
         for i in range(batch_size):
             # Random index from dataset
