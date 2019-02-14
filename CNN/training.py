@@ -5,15 +5,15 @@ from keras.layers import Conv3DTranspose, BatchNormalization
 from keras.models import Model
 from keras.initializers import RandomNormal
 from keras.utils import plot_model
-from keras.callbacks import ReduceLROnPlateau, Callback
+from keras.callbacks import ReduceLROnPlateau, Callback, ModelCheckpoint
 import dataLoader as load
 import numpy as np
 import math
 
 # If on server
-fixed_dir = "/hepgpu3-data1/dmcsween/ResampleData/PlanningCT"
-moving_dir = "/hepgpu3-data1/dmcsween/ResampleData/PET_Rigid"
-dvf_dir = "/hepgpu3-data1/dmcsween/ResampleData/DVF"
+fixed_dir = "/hepgpu3-data1/dmcsween/Data128/ResampleData/PlanningCT"
+moving_dir = "/hepgpu3-data1/dmcsween/Data128/ResampleData/PET_Rigid"
+dvf_dir = "/hepgpu3-data1/dmcsween/Datat128/ResampleData/DVF"
 
 # If on laptop
 """
@@ -78,6 +78,12 @@ def train():
     # CNN Structure
     fixed_image = Input(shape=(train_fixed.shape[1:]))  # Ignore batch but include channel
     moving_image = Input(shape=(train_moving.shape[1:]))
+    # Downsample Each
+    fixed_image = Conv3D(64, (3, 3, 3), strides=2, activation='relu', padding='same',
+                         name='downsample_fixed')(fixed_image)
+    moving_image = Conv3D(64, (3, 3, 3), strides=2, activation='relu', padding='same',
+                          name='downsample_moving')(moving_image)
+
     input = concatenate([fixed_image, moving_image])
 
     x1 = Conv3D(64, (3, 3, 3), activation='relu', padding='same', name='down_1a')(input)
@@ -113,15 +119,20 @@ def train():
     # dense2 = Dense(dvf_params, activation='softmax')(flat)
 
     # Transform into flow field (from VoxelMorph Github)
+    dvf = Conv3D(64, (3, 3, 3), strides=2, activation='relu', padding='same',
+                 name='upsample_dvf')(merge1)
     dvf = Conv3D(64, kernel_size=3, padding='same', name='dvf',
-                 kernel_initializer=RandomNormal(mean=0.0, stddev=1e-5))(merge1)
+                 kernel_initializer=RandomNormal(mean=0.0, stddev=1e-5))(dvf)
     dvf = Conv3D(3, kernel_size=1, padding='same', name='dvf',
-                 kernel_initializer=RandomNormal(mean=0.0, stddev=1e-5))(merge1)
+                 kernel_initializer=RandomNormal(mean=0.0, stddev=1e-5))(dvf)
     # Callbacks
     reduce_lr = ReduceLROnPlateau(monitor='acc', factor=0.2,
                                   patience=5, min_lr=0.001)
     history = LossHistory()
-    callbacks = [reduce_lr, history]
+    checkpoint = ModelCheckpoint('best_model.h5', monitor='acc',
+                                 verbose=1, save_best_only=True, period=1)
+
+    callbacks = [reduce_lr, history, checkpoint]
     # Train
     model = Model(inputs=[fixed_image, moving_image], outputs=dvf)
     for layer in model.layers:
@@ -132,10 +143,12 @@ def train():
 
     model.compile(optimizer='Adam', loss='mean_squared_error', metrics=["accuracy"])
     model.fit_generator(generator=generator(inputs=[train_fixed, train_moving], label=train_dvf, batch_size=batch_size),
-                        steps_per_epoch=math.ceil(train_fixed.shape[0]/batch_size), epochs=100, verbose=1, callbacks=callbacks)
+                        steps_per_epoch=math.ceil(train_fixed.shape[0]/batch_size),
+                        epochs=100, verbose=1,
+                        callbacks=callbacks)
 
-    accuracy = model.evaluate_generator(generator(
-        inputs=[validation_fixed, validation_moving], label=validation_dvf, batch_size=batch_size), steps=1, verbose=1)
+    # accuracy = model.evaluate_generator(generator(
+    #    inputs=[validation_fixed, validation_moving], label=validation_dvf, batch_size=batch_size), steps=1, verbose=1)
     model.save('model.h5')
     print("Accuracy:", accuracy[1])
 
