@@ -28,7 +28,7 @@ def shuffle_inplace(fixed, moving, dvf):
     return fixed[p], moving[p], dvf[p]
 
 
-def generator(inputs, label, batch_size=6):
+def generator(inputs, label, batch_size=3):
     x_dim, y_dim, z_dim, channel = inputs[0].shape[1:]
     fixed_input, moving_input = inputs
     batch_fixed, batch_moving = np.zeros((batch_size, x_dim, y_dim, z_dim, channel)), np.zeros(
@@ -120,7 +120,7 @@ def train():
 
     model.compile(optimizer='Adam', loss='mean_squared_error', metrics=["accuracy"])
     model.fit_generator(generator=generator(inputs=[train_fixed, train_moving], label=train_dvf),
-                        steps_per_epoch=13, epochs=20, verbose=1)
+                        steps_per_epoch=26, epochs=20, verbose=1)
 
     accuracy = model.evaluate_generator(x=generator(
         inputs=[validation_fixed, validation_moving], label=validation_dvf, batch_size=4), steps=1, verbose=1)
