@@ -13,7 +13,7 @@ import math
 # If on server
 fixed_dir = "/hepgpu3-data1/dmcsween/Data128/ResampleData/PlanningCT"
 moving_dir = "/hepgpu3-data1/dmcsween/Data128/ResampleData/PET_Rigid"
-dvf_dir = "/hepgpu3-data1/dmcsween/Datat128/ResampleData/DVF"
+dvf_dir = "/hepgpu3-data1/dmcsween/Data128/ResampleData/DVF"
 
 # If on laptop
 """
