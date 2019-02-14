@@ -84,7 +84,7 @@ def train():
     x1 = Conv3D(16, (7, 7, 7), strides=2, activation='relu',
                 padding='same', name='downsample')(input)
     x1 = Conv3D(16, (3, 3, 3), activation='relu', padding='same', name='down_1a')(x1)
-    x1 = Conv3D(16, (3, 3, 3), activation='relu', padding='same', name='down_1a')(x1)
+    x1 = Conv3D(16, (3, 3, 3), activation='relu', padding='same', name='down_1b')(x1)
     x1 = BatchNormalization()(x1)
 
     x1 = Conv3D(64, (3, 3, 3), activation='relu', padding='same', name='down_1c')(x1)
