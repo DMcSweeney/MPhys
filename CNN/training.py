@@ -9,17 +9,17 @@ import dataLoader as load
 import numpy as np
 
 # If on server
-
+"""
 fixed_dir = "/hepgpu3-data1/dmcsween/DataSplit/TrainingSet/PCT"
 moving_dir = "/hepgpu3-data1/dmcsween/DataSplit/TrainingSet/PET"
 dvf_dir = "/hepgpu3-data1/dmcsween/DataSplit/TrainingSet/DVF"
 
 """
 # If on laptop
+
 fixed_dir = "E:/MPhys/DataSplit/TrainingSet/PCT"
 moving_dir = "E:/MPhys/DataSplit/TrainingSet/PET"
 dvf_dir = "E:/MPhys/DataSplit/TrainingSet/DVF"
-"""
 
 
 def shuffle_inplace(fixed, moving, dvf):
@@ -30,9 +30,10 @@ def shuffle_inplace(fixed, moving, dvf):
 
 
 def generator(inputs, label, batch_size=4):
-    x_dim, y_dim, z_dim = inputs[0].shape[1:4]
-    batch_inputs = [np.zeros((batch_size, x_dim, y_dim, z_dim)),
-                    np.zeros((batch_size, x_dim, y_dim, z_dim))]
+    x_dim, y_dim, z_dim, channel = inputs[0].shape[1:]
+    fixed_input, moving_input = inputs
+    batch_fixed, batch_moving = np.zeros((batch_size, x_dim, y_dim, z_dim, channel)), np.zeros(
+        (batch_size, x_dim, y_dim, z_dim, channel))
     # add 3 due to 3D vector
     batch_label = np.zeros((batch_size, x_dim, y_dim, z_dim, 3))
     print("Len label:", len(label))
@@ -42,9 +43,10 @@ def generator(inputs, label, batch_size=4):
             # Random index from dataset
             index = np.random.choice(len(label), 1)
             print(inputs[0].shape, inputs[1].shape)
-            batch_inputs[i] = [inputs[0][index, ...], inputs[1][index, ...]]
+            print("Index:", index)
+            batch_fixed[i], batch_moving[i] = inputs[0][index, ...], inputs[1][index, ...]
             batch_label[i] = label[index]
-        yield batch_inputs, batch_label
+        yield [batch_fixed, batch_moving], batch_label
 
 
 def train():
@@ -118,10 +120,10 @@ def train():
 
     model.compile(optimizer='Adam', loss='mean_squared_error', metrics=["accuracy"])
     model.fit_generator(generator([train_fixed, train_moving], train_dvf,
-                                  batch_size=4), samples_per_epoch=50, nb_epoch=20, verbose=1)
+                                  batch_size=4), steps_per_epoch=1, epochs=20, verbose=1)
     model.save('model.h5')
-    accuracy = model.evaluate(x=[validation_fixed, validation_moving],
-                              y=validation_dvf, batch_size=4)
+    accuracy = model.evaluate_generator(x=generator(
+        [validation_fixed, validation_moving], validation_dvf, batch_size=4), steps=1, verbose=1)
     print("Accuracy:", accuracy[1])
 
 
