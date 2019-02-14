@@ -45,7 +45,7 @@ def generator(inputs, label, batch_size=4):
         print(inputs[0].shape, inputs[1].shape)
         print("Index:", index)
         batch_fixed[i], batch_moving[i] = inputs[0][index, ...], inputs[1][index, ...]
-        batch_label[i] = label[index]
+        batch_label[i] = label[index, ...]
     yield [batch_fixed, batch_moving], batch_label
 
 
@@ -115,7 +115,7 @@ def train():
     for layer in model.layers:
         print(layer.name, layer.output_shape)
 
-    print(model.summary())
+    # print(model.summary())
     plot_model(model, to_file='model.png')
 
     model.compile(optimizer='Adam', loss='mean_squared_error', metrics=["accuracy"])
