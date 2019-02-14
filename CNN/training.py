@@ -120,7 +120,7 @@ def train():
 
     model.compile(optimizer='Adam', loss='mean_squared_error', metrics=["accuracy"])
     model.fit_generator(generator=generator(inputs=[train_fixed, train_moving], label=train_dvf),
-                        steps_per_epoch=26, epochs=20, verbose=1)
+                        steps_per_epoch=29, epochs=20, verbose=1)
 
     accuracy = model.evaluate_generator(x=generator(
         inputs=[validation_fixed, validation_moving], label=validation_dvf, batch_size=4), steps=1, verbose=1)
