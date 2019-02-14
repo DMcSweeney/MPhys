@@ -134,8 +134,8 @@ def train():
     model.fit_generator(generator=generator(inputs=[train_fixed, train_moving], label=train_dvf, batch_size=batch_size),
                         steps_per_epoch=math.ceil(train_fixed.shape[0]/batch_size), epochs=20, verbose=1, callbacks=callbacks)
 
-    accuracy = model.evaluate_generator(x=generator(
-        inputs=[validation_fixed, validation_moving], label=validation_dvf, batch_size=4), steps=1, verbose=1)
+    accuracy = model.evaluate_generator(generator(
+        inputs=[validation_fixed, validation_moving], label=validation_dvf, batch_size=batch_size), steps=1, verbose=1)
     model.save('model.h5')
     print("Accuracy:", accuracy[1])
 
