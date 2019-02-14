@@ -9,7 +9,7 @@ import dataLoader as load
 import numpy as np
 
 # If on server
-
+"""
 fixed_dir = "/hepgpu3-data1/dmcsween/DataSplit/TrainingSet/PCT"
 moving_dir = "/hepgpu3-data1/dmcsween/DataSplit/TrainingSet/PET"
 dvf_dir = "/hepgpu3-data1/dmcsween/DataSplit/TrainingSet/DVF"
@@ -19,7 +19,6 @@ dvf_dir = "/hepgpu3-data1/dmcsween/DataSplit/TrainingSet/DVF"
 fixed_dir = "E:/MPhys/DataSplit/TrainingSet/PCT"
 moving_dir = "E:/MPhys/DataSplit/TrainingSet/PET"
 dvf_dir = "E:/MPhys/DataSplit/TrainingSet/DVF"
-"""
 
 
 def shuffle_inplace(fixed, moving, dvf):
@@ -29,7 +28,7 @@ def shuffle_inplace(fixed, moving, dvf):
     return fixed[p], moving[p], dvf[p]
 
 
-def generator(inputs, label, batch_size=4):
+def generator(inputs, label, batch_size=6):
     x_dim, y_dim, z_dim, channel = inputs[0].shape[1:]
     fixed_input, moving_input = inputs
     batch_fixed, batch_moving = np.zeros((batch_size, x_dim, y_dim, z_dim, channel)), np.zeros(
@@ -66,11 +65,9 @@ def train():
     validation_fixed, validation_moving, validation_dvf, train_fixed, train_moving, train_dvf = load.split_data(
         fixed_array, moving_array, dvf_array, validation_ratio=0.2)
 
-    print("PCT Shape:", train_fixed.shape)
-    print("PET Shape:", train_moving.shape)
-    print("DVF Shape:", train_dvf.shape)
-
-    learning_rate_decay_steps = 10*(train_fixed.shape[0])
+    print("PCT Shape:", train_fixed.shape[1:])
+    print("PET Shape:", train_moving.shape[1:])
+    print("DVF Shape:", train_dvf.shape[1:])
 
     # CNN Structure
     fixed_image = Input(shape=(train_fixed.shape[1:]))  # Ignore batch but include channel
@@ -122,15 +119,11 @@ def train():
     plot_model(model, to_file='model.png')
 
     model.compile(optimizer='Adam', loss='mean_squared_error', metrics=["accuracy"])
-    model.fit(x=[train_fixed, train_moving], y=train_dvf,
-              batch_size=24, epochs=20)
-    """
     model.fit_generator(generator=generator(inputs=[train_fixed, train_moving], label=train_dvf),
                         steps_per_epoch=23, epochs=20, verbose=1)
 
     accuracy = model.evaluate_generator(x=generator(
         inputs=[validation_fixed, validation_moving], label=validation_dvf, batch_size=4), steps=1, verbose=1)
-    """
     model.save('model.h5')
     print("Accuracy:", accuracy[1])
 
