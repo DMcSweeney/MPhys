@@ -78,7 +78,7 @@ def train():
     # CNN Structure
     fixed_image = Input(shape=(train_fixed.shape[1:]))  # Ignore batch but include channel
     moving_image = Input(shape=(train_moving.shape[1:]))
-    input = concatenate([fixed_image, moving_image], axis=0)
+    input = concatenate([fixed_image, moving_image])
 
     x1 = Conv3D(64, (3, 3, 3), activation='relu', padding='same', name='down_1a')(input)
     x1 = Conv3D(64, (3, 3, 3), activation='relu', padding='same', name='down_1b')(x1)
@@ -99,21 +99,23 @@ def train():
     y2 = Conv3DTranspose(128, (3, 3, 3), activation='relu', padding='same', name='Up_2b')(y2)
     y2 = BatchNormalization()(y2)
 
-    merge2 = concatenate([x2, y2], axis=0)
+    merge2 = concatenate([x2, y2])
 
     x = UpSampling3D(size=(2, 2, 2), name='UpSamp_2')(merge2)
     y1 = Conv3DTranspose(64, (3, 3, 3), activation='relu', padding='same', name='Up_1a')(x)
     y1 = Conv3DTranspose(64, (3, 3, 3), activation='relu', padding='same', name='Up_1b')(y1)
     y1 = BatchNormalization()(y1)
 
-    merge1 = concatenate([x1, y1], axis=0)
+    merge1 = concatenate([x1, y1])
 
     # flat = Flatten()(merge1)
     # dense1 = Dense(1, activation='relu')(flat)
     # dense2 = Dense(dvf_params, activation='softmax')(flat)
 
     # Transform into flow field (from VoxelMorph Github)
-    dvf = Conv3D(3, kernel_size=3, padding='same', name='dvf',
+    dvf = Conv3D(64, kernel_size=3, padding='same', name='dvf',
+                 kernel_initializer=RandomNormal(mean=0.0, stddev=1e-5))(merge1)
+    dvf = Conv3D(3, kernel_size=1, padding='same', name='dvf',
                  kernel_initializer=RandomNormal(mean=0.0, stddev=1e-5))(merge1)
     # Callbacks
     reduce_lr = ReduceLROnPlateau(monitor='acc', factor=0.2,
