@@ -9,17 +9,22 @@ import dataLoader as load
 import numpy as np
 
 # If on server
-
+"""
 fixed_dir = "/hepgpu3-data1/dmcsween/DataSplit/TrainingSet/PCT"
 moving_dir = "/hepgpu3-data1/dmcsween/DataSplit/TrainingSet/PET"
 dvf_dir = "/hepgpu3-data1/dmcsween/DataSplit/TrainingSet/DVF"
 
-"""
 # If on laptop
 fixed_dir = "E:/MPhys/DataSplit/TrainingSet/PCT"
 moving_dir = "E:/MPhys/DataSplit/TrainingSet/PET"
 dvf_dir = "E:/MPhys/DataSplit/TrainingSet/DVF"
 """
+#IF your name is Tom 
+fixed_dir = "D:\\Mphys\\Nifty\\PCT"
+moving_dir = "D:\\Mphys\\Nifty\\PET"
+dvf_dir = "D:\\Mphys\\Nifty\\DVF"
+
+
 
 
 def shuffle_inplace(fixed, moving, dvf):
