@@ -7,6 +7,7 @@ from keras.initializers import RandomNormal
 from keras.utils import plot_model
 import dataLoader as load
 import numpy as np
+import math
 
 # If on server
 fixed_dir = "/hepgpu3-data1/dmcsween/ResampleData/PlanningCT"
@@ -19,6 +20,8 @@ fixed_dir = "E:/MPhys/DataSplit/TrainingSet/PCT"
 moving_dir = "E:/MPhys/DataSplit/TrainingSet/PET"
 dvf_dir = "E:/MPhys/DataSplit/TrainingSet/DVF"
 """
+
+batch_size = 2
 
 
 def shuffle_inplace(fixed, moving, dvf):
@@ -119,8 +122,8 @@ def train():
     plot_model(model, to_file='model.png')
 
     model.compile(optimizer='Adam', loss='mean_squared_error', metrics=["accuracy"])
-    model.fit_generator(generator=generator(inputs=[train_fixed, train_moving], label=train_dvf),
-                        steps_per_epoch=29, epochs=20, verbose=1)
+    model.fit_generator(generator=generator(inputs=[train_fixed, train_moving], label=train_dvf, batch_size=batch_size),
+                        steps_per_epoch=math.ceil(train_fixed.shape[0]/batch_size), epochs=20, verbose=1)
 
     accuracy = model.evaluate_generator(x=generator(
         inputs=[validation_fixed, validation_moving], label=validation_dvf, batch_size=4), steps=1, verbose=1)
