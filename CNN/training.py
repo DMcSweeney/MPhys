@@ -47,7 +47,7 @@ def generator(inputs, label, batch_size=4):
             batch_fixed[i], batch_moving[i] = inputs[0][index, ...], inputs[1][index, ...]
             batch_label[i] = label[index, ...]
             print(batch_fixed.shape, batch_label.shape)
-        yield ([batch_fixed, batch_moving], batch_label)
+        yield ({'fixed_image': batch_fixed, 'moving_image': batch_moving}, {'dvf':, batch_label})
 
 
 def train():
