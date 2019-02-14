@@ -46,6 +46,7 @@ def generator(inputs, label, batch_size=4):
         print("Index:", index)
         batch_fixed[i], batch_moving[i] = inputs[0][index, ...], inputs[1][index, ...]
         batch_label[i] = label[index, ...]
+        print(batch_fixed.shape, batch_label.shape)
     yield [batch_fixed, batch_moving], batch_label
 
 
