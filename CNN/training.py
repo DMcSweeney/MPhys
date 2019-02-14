@@ -22,7 +22,7 @@ moving_dir = "E:/MPhys/DataSplit/TrainingSet/PET"
 dvf_dir = "E:/MPhys/DataSplit/TrainingSet/DVF"
 """
 
-batch_size = 1
+batch_size = 4
 
 
 class LossHistory(Callback):
