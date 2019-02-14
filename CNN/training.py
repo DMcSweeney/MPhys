@@ -123,7 +123,7 @@ def train():
     # Transform into flow field (from VoxelMorph Github)
     dvf = Conv3D(64, (3, 3, 3), strides=2, activation='relu', padding='same',
                  name='upsample_dvf')(merge1)
-    dvf = Conv3D(64, kernel_size=3, padding='same', name='dvf',
+    dvf = Conv3D(64, kernel_size=3, padding='same', name='dvf_64features',
                  kernel_initializer=RandomNormal(mean=0.0, stddev=1e-5))(dvf)
     dvf = Conv3D(3, kernel_size=1, padding='same', name='dvf',
                  kernel_initializer=RandomNormal(mean=0.0, stddev=1e-5))(dvf)
