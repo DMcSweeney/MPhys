@@ -38,15 +38,15 @@ def generator(inputs, label, batch_size=4):
     batch_label = np.zeros((batch_size, x_dim, y_dim, z_dim, 3))
     print("Len label:", len(label))
     print("label shape:", label.shape)
-    while True:
-        for i in range(batch_size):
-            # Random index from dataset
-            index = np.random.choice(len(label), 1)
-            print(inputs[0].shape, inputs[1].shape)
-            print("Index:", index)
-            batch_fixed[i], batch_moving[i] = inputs[0][index, ...], inputs[1][index, ...]
-            batch_label[i] = label[index]
-        yield [batch_fixed, batch_moving], batch_label
+    for i in range(batch_size):
+        print(range(batch_size))
+        # Random index from dataset
+        index = np.random.choice(len(label), 1)
+        print(inputs[0].shape, inputs[1].shape)
+        print("Index:", index)
+        batch_fixed[i], batch_moving[i] = inputs[0][index, ...], inputs[1][index, ...]
+        batch_label[i] = label[index]
+    yield [batch_fixed, batch_moving], batch_label
 
 
 def train():
@@ -119,8 +119,8 @@ def train():
     plot_model(model, to_file='model.png')
 
     model.compile(optimizer='Adam', loss='mean_squared_error', metrics=["accuracy"])
-    model.fit_generator(generator([train_fixed, train_moving], train_dvf,
-                                  batch_size=4), steps_per_epoch=1, epochs=20, verbose=1)
+    model.fit_generator(generator=generator([train_fixed, train_moving], train_dvf),
+                        steps_per_epoch=1, epochs=20, verbose=1)
     model.save('model.h5')
     accuracy = model.evaluate_generator(x=generator(
         [validation_fixed, validation_moving], validation_dvf, batch_size=4), steps=1, verbose=1)
