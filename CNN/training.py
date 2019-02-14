@@ -120,11 +120,16 @@ def train():
     plot_model(model, to_file='model.png')
 
     model.compile(optimizer='Adam', loss='mean_squared_error', metrics=["accuracy"])
+    model.fit(x=[train_fixed, train_moving], y=train_dvf,
+              batch_size=4, epochs=20, steps_per_epoch=23)
+    """
     model.fit_generator(generator=generator(inputs=[train_fixed, train_moving], label=train_dvf),
                         steps_per_epoch=23, epochs=20, verbose=1)
-    model.save('model.h5')
+
     accuracy = model.evaluate_generator(x=generator(
         inputs=[validation_fixed, validation_moving], label=validation_dvf, batch_size=4), steps=1, verbose=1)
+    """
+    model.save('model.h5')
     print("Accuracy:", accuracy[1])
 
 
