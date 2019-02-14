@@ -30,7 +30,7 @@ def shuffle_inplace(fixed, moving, dvf):
 
 
 def generator(inputs, label, batch_size=4):
-    batch_inputs = [np.zeros((batch_size, inputs.shape[1:])),
+    batch_inputs = [np.zeros((batch_size, inputs[0].shape[1:])),
                     np.zeros((batch_size, inputs[0].shape[1:]))]
     batch_label = np.zeros((batch_size, label.shape[1:]))
     while True:
