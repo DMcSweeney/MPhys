@@ -81,16 +81,22 @@ def train():
 
     input = concatenate([fixed_image, moving_image])
 
-    x1 = Conv3D(64, (3, 3, 3), strides=2, activation='relu',
+    x1 = Conv3D(16, (7, 7, 7), strides=2, activation='relu',
                 padding='same', name='downsample')(input)
-    x1 = Conv3D(64, (3, 3, 3), activation='relu', padding='same', name='down_1a')(x1)
-    x1 = Conv3D(64, (3, 3, 3), activation='relu', padding='same', name='down_1b')(x1)
+    x1 = Conv3D(16, (3, 3, 3), activation='relu', padding='same', name='down_1a')(x1)
+    x1 = Conv3D(16, (3, 3, 3), activation='relu', padding='same', name='down_1a')(x1)
     x1 = BatchNormalization()(x1)
+
+    x1 = Conv3D(64, (3, 3, 3), activation='relu', padding='same', name='down_1c')(x1)
+    x1 = Conv3D(64, (3, 3, 3), activation='relu', padding='same', name='down_1d')(x1)
+    x1 = BatchNormalization()(x1)
+
     x = MaxPooling3D(pool_size=(2, 2, 2), padding='same', name='Pool_1')(x1)
 
     x2 = Conv3D(128, (3, 3, 3), activation='relu', padding='same', name='down_2a')(x)
     x2 = Conv3D(128, (3, 3, 3), activation='relu', padding='same', name='down_2b')(x2)
     x2 = BatchNormalization()(x2)
+
     x = MaxPooling3D(pool_size=(2, 2, 2), padding='same', name='Pool_2')(x2)
 
     x3 = Conv3D(256, (3, 3, 3), activation='relu', padding='same', name='down_3a')(x)
@@ -110,10 +116,6 @@ def train():
     y1 = BatchNormalization()(y1)
 
     merge1 = concatenate([x1, y1])
-
-    # flat = Flatten()(merge1)
-    # dense1 = Dense(1, activation='relu')(flat)
-    # dense2 = Dense(dvf_params, activation='softmax')(flat)
 
     # Transform into flow field (from VoxelMorph Github)
     dvf = Conv3DTranspose(64, (3, 3, 3), strides=2, activation='relu', padding='same',
