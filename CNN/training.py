@@ -70,6 +70,8 @@ def train():
     print("PET Shape:", train_moving.shape)
     print("DVF Shape:", train_dvf.shape)
 
+    learning_rate_decay_steps = 10*(train_fixed.shape[0])
+
     # CNN Structure
     fixed_image = Input(shape=(train_fixed.shape[1:]))  # Ignore batch but include channel
     moving_image = Input(shape=(train_moving.shape[1:]))
@@ -121,7 +123,7 @@ def train():
 
     model.compile(optimizer='Adam', loss='mean_squared_error', metrics=["accuracy"])
     model.fit(x=[train_fixed, train_moving], y=train_dvf,
-              batch_size=4, epochs=20)
+              batch_size=24, epochs=20)
     """
     model.fit_generator(generator=generator(inputs=[train_fixed, train_moving], label=train_dvf),
                         steps_per_epoch=23, epochs=20, verbose=1)
