@@ -121,7 +121,7 @@ def train():
 
     model.compile(optimizer='Adam', loss='mean_squared_error', metrics=["accuracy"])
     model.fit(x=[train_fixed, train_moving], y=train_dvf,
-              batch_size=4, epochs=20, steps_per_epoch=23)
+              batch_size=4, epochs=20)
     """
     model.fit_generator(generator=generator(inputs=[train_fixed, train_moving], label=train_dvf),
                         steps_per_epoch=23, epochs=20, verbose=1)
