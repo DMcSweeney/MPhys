@@ -25,7 +25,7 @@ dvf_dir = "E:/MPhys/DataSplit/TrainingSet/DVF"
 batch_size = 1
 
 
-class LossHistory(keras.callbacks.Callback):
+class LossHistory(Callback):
     def on_train_begin(self, logs={}):
         self.losses = []
 
