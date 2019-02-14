@@ -144,7 +144,12 @@ def train():
     model.fit_generator(generator=generator(inputs=[train_fixed, train_moving], label=train_dvf, batch_size=batch_size),
                         steps_per_epoch=math.ceil(train_fixed.shape[0]/batch_size),
                         epochs=100, verbose=1,
-                        callbacks=callbacks)
+                        callbacks=callbacks,
+                        validation_data=generator(
+                            inputs=[validation_fixed, validation_moving], label=validation_dvf),
+                        validation_steps=math.ceil(validation_fixed[0]/batch_size),
+                        validation_freq=2,
+                        use_multiprocessing=True)
 
     # accuracy = model.evaluate_generator(generator(
     #    inputs=[validation_fixed, validation_moving], label=validation_dvf, batch_size=batch_size), steps=1, verbose=1)
