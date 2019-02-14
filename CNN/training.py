@@ -116,7 +116,7 @@ def train():
     dvf = Conv3D(3, kernel_size=3, padding='same', name='dvf',
                  kernel_initializer=RandomNormal(mean=0.0, stddev=1e-5))(merge1)
     # Callbacks
-    reduce_lr = ReduceLROnPlateau(monitor='val_loss', factor=0.2,
+    reduce_lr = ReduceLROnPlateau(monitor='acc', factor=0.2,
                                   patience=5, min_lr=0.001)
     history = LossHistory()
     callbacks = [reduce_lr, history]
