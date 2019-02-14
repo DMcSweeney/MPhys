@@ -21,7 +21,7 @@ moving_dir = "E:/MPhys/DataSplit/TrainingSet/PET"
 dvf_dir = "E:/MPhys/DataSplit/TrainingSet/DVF"
 """
 
-batch_size = 2
+batch_size = 1
 
 
 def shuffle_inplace(fixed, moving, dvf):
