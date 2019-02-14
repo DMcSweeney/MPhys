@@ -5,6 +5,7 @@ from keras.layers import Conv3DTranspose, BatchNormalization
 from keras.models import Model
 from keras.initializers import RandomNormal
 from keras.utils import plot_model
+from keras.callbacks import ReduceLROnPlateau, LossHistory
 import dataLoader as load
 import numpy as np
 import math
@@ -26,7 +27,6 @@ batch_size = 1
 
 def shuffle_inplace(fixed, moving, dvf):
     assert len(fixed[:, ...]) == len(moving[:, ...]) == len(dvf[:, ...])
-    print(fixed.shape)
     p = np.random.permutation(len(fixed[:, ...]))
     return fixed[p], moving[p], dvf[p]
 
@@ -38,17 +38,12 @@ def generator(inputs, label, batch_size=3):
         (batch_size, x_dim, y_dim, z_dim, channel))
     # add 3 due to 3D vector
     batch_label = np.zeros((batch_size, x_dim, y_dim, z_dim, 3))
-    print("Len label:", len(label))
-    print("label shape:", label.shape)
     while True:
         for i in range(batch_size):
             # Random index from dataset
             index = np.random.choice(len(label), 1)
-            print(inputs[0].shape, inputs[1].shape)
-            print("Index:", index)
             batch_fixed[i], batch_moving[i] = inputs[0][index, ...], inputs[1][index, ...]
             batch_label[i] = label[index, ...]
-            print(batch_fixed.shape, batch_label.shape)
         yield ({'input_1': batch_fixed, 'input_2': batch_moving}, {'dvf': batch_label})
 
 
@@ -68,9 +63,9 @@ def train():
     validation_fixed, validation_moving, validation_dvf, train_fixed, train_moving, train_dvf = load.split_data(
         fixed_array, moving_array, dvf_array, validation_ratio=0.2)
 
-    print("PCT Shape:", train_fixed.shape[1:])
-    print("PET Shape:", train_moving.shape[1:])
-    print("DVF Shape:", train_dvf.shape[1:])
+    print("PCT Shape:", train_fixed.shape)
+    print("PET Shape:", train_moving.shape)
+    print("DVF Shape:", train_dvf.shape)
 
     # CNN Structure
     fixed_image = Input(shape=(train_fixed.shape[1:]))  # Ignore batch but include channel
@@ -112,7 +107,11 @@ def train():
     # Transform into flow field (from VoxelMorph Github)
     dvf = Conv3D(3, kernel_size=3, padding='same', name='dvf',
                  kernel_initializer=RandomNormal(mean=0.0, stddev=1e-5))(merge1)
-
+    # Callbacks
+    reduce_lr = ReduceLROnPlateau(monitor='val_loss', factor=0.2,
+                                  patience=5, min_lr=0.001)
+    history = LossHistory()
+    callbacks = [reduce_lr, history]
     # Train
     model = Model(inputs=[fixed_image, moving_image], outputs=dvf)
     for layer in model.layers:
@@ -123,7 +122,7 @@ def train():
 
     model.compile(optimizer='Adam', loss='mean_squared_error', metrics=["accuracy"])
     model.fit_generator(generator=generator(inputs=[train_fixed, train_moving], label=train_dvf, batch_size=batch_size),
-                        steps_per_epoch=math.ceil(train_fixed.shape[0]/batch_size), epochs=20, verbose=1)
+                        steps_per_epoch=math.ceil(train_fixed.shape[0]/batch_size), epochs=20, verbose=1, callbacks=callbacks)
 
     accuracy = model.evaluate_generator(x=generator(
         inputs=[validation_fixed, validation_moving], label=validation_dvf, batch_size=4), steps=1, verbose=1)
