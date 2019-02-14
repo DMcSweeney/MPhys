@@ -77,14 +77,16 @@ def train():
 
     # CNN Structure
     fixed_image = Input(shape=(train_fixed.shape[1:]))  # Ignore batch but include channel
-    moving_image = Input(shape=(train_moving.shape[1:]))
+
     # Downsample Each
-    fixed_image = Conv3D(64, (3, 3, 3), strides=2, activation='relu', padding='same',
-                         name='downsample_fixed')(fixed_image)
+    down_fixed_image = Conv3D(64, (3, 3, 3), strides=2, activation='relu', padding='same',
+                              name='downsample_fixed')(fixed_image)
+
+    down_moving_image = Input(shape=(train_moving.shape[1:]))
     moving_image = Conv3D(64, (3, 3, 3), strides=2, activation='relu', padding='same',
                           name='downsample_moving')(moving_image)
 
-    input = concatenate([fixed_image, moving_image])
+    input = concatenate([down_fixed_image, down_moving_image])
 
     x1 = Conv3D(64, (3, 3, 3), activation='relu', padding='same', name='down_1a')(input)
     x1 = Conv3D(64, (3, 3, 3), activation='relu', padding='same', name='down_1b')(x1)
