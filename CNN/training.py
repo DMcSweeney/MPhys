@@ -5,7 +5,7 @@ from keras.layers import Conv3DTranspose, BatchNormalization
 from keras.models import Model
 from keras.initializers import RandomNormal
 from keras.utils import plot_model
-from keras.callbacks import ReduceLROnPlateau, LossHistory
+from keras.callbacks import ReduceLROnPlateau, Callback
 import dataLoader as load
 import numpy as np
 import math
@@ -23,6 +23,14 @@ dvf_dir = "E:/MPhys/DataSplit/TrainingSet/DVF"
 """
 
 batch_size = 1
+
+
+class LossHistory(keras.callbacks.Callback):
+    def on_train_begin(self, logs={}):
+        self.losses = []
+
+    def on_batch_end(self, batch, logs={}):
+        self.losses.append(logs.get('loss'))
 
 
 def shuffle_inplace(fixed, moving, dvf):
