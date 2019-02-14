@@ -79,11 +79,11 @@ def train():
     fixed_image = Input(shape=(train_fixed.shape[1:]))  # Ignore batch but include channel
 
     # Downsample Each
-    down_fixed_image = Conv3D(64, (5, 5, 5), strides=3, activation='relu', padding='same',
+    down_fixed_image = Conv3D(64, (5, 5, 5), strides=2, activation='relu', padding='same',
                               name='downsample_fixed')(fixed_image)
 
     moving_image = Input(shape=(train_moving.shape[1:]))
-    down_moving_image = Conv3D(64, (5, 5, 5), strides=3, activation='relu', padding='same',
+    down_moving_image = Conv3D(64, (5, 5, 5), strides=2, activation='relu', padding='same',
                                name='downsample_moving')(moving_image)
 
     input = concatenate([down_fixed_image, down_moving_image])
