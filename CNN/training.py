@@ -74,33 +74,33 @@ def train():
     fixed_image = Input(shape=(train_fixed.shape[1:]))  # Ignore batch but include channel
     moving_image = Input(shape=(train_moving.shape[1:]))
     input = concatenate([fixed_image, moving_image], axis=0)
-
+    print("Here1")
     x1 = Conv3D(64, (3, 3, 3), activation='relu', padding='same', name='down_1a')(input)
     x1 = Conv3D(64, (3, 3, 3), activation='relu', padding='same', name='down_1b')(x1)
     x1 = BatchNormalization()(x1)
     x = MaxPooling3D(pool_size=(2, 2, 2), padding='same', name='Pool_1')(x1)
-
+    print("Here2")
     x2 = Conv3D(128, (3, 3, 3), activation='relu', padding='same', name='down_2a')(x)
     x2 = Conv3D(128, (3, 3, 3), activation='relu', padding='same', name='down_2b')(x2)
     x2 = BatchNormalization()(x2)
     x = MaxPooling3D(pool_size=(2, 2, 2), padding='same', name='Pool_2')(x2)
-
+    print("Here3")
     x3 = Conv3D(256, (3, 3, 3), activation='relu', padding='same', name='down_3a')(x)
     x3 = Conv3D(256, (3, 3, 3), activation='relu', padding='same', name='down_3b')(x3)
     x3 = BatchNormalization()(x3)
-
+    print("Here4")
     x = UpSampling3D(size=(2, 2, 2), name='UpSamp_3')(x3)
     y2 = Conv3DTranspose(128, (3, 3, 3), activation='relu', padding='same', name='Up_2a')(x)
     y2 = Conv3DTranspose(128, (3, 3, 3), activation='relu', padding='same', name='Up_2b')(y2)
     y2 = BatchNormalization()(y2)
-
+    print("Here5")
     merge2 = concatenate([x2, y2], axis=0)
 
     x = UpSampling3D(size=(2, 2, 2), name='UpSamp_2')(merge2)
     y1 = Conv3DTranspose(64, (3, 3, 3), activation='relu', padding='same', name='Up_1a')(x)
     y1 = Conv3DTranspose(64, (3, 3, 3), activation='relu', padding='same', name='Up_1b')(y1)
     y1 = BatchNormalization()(y1)
-
+    print("Here6")
     merge1 = concatenate([x1, y1], axis=0)
 
     # flat = Flatten()(merge1)
