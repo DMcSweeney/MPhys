@@ -147,7 +147,7 @@ def train():
                         callbacks=callbacks,
                         validation_data=generator(
                             inputs=[validation_fixed, validation_moving], label=validation_dvf),
-                        validation_steps=math.ceil(validation_fixed[0]/batch_size),
+                        validation_steps=math.ceil(validation_fixed.shape[0]/batch_size),
                         validation_freq=2,
                         use_multiprocessing=True)
 
