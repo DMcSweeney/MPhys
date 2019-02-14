@@ -41,6 +41,7 @@ def generator(inputs, label, batch_size=4):
         for i in range(batch_size):
             # Random index from dataset
             index = np.random.choice(len(label), 1)
+            print(inputs[0].shape, inputs[1].shape)
             batch_inputs[i] = [inputs[0][index, ...], inputs[1][index, ...]]
             batch_label[i] = label[index]
         yield batch_inputs, batch_label
