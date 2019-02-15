@@ -11,12 +11,12 @@ import numpy as np
 import math
 
 # If on server
+
 fixed_dir = "/hepgpu3-data1/dmcsween/Data128/ResampleData/PlanningCT"
 moving_dir = "/hepgpu3-data1/dmcsween/Data128/ResampleData/PET_Rigid"
 dvf_dir = "/hepgpu3-data1/dmcsween/Data128/ResampleData/DVF"
-
-# If on laptop
 """
+# If on laptop
 fixed_dir = "E:/MPhys/DataSplit/TrainingSet/PCT"
 moving_dir = "E:/MPhys/DataSplit/TrainingSet/PET"
 dvf_dir = "E:/MPhys/DataSplit/TrainingSet/DVF"
@@ -118,10 +118,16 @@ def train():
     merge1 = concatenate([x1, y1])
 
     # Transform into flow field (from VoxelMorph Github)
-    dvf = Conv3DTranspose(64, (3, 3, 3), strides=2, activation='relu', padding='same',
-                          name='upsample_dvf')(merge1)
+    upsample = Conv3DTranspose(64, (3, 3, 3), strides=2, activation='relu', padding='same',
+                               name='upsample_dvf')(merge1)
+    upsample = Conv3DTranspose(64, (3, 3, 3), strides=2, activation='relu', padding='same',
+                               name='upsample_dvf')(upsample)
+    upsample = Conv3DTranspose(64, (3, 3, 3), strides=2, activation='relu', padding='same',
+                               name='upsample_dvf')(upsample)
+    upsample = BatchNormalization()(upsample)
+
     dvf = Conv3D(64, kernel_size=3, padding='same', name='dvf_64features',
-                 kernel_initializer=RandomNormal(mean=0.0, stddev=1e-5))(dvf)
+                 kernel_initializer=RandomNormal(mean=0.0, stddev=1e-5))(upsample)
     dvf = Conv3D(3, kernel_size=1, padding='same', name='dvf',
                  kernel_initializer=RandomNormal(mean=0.0, stddev=1e-5))(dvf)
     # Callbacks
