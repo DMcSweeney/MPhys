@@ -11,7 +11,6 @@ import numpy as np
 import math
 
 # If on server
-
 fixed_dir = "/hepgpu3-data1/dmcsween/Data128/ResampleData/PlanningCT"
 moving_dir = "/hepgpu3-data1/dmcsween/Data128/ResampleData/PET_Rigid"
 dvf_dir = "/hepgpu3-data1/dmcsween/Data128/ResampleData/DVF"
@@ -21,7 +20,6 @@ fixed_dir = "E:/MPhys/DataSplit/TrainingSet/PCT"
 moving_dir = "E:/MPhys/DataSplit/TrainingSet/PET"
 dvf_dir = "E:/MPhys/DataSplit/TrainingSet/DVF"
 """
-
 batch_size = 4
 
 
@@ -131,10 +129,10 @@ def train():
     dvf = Conv3D(3, kernel_size=1, padding='same', name='dvf',
                  kernel_initializer=RandomNormal(mean=0.0, stddev=1e-5))(dvf)
     # Callbacks
-    reduce_lr = ReduceLROnPlateau(monitor='acc', factor=0.2,
+    reduce_lr = ReduceLROnPlateau(monitor='val_acc', factor=0.2,
                                   patience=5, min_lr=0.001)
     history = LossHistory()
-    checkpoint = ModelCheckpoint('best_model.h5', monitor='acc',
+    checkpoint = ModelCheckpoint('best_model.h5', monitor='val_acc',
                                  verbose=1, save_best_only=True, period=1)
 
     callbacks = [reduce_lr, history, checkpoint]
