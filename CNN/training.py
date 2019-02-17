@@ -138,9 +138,9 @@ def train():
     history = LossHistory()
     checkpoint = ModelCheckpoint('best_model.h5', monitor='val_acc',
                                  verbose=1, save_best_only=True, period=1)
-    TensorBoard(log_dir='./logs', histogram_freq=0,
-                batch_size=4, write_graph=True, write_grads=True, update_freq='epoch')
-    callbacks = [reduce_lr, history, checkpoint]
+    tensorboard = TensorBoard(log_dir='./logs', histogram_freq=1,
+                              batch_size=4, write_graph=True, write_grads=True, update_freq='epoch')
+    callbacks = [reduce_lr, history, checkpoint, tensorboard]
     # Train
     model = Model(inputs=[fixed_image, moving_image], outputs=dvf)
     for layer in model.layers:
