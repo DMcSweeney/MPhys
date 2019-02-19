@@ -39,9 +39,9 @@ def train():
     fixed_image, moving_image, dvf_label = load.data_reader(fixed_dir, moving_dir, dvf_dir)
 
     # Turn into numpy arrays
-    fixed_array = fixed_image.get_data()
-    moving_array = moving_image.get_data()
-    dvf_array = dvf_label.get_data(is_image=False)
+    fixed_array, _ = fixed_image.get_data()
+    moving_array, _ = moving_image.get_data()
+    dvf_array, _ = dvf_label.get_data(is_image=False)
     # Shuffle arrays
     fixed_array, moving_array, dvf_array = helper.shuffle_inplace(
         fixed_array, moving_array, dvf_array)

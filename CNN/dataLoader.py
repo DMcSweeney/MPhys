@@ -39,10 +39,12 @@ class DataLoader:
         if is_image is True:
             # Load images
             array = [np.array(self.file_objects[i].dataobj) for i in range(self.num_data)]
+            affine = np.array(self.getaffine)
             out = np.expand_dims(np.stack(array, axis=0), axis=-1)
         else:
             # Load DVF (label)
             array = np.squeeze([np.array(self.file_objects[i].dataobj)
                                 for i in range(self.num_data)])
+            affine = np.array(self.getaffine)
             out = np.expand_dims(np.stack(array, axis=0), axis=-1)
-        return out
+        return out, affine

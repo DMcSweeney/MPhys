@@ -25,10 +25,12 @@ def inference():
     fixed_predict, moving_predict, dvf_label = load.data_reader(fixed_dir, moving_dir, dvf_dir)
 
     print('Turn into numpy arrays')
-    fixed_array = fixed_predict.get_data()
-    moving_array = moving_predict.get_data()
-    dvf_array = dvf_label.get_data(is_image=False)
+    fixed_array, fixed_affine = fixed_predict.get_data()
+    moving_array, moving_affine = moving_predict.get_data()
+    dvf_array, dvf_affine = dvf_label.get_data(is_image=False)
 
+    print("Fixed affine:", fixed_affine.shape)
+    print("DVF affine:", dvf_affine.shape)
     print('Shuffle')
     fixed_array, moving_array, dvf_array = helper.shuffle_inplace(
         fixed_array, moving_array, dvf_array)
