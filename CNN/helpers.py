@@ -55,8 +55,8 @@ class Helpers(object):
     def write_images(input_, base_affine, file_path=None, file_prefix=''):
         if file_path is not None:
             batch_size = input_.shape[0]
-            affine = [base_affine[idx].getaffine for idx in range(batch_size)]
-            [nib.save(nib.Nifti1Image(input_[idx, ...], affine[idx]),
+            #affine = [base_affine[idx] for idx in range(batch_size)]
+            [nib.save(nib.Nifti1Image(input_[idx, ...], base_affine[idx, ...]),
                       os.path.join(file_path,
                                    file_prefix + '%s.nii' % idx))
              for idx in range(batch_size)]
