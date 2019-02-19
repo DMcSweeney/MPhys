@@ -6,16 +6,16 @@ import math
 
 helper = Helpers()
 
+"""
 # On server
 fixed_dir = "/hepgpu3-data1/dmcsween/Data128/ResampleData/PlanningCT"
 moving_dir = "/hepgpu3-data1/dmcsween/Data128/ResampleData/PET_Rigid"
 dvf_dir = "/hepgpu3-data1/dmcsween/Data128/ResampleData/DVF"
 """
 # On laptop
-fixed_dir = "E:/MPhys/DataSplit/TrainingSet/PCT"
-moving_dir = "E:/MPhys/DataSplit/TrainingSet/PET"
-dvf_dir = "E:/MPhys/DataSplit/TrainingSet/DVF"
-"""
+fixed_dir = "E:/MPhys/Data128/PlanningCT"
+moving_dir = "E:/MPhys/Data128/PET_Rigid"
+dvf_dir = "E:/MPhys/Data128/DVF"
 batch_size = 2
 
 
@@ -43,7 +43,7 @@ def inference():
         steps=math.ceil(test_fixed.shape[0]/batch_size),
         verbose=1)
     print('Save DVF')
-    helper.write_images(dvf, test_fixed, file_path='./outputs/', file_prefix='dvf')
+    helper.write_images(dvf, fixed_predict, file_path='./outputs/', file_prefix='dvf')
     # Warp image
 
     # Save warped

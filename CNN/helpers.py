@@ -6,7 +6,7 @@ import os
 
 class Helpers(object):
     @staticmethod
-    def generator(inputs, label, batch_size=3, predict=False):
+    def generator(inputs, label, batch_size=4, predict=False):
         x_dim, y_dim, z_dim, channel = inputs[0].shape[1:]
         fixed_input, moving_input = inputs
         batch_fixed, batch_moving = np.zeros((batch_size, x_dim, y_dim, z_dim, channel)), np.zeros(

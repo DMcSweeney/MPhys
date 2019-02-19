@@ -104,7 +104,7 @@ def write_masks(patient_dir, contour_path, image_path, index, img_format='nii'):
 
 def organise_scans(input_path, rigid_output_path, dvf_output_path, pet_output_path):
     for folder in os.listdir(input_path):
-        print(folder)
+        print("Folder", folder)
         if folder == 'Rigid':
             rigid_path = os.path.join(input_path, folder)
             for patient_path in os.listdir(rigid_path):
@@ -116,40 +116,37 @@ def organise_scans(input_path, rigid_output_path, dvf_output_path, pet_output_pa
                         rigid_filepath = os.path.join(patient_path, file)
                         rigid_out_filepath = os.path.join(
                             rigid_output_path, '{}_inv.nii'.format(patient))
-                        shutil.copy(rigid_filepath, rigid_out_filepath)
+                        shutil.move(rigid_filepath, rigid_out_filepath)
         if folder == 'DVF':
             dvf_path = os.path.join(input_path, folder)
             for patient_path in os.listdir(dvf_path):
                 patient = patient_path.split('/')[-1]
-                print(patient)
+                print("Patient:", patient)
                 patient_path = os.path.join(dvf_path, patient)
                 for file in os.listdir(patient_path):
                     if file.endswith('.nii'):
                         dvf_filepath = os.path.join(patient_path, file)
-                        print(dvf_output_path)
+                        print("DVF Out", dvf_output_path)
                         dvf_out_filepath = os.path.join(
                             dvf_output_path, '{}_inv.nii'.format(patient))
-                        shutil.copy(dvf_filepath, dvf_out_filepath)
+                        shutil.move(dvf_filepath, dvf_out_filepath)
         if folder == 'PET_Rigid':
             pet_path = os.path.join(input_path, folder)
             for patient_path in os.listdir(pet_path):
-                patient = patient_path.split('/')[-1]
+                patient = os.path.splitext(patient_path)[0]
                 print(patient)
                 patient_path = os.path.join(pet_path, patient)
-                for file in os.listdir(patient_path):
-                    if file.endswith('.nii'):
-                        pet_filepath = os.path.join(patient_path, file)
-                        pet_out_filepath = os.path.join(
-                            pet_output_path, '{}_inv.nii'.format(patient))
-                        shutil.copy(pet_filepath, pet_out_filepath)
+                pet_out_filepath = os.path.join(
+                    pet_output_path, '{}_inv.nii'.format(patient))
+                shutil.move(patient_path, pet_out_filepath)
         # Write for Fixed image to change name to patient_inv.nii
         else:
             print('No important info')
 
 
 def main(argv=None):
-    organise_scans('/mnt/e/Mphys/resample_data128/', rigid_output_path='/mnt/e/Mphys/DataResampled128/PCT_Rigid',
-                   dvf_output_path='/mnt/e/Mphys/DataResampled128/DVF', pet_output_path='/mnt/e/Mphys/DataResampled128/PET')
+    organise_scans('/mnt/e/MPhys/resample_data128/', rigid_output_path='/mnt/e/MPhys/DataResampled128/moving',
+                   dvf_output_path='/mnt/e/MPhys/DataResampled128/DVF', pet_output_path='/mnt/e/MPhys/DataResampled128/fixed')
 
 
 if __name__ == '__main__':
