@@ -122,6 +122,7 @@ RegNet/
 *.json
 *.JPG
 *.nii
+*.h5
 #Config file
 *.ini
 *.png
