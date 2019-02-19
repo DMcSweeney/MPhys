@@ -1,15 +1,16 @@
 """Training CNN for registration in Keras. Assumes all inputs are same shape."""
 
 from keras.layers import Input, Conv3D, MaxPooling3D, concatenate, UpSampling3D
-from keras.layers import Conv3DTranspose, BatchNormalization, LeakyReLU
+from keras.layers import Conv3DTranspose, BatchNormalization
 from keras.models import Model
 from keras.initializers import RandomNormal
 from keras.utils import plot_model
 from keras.callbacks import ReduceLROnPlateau, Callback, ModelCheckpoint, TensorBoard
 import dataLoader as load
-import numpy as np
+from helpers import Helpers
 import math
 
+helper = Helpers()
 # If on server
 fixed_dir = "/hepgpu3-data1/dmcsween/Data128/ResampleData/PlanningCT"
 moving_dir = "/hepgpu3-data1/dmcsween/Data128/ResampleData/PET_Rigid"
@@ -33,28 +34,6 @@ class LossHistory(Callback):
         self.losses.append(logs.get('loss'))
 
 
-def shuffle_inplace(fixed, moving, dvf):
-    assert len(fixed[:, ...]) == len(moving[:, ...]) == len(dvf[:, ...])
-    p = np.random.permutation(len(fixed[:, ...]))
-    return fixed[p], moving[p], dvf[p]
-
-
-def generator(inputs, label, batch_size=3):
-    x_dim, y_dim, z_dim, channel = inputs[0].shape[1:]
-    fixed_input, moving_input = inputs
-    batch_fixed, batch_moving = np.zeros((batch_size, x_dim, y_dim, z_dim, channel)), np.zeros(
-        (batch_size, x_dim, y_dim, z_dim, channel))
-    # add 3 due to 3D vector
-    batch_label = np.zeros((batch_size, x_dim, y_dim, z_dim, 3))
-    while True:
-        for i in range(batch_size):
-            # Random index from dataset
-            index = np.random.choice(len(label), 1)
-            batch_fixed[i], batch_moving[i] = inputs[0][index, ...], inputs[1][index, ...]
-            batch_label[i] = label[index, ...]
-        yield ({'input_1': batch_fixed, 'input_2': batch_moving}, {'dvf': batch_label})
-
-
 def train():
     # Load DATA
     fixed_image, moving_image, dvf_label = load.data_reader(fixed_dir, moving_dir, dvf_dir)
@@ -63,13 +42,18 @@ def train():
     fixed_array = fixed_image.get_data()
     moving_array = moving_image.get_data()
     dvf_array = dvf_label.get_data(is_image=False)
-    print(fixed_array.dtype)
     # Shuffle arrays
-    fixed_array, moving_array, dvf_array = shuffle_inplace(fixed_array, moving_array, dvf_array)
+    fixed_array, moving_array, dvf_array = helper.shuffle_inplace(
+        fixed_array, moving_array, dvf_array)
 
-    # Split into validation and training set
-    validation_fixed, validation_moving, validation_dvf, train_fixed, train_moving, train_dvf = load.split_data(
-        fixed_array, moving_array, dvf_array, validation_ratio=0.2)
+    # Split into test and training set
+    # Training/Validation/Test = 80/15/5 split
+    test_fixed, test_moving, test_dvf, train_fixed, train_moving, train_dvf = helper.split_data(
+        fixed_array, moving_array, dvf_array, split_ratio=0.05)
+
+    # Split training into validation and training set
+    validation_fixed, validation_moving, validation_dvf, train_fixed, train_moving, train_dvf = helper.split_data(
+        train_fixed, train_moving, train_dvf, split_ratio=0.15)
 
     print("PCT Shape:", train_fixed.shape)
     print("PET Shape:", train_moving.shape)
@@ -150,11 +134,11 @@ def train():
     plot_model(model, to_file='model.png')
 
     model.compile(optimizer='Adam', loss='mean_squared_error', metrics=["accuracy"])
-    model.fit_generator(generator=generator(inputs=[train_fixed, train_moving], label=train_dvf, batch_size=batch_size),
+    model.fit_generator(generator=helper.generator(inputs=[train_fixed, train_moving], label=train_dvf, batch_size=batch_size),
                         steps_per_epoch=math.ceil(train_fixed.shape[0]/batch_size),
                         epochs=100, verbose=1,
                         callbacks=callbacks,
-                        validation_data=generator(
+                        validation_data=helper.generator(
                             inputs=[validation_fixed, validation_moving], label=validation_dvf),
                         validation_steps=math.ceil(validation_fixed.shape[0]/batch_size),
                         use_multiprocessing=True)

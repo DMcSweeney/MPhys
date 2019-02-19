@@ -1,7 +1,5 @@
 """
 Load data for training and validation
-
-
 """
 import os
 import nibabel as nib
@@ -48,18 +46,3 @@ class DataLoader:
                                 for i in range(self.num_data)])
             out = np.expand_dims(np.stack(array, axis=0), axis=-1)
         return out
-
-
-def split_data(fixed_image, moving_image, dvf_label, validation_ratio):
-    validation_size = int(validation_ratio*fixed_image.shape[0])
-
-    validation_fixed = fixed_image[:validation_size, ...]
-    validation_moving = moving_image[:validation_size, ...]
-    validation_dvf = np.squeeze(dvf_label[:validation_size, ...])
-
-    train_fixed = fixed_image[validation_size:, ...]
-    train_moving = moving_image[validation_size:, ...]
-    train_dvf = np.squeeze(dvf_label[validation_size:, ...])
-    print("Validation shape:", validation_fixed.shape)
-    print("Training shape:", train_fixed.shape)
-    return validation_fixed, validation_moving, validation_dvf, train_fixed, train_moving, train_dvf
