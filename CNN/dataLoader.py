@@ -32,7 +32,7 @@ class DataLoader:
                            else 1 for i in range(self.num_data)]
 
         self.data_shape = list(np.shape(self.file_objects[0].dataobj))
-        self.flatten = self.get_data().reshape(self.num_data, -1)
+        #self.flatten = self.get_data().reshape(self.num_data, -1)
 
     def get_data(self, is_image=True):
         # Get data in form of array
