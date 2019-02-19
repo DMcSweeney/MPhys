@@ -6,11 +6,16 @@ import math
 
 helper = Helpers()
 
-
+# On server
+fixed_dir = "/hepgpu3-data1/dmcsween/Data128/ResampleData/PlanningCT"
+moving_dir = "/hepgpu3-data1/dmcsween/Data128/ResampleData/PET_Rigid"
+dvf_dir = "/hepgpu3-data1/dmcsween/Data128/ResampleData/DVF"
+"""
+# On laptop 
 fixed_dir = "E:/MPhys/DataSplit/TrainingSet/PCT"
 moving_dir = "E:/MPhys/DataSplit/TrainingSet/PET"
 dvf_dir = "E:/MPhys/DataSplit/TrainingSet/DVF"
-
+"""
 batch_size = 2
 
 
