@@ -2,10 +2,10 @@
 echo \# Bash script to perform registration using elastix
 
 cwd="/mnt/d/Documents/GitHub/MPhys/"
-base_dir="/mnt/e/Mphys/resample_data"
-fixed_ref="PlanningCT"
-moving_ref="PET_Rigid"
-out_dir="/mnt/e/Mphys/resample_data"
+base_dir="/mnt/e/Mphys/resample_data128"
+moving_ref="PlanningCT"
+fixed_ref="PET_Rigid"
+out_dir="/mnt/e/Mphys/resample_data128"
 
 # if [ -d ${out_dir}  ]; then
 #   rm -rf ${out_dir}

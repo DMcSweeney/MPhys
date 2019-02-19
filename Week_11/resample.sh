@@ -3,9 +3,9 @@ echo \# Bash script to perform resampling to coarser image
 
 # cwd="/mnt/e/Mphys/" # Dir from which script is run
 base_dir="/mnt/e/Mphys/NiftyPatients" # Directory containing files to resample
-fixed_ref="PlanningCT"
-moving_ref="PET_Rigid"
-out_dir="/mnt/e/Mphys/resample_data" #Dir to which we should write
+moving_ref="PlanningCT"
+fixed_ref="PET_Rigid"
+out_dir="/mnt/e/Mphys/resample_data128" #Dir to which we should write
 
 if [ -d ${out_dir}  ]; then
   rm -rf ${out_dir}
