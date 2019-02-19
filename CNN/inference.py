@@ -11,7 +11,7 @@ fixed_dir = "/hepgpu3-data1/dmcsween/Data128/ResampleData/PlanningCT"
 moving_dir = "/hepgpu3-data1/dmcsween/Data128/ResampleData/PET_Rigid"
 dvf_dir = "/hepgpu3-data1/dmcsween/Data128/ResampleData/DVF"
 """
-# On laptop 
+# On laptop
 fixed_dir = "E:/MPhys/DataSplit/TrainingSet/PCT"
 moving_dir = "E:/MPhys/DataSplit/TrainingSet/PET"
 dvf_dir = "E:/MPhys/DataSplit/TrainingSet/DVF"
@@ -20,29 +20,29 @@ batch_size = 2
 
 
 def inference():
-    # Load data to Transform
+    print('Load data to Transform')
     fixed_predict, moving_predict, dvf_label = load.data_reader(fixed_dir, moving_dir, dvf_dir)
 
-    # Turn into numpy arrays
+    print('Turn into numpy arrays')
     fixed_array = fixed_predict.get_data()
     moving_array = moving_predict.get_data()
     dvf_array = dvf_label.get_data(is_image=False)
 
-    # Shuffle
+    print('Shuffle')
     fixed_array, moving_array, dvf_array = helper.shuffle_inplace(
         fixed_array, moving_array, dvf_array)
-    # Split into test/training data
+    print('Split into test/training data')
     test_fixed, test_moving, test_dvf, train_fixed, train_moving, train_dvf = helper.split_data(
         fixed_array, moving_array, dvf_array, split_ratio=0.05)
 
-    # Load models
+    print('Load models')
     model = load_model('best_model.h5')
     model.compile(optimizer='Adam', loss='mean_squared_error', metrics=["accuracy"])
     dvf = model.predict_generator(helper.generator(
         inputs=[test_fixed, test_moving], label=test_dvf, predict=True),
         steps=math.ceil(test_fixed.shape[0]/batch_size),
         verbose=1)
-    # Save DVF
+    print('Save DVF')
     helper.write_images(dvf, test_fixed, file_path='./outputs/', file_prefix='dvf')
     # Warp image
 

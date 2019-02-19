@@ -56,7 +56,6 @@ class Helpers(object):
         if file_path is not None:
             batch_size = input_.shape[0]
             affine = [base_affine[idx].getaffine for idx in range(batch_size)]
-            affine = [[-8, 0, 0, 260], [0, -8, 0, 220], [0, 0, 4, 130], [0, 0, 0, 1]]
             [nib.save(nib.Nifti1Image(input_[idx, ...], affine[idx]),
                       os.path.join(file_path,
                                    file_prefix + '%s.nii' % idx))
