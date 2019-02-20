@@ -9,6 +9,8 @@ from keras.callbacks import ReduceLROnPlateau, Callback, ModelCheckpoint, Tensor
 import dataLoader as load
 from helpers import Helpers
 import math
+from time import time
+
 
 helper = Helpers()
 # If on server
@@ -122,8 +124,8 @@ def train():
     history = LossHistory()
     checkpoint = ModelCheckpoint('best_model.h5', monitor='val_acc',
                                  verbose=1, save_best_only=True, period=1)
-    tensorboard = TensorBoard(log_dir='./logs', histogram_freq=1,
-                              batch_size=4, write_graph=True, write_grads=True, update_freq='epoch')
+    tensorboard = TensorBoard(log_dir='./logs', batch_size=batch_size,
+                              write_graph=True, write_grads=True, update_freq='epoch')
     callbacks = [reduce_lr, history, checkpoint, tensorboard]
     # Train
     model = Model(inputs=[fixed_image, moving_image], outputs=dvf)
