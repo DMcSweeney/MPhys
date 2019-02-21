@@ -34,6 +34,7 @@ class Helpers(object):
         np.random.seed(1234)
         assert len(fixed[:, ...]) == len(moving[:, ...]) == len(dvf[:, ...])
         p = np.random.permutation(len(fixed[:, ...]))
+        print("Permutation:", p)
         return fixed[p], moving[p], dvf[p]
 
     @staticmethod
