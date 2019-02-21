@@ -75,14 +75,16 @@ def train():
                 padding='same', name='downsample3')(x1)
     x1 = BatchNormalization()(x1)
 
+    x1 = Conv3D(64, (3, 3, 3), activation=activation, padding='same', name='down_1a')(x1)
+    x1 = Conv3D(64, (3, 3, 3), activation=activation, padding='same', name='down_1b')(x1)
     x1 = Conv3D(64, (3, 3, 3), activation=activation, padding='same', name='down_1c')(x1)
-    x1 = Conv3D(64, (3, 3, 3), activation=activation, padding='same', name='down_1d')(x1)
     x1 = BatchNormalization()(x1)
 
     x = MaxPooling3D(pool_size=(2, 2, 2), padding='same', name='Pool_1')(x1)
 
     x2 = Conv3D(128, (3, 3, 3), activation=activation, padding='same', name='down_2a')(x)
     x2 = Conv3D(128, (3, 3, 3), activation=activation, padding='same', name='down_2b')(x2)
+    x2 = Conv3D(128, (3, 3, 3), activation=activation, padding='same', name='down_2c')(x2)
     x2 = BatchNormalization()(x2)
 
     x = MaxPooling3D(pool_size=(2, 2, 2), padding='same', name='Pool_2')(x2)
@@ -91,8 +93,19 @@ def train():
     x3 = Conv3D(256, (3, 3, 3), activation=activation, padding='same', name='down_3b')(x3)
     x3 = BatchNormalization()(x3)
 
+    x = MaxPooling3D(pool_size=(2, 2, 2), padding='same', name='Pool_3')(x3)
+
+    x4 = Conv3D(512, (3, 3, 3), activation=activation, padding='same', name='down_4a')(x)
+
+    x = UpSampling3D(size=(2, 2, 2), name='UpSamp_4')(x4)
+    y3 = Conv3DTranspose(256, (3, 3, 3), activation=activation, padding='same', name='Up_3a')(x)
+    y3 = Conv3DTranspose(256, (3, 3, 3), activation=activation, padding='same', name='Up_3b')(y3)
+    y3 = Conv3DTranspose(256, (3, 3, 3), activation=activation, padding='same', name='Up_3c')(y3)
+    y3 = BatchNormalization()(y3)
+
     x = UpSampling3D(size=(2, 2, 2), name='UpSamp_3')(x3)
     y2 = Conv3DTranspose(128, (3, 3, 3), activation=activation, padding='same', name='Up_2a')(x)
+    y2 = Conv3DTranspose(128, (3, 3, 3), activation=activation, padding='same', name='Up_2b')(y2)
     y2 = Conv3DTranspose(128, (3, 3, 3), activation=activation, padding='same', name='Up_2b')(y2)
     y2 = BatchNormalization()(y2)
 
