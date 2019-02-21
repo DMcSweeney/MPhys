@@ -45,13 +45,14 @@ def inference():
     print('Load models')
     model = load_model('best_model.h5')
     model.compile(optimizer='Adam', loss='mean_squared_error', metrics=["accuracy"])
-    dvf = model.predict_generator(helper.generator(
-        inputs=[test_fixed, test_moving], label=test_dvf, predict=True),
-        steps=math.ceil(test_fixed.shape[0]/batch_size),
-        verbose=1)
+    dvf = model.predict([test_fixed, test_moving], steps=math.ceil(
+        test_fixed.shape[0]/batch_size), verbose=1)
     print('Save DVF')
     helper.write_images(dvf, test_fixed_affine, file_path='./outputs/', file_prefix='dvf')
-    # Warp image
+    # Save images
+    helper.write_images(test_fixed, test_fixed_affine, file_path='./outputs/', file_prefix='fixed')
+    helper.write_images(test_moving, test_moving_affine,
+                        file_path='./outputs/', file_prefix='moving')
 
     # Save warped
 
