@@ -106,7 +106,7 @@ def train():
     x = UpSampling3D(size=(2, 2, 2), name='UpSamp_3')(x3)
     y2 = Conv3DTranspose(128, (3, 3, 3), activation=activation, padding='same', name='Up_2a')(x)
     y2 = Conv3DTranspose(128, (3, 3, 3), activation=activation, padding='same', name='Up_2b')(y2)
-    y2 = Conv3DTranspose(128, (3, 3, 3), activation=activation, padding='same', name='Up_2b')(y2)
+    y2 = Conv3DTranspose(128, (3, 3, 3), activation=activation, padding='same', name='Up_2c')(y2)
     y2 = BatchNormalization()(y2)
 
     merge2 = concatenate([x2, y2])
@@ -114,6 +114,7 @@ def train():
     x = UpSampling3D(size=(2, 2, 2), name='UpSamp_2')(merge2)
     y1 = Conv3DTranspose(64, (3, 3, 3), activation=activation, padding='same', name='Up_1a')(x)
     y1 = Conv3DTranspose(64, (3, 3, 3), activation=activation, padding='same', name='Up_1b')(y1)
+    y1 = Conv3DTranspose(64, (3, 3, 3), activation=activation, padding='same', name='Up_1c')(y1)
     y1 = BatchNormalization()(y1)
 
     merge1 = concatenate([x1, y1])
