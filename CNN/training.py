@@ -9,7 +9,6 @@ from keras.callbacks import ReduceLROnPlateau, Callback, ModelCheckpoint, Tensor
 import dataLoader as load
 from helpers import Helpers
 import math
-from time import time
 
 
 helper = Helpers()
@@ -132,6 +131,7 @@ def train():
                  kernel_initializer=RandomNormal(mean=0.0, stddev=1e-5))(upsample)
     dvf = Conv3D(3, kernel_size=1, activation=activation, padding='same', name='dvf',
                  kernel_initializer=RandomNormal(mean=0.0, stddev=1e-5))(dvf)
+
     # Callbacks
     reduce_lr = ReduceLROnPlateau(monitor='val_acc', factor=0.2,
                                   patience=5, min_lr=0.001)
@@ -141,6 +141,7 @@ def train():
     tensorboard = TensorBoard(log_dir='./logs', batch_size=batch_size,
                               write_graph=True, write_grads=True, update_freq='epoch')
     callbacks = [reduce_lr, history, checkpoint, tensorboard]
+
     # Train
     model = Model(inputs=[fixed_image, moving_image], outputs=dvf)
     for layer in model.layers:

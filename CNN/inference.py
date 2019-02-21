@@ -53,11 +53,12 @@ def inference():
         test_fixed.shape[0]/batch_size), verbose=1)
 
     print('Save DVF')
-    helper.write_images(dvf, test_fixed_affine, file_path='./outputs/', file_prefix='dvf')
     # Save images
     helper.write_images(test_fixed, test_fixed_affine, file_path='./outputs/', file_prefix='fixed')
     helper.write_images(test_moving, test_moving_affine,
                         file_path='./outputs/', file_prefix='moving')
+
+    helper.write_images(dvf, test_fixed_affine, file_path='./outputs/', file_prefix='dvf')
 
     # Save warped
 
