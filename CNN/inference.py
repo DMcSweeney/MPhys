@@ -31,11 +31,13 @@ def inference():
 
     print("Fixed affine:", fixed_affine.shape)
     print("DVF affine:", dvf_affine.shape)
+
     print('Shuffle')
     fixed_array, moving_array, dvf_array = helper.shuffle_inplace(
         fixed_array, moving_array, dvf_array)
     fixed_affine, moving_affine, dvf_affine = helper.shuffle_inplace(
         fixed_affine, moving_affine, dvf_affine)
+
     print('Split into test/training data')
     test_fixed, test_moving, test_dvf, train_fixed, train_moving, train_dvf = helper.split_data(
         fixed_array, moving_array, dvf_array, split_ratio=0.05)
@@ -43,10 +45,13 @@ def inference():
         fixed_affine, moving_affine, dvf_affine, split_ratio=0.05)
 
     print('Load models')
+    print("Fixed input", test_fixed.shape)
+    print("Moving input", test_moving.shape)
     model = load_model('best_model.h5')
     model.compile(optimizer='Adam', loss='mean_squared_error', metrics=["accuracy"])
     dvf = model.predict([test_fixed, test_moving], steps=math.ceil(
         test_fixed.shape[0]/batch_size), verbose=1)
+
     print('Save DVF')
     helper.write_images(dvf, test_fixed_affine, file_path='./outputs/', file_prefix='dvf')
     # Save images
