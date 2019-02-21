@@ -54,6 +54,24 @@ def generator(inputs, label, batch_size=3):
             batch_label[i] = label[index, ...]
         yield ({'input_1': batch_fixed, 'input_2': batch_moving}, {'dvf': batch_label})
 
+gen = ImageDataGenerator(horizontal_flip = True,
+                         vertical_flip = False,
+                         width_shift_range = 0.1,
+                         height_shift_range = 0.1,
+                         zoom_range = 0.1,
+                         rotation_range = 40)
+
+def gen_flow_for_two_inputs(inputs, label, batch_Size = 3 ):
+    x1, x2 = inputs
+    genX1 = gen.flow(X1,label,  batch_size=batch_size,seed=666)
+    genX2 = gen.flow(X1,X2, batch_size=batch_size,seed=666)
+    while True:
+            X1i = genX1.next()
+            X2i = genX2.next()
+            #Assert arrays are equal - this was for peace of mind, but slows down training
+            #np.testing.assert_array_equal(X1i[0],X2i[0])
+            yield [x1i[0],x2i], x1i[1]
+
 
 def train():
     # Load DATA
@@ -150,7 +168,8 @@ def train():
     plot_model(model, to_file='model.png')
 
     model.compile(optimizer='Adam', loss='mean_squared_error', metrics=["accuracy"])
-    model.fit_generator(generator=generator(inputs=[train_fixed, train_moving], label=train_dvf, batch_size=batch_size),
+    model.fit_generator(generator=generator(inputs=[train_fixed, train_moving], label=train_dvf,
+                        batch_size=batch_size),
                         steps_per_epoch=math.ceil(train_fixed.shape[0]/batch_size),
                         epochs=100, verbose=1,
                         callbacks=callbacks,
