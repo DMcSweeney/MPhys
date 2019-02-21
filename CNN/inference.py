@@ -49,7 +49,7 @@ def inference():
     print("Moving input", test_moving.shape)
     model = load_model('best_model.h5')
     model.compile(optimizer='Adam', loss='mean_squared_error', metrics=["accuracy"])
-    dvf = model.predict([test_fixed, test_moving], steps=math.ceil(
+    dvf = model.predict_generator(helper.generator([test_fixed, test_moving], label=test_dvf, predict=True), steps=math.ceil(
         test_fixed.shape[0]/batch_size), verbose=1)
 
     print('Save DVF')
