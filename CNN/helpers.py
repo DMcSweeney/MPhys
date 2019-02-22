@@ -2,7 +2,7 @@
 import numpy as np
 import nibabel as nib
 import os
-import datetime as date
+import time
 
 
 class Helpers(object):
@@ -68,20 +68,20 @@ class Helpers(object):
         np.random.seed(1234)
         assert len(fixed[:, ...]) == len(moving[:, ...]) == len(dvf[:, ...])
         p = np.random.permutation(len(fixed[:, ...]))
-        np.random.seed(date.datetime.now())
+        np.random.seed(int(time.time())
         return fixed[p], moving[p], dvf[p]
 
     @staticmethod
     def split_data(fixed_image, moving_image, dvf_label, split_ratio):
-        validation_size = int(split_ratio*fixed_image.shape[0])
+        validation_size=int(split_ratio*fixed_image.shape[0])
 
-        validation_fixed = fixed_image[:validation_size, ...]
-        validation_moving = moving_image[:validation_size, ...]
-        validation_dvf = np.squeeze(dvf_label[:validation_size, ...])
+        validation_fixed=fixed_image[:validation_size, ...]
+        validation_moving=moving_image[:validation_size, ...]
+        validation_dvf=np.squeeze(dvf_label[:validation_size, ...])
 
-        train_fixed = fixed_image[validation_size:, ...]
-        train_moving = moving_image[validation_size:, ...]
-        train_dvf = np.squeeze(dvf_label[validation_size:, ...])
+        train_fixed=fixed_image[validation_size:, ...]
+        train_moving=moving_image[validation_size:, ...]
+        train_dvf=np.squeeze(dvf_label[validation_size:, ...])
         print("Validation shape:", validation_fixed.shape)
         print("Training shape:", train_fixed.shape)
         return validation_fixed, validation_moving, validation_dvf, train_fixed, train_moving, train_dvf
@@ -89,7 +89,7 @@ class Helpers(object):
     @staticmethod
     def write_images(input_, base_affine, file_path=None, file_prefix=''):
         if file_path is not None:
-            batch_size = input_.shape[0]
+            batch_size=input_.shape[0]
             print("affine shape", base_affine.shape)
             print("Input shape", input_.shape)
             [nib.save(nib.Nifti1Image(input_[idx, ...], base_affine[idx, ...]),
