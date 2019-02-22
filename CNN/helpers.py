@@ -26,8 +26,8 @@ class Helpers(object):
                         batch_moving = Helpers.flip(input=batch_moving)
                     batch_fixed = Helpers.noise(batch_fixed, batch_size)
                     batch_moving = Helpers.noise(batch_moving, batch_size)
-                    batch_fixed = Helpers.normalise(batch_fixed)
-                    batch_moving = Helpers.normalise(batch_moving)
+                batch_fixed = Helpers.normalise(batch_fixed)
+                batch_moving = Helpers.normalise(batch_moving)
                 yield ({'input_1': batch_fixed, 'input_2': batch_moving}, {'dvf': batch_label})
         else:
             while True:
@@ -35,8 +35,8 @@ class Helpers(object):
                     # Random index from dataset
                     index = np.random.choice(len(label), 1)
                     batch_fixed[i], batch_moving[i] = inputs[0][index, ...], inputs[1][index, ...]
-                    batch_fixed = Helpers.normalise(batch_fixed)
-                    batch_moving = Helpers.normalise(batch_moving)
+                batch_fixed = Helpers.normalise(batch_fixed)
+                batch_moving = Helpers.normalise(batch_moving)
                 yield ({'input_1': batch_fixed, 'input_2': batch_moving})
 
     @staticmethod
