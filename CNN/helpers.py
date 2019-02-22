@@ -58,8 +58,7 @@ class Helpers(object):
         var_original = np.var(input[:, 100:110, 10:20, 60:70])
         var_multiplied = np.var(random*input[:, 100:110, 10:20, 60:70])
         var_noise = var_multiplied - random**2 * var_original
-        print(var_noise)
-        std_noise = np.sqrt(var_noise)
+        std_noise = np.sqrt(abs(var_noise))
         noise_field = np.random.normal(loc=0, scale=std_noise, size=input.shape)
         return input + noise_field
 
