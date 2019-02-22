@@ -43,7 +43,9 @@ class Helpers(object):
     def normalise(input):
         maxi = np.amax(input, axis=0)
         mini = np.amax(input, axis=0)
+        print("maxi shape:", maxi.shape)
         med_maxi = np.median(maxi)
+        print("med_maxi shape:", med_maxi.shape)
         med_mini = np.median(mini)
         normal_input = (input-med_mini)/(med_maxi-med_mini)
         return np.clip(normal_input, a_min=0, a_max=1)
