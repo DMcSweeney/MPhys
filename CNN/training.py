@@ -150,15 +150,14 @@ def train():
     # print(model.summary())
     plot_model(model, to_file='model.png')
 
-    model.compile(optimizer='Adam', loss='mean_squared_error')
+    model.compile(optimizer='Adam', loss='mean_squared_error', metric='rmse')
     model.fit_generator(generator=helper.generator(inputs=[train_fixed, train_moving], label=train_dvf, batch_size=batch_size),
                         steps_per_epoch=math.ceil(train_fixed.shape[0]/batch_size),
                         epochs=100, verbose=1,
                         callbacks=callbacks,
                         validation_data=helper.generator(
                             inputs=[validation_fixed, validation_moving], label=validation_dvf),
-                        validation_steps=math.ceil(validation_fixed.shape[0]/batch_size),
-                        use_multiprocessing=True)
+                        validation_steps=math.ceil(validation_fixed.shape[0]/batch_size))
 
     # accuracy = model.evaluate_generator(generator(
     #    inputs=[validation_fixed, validation_moving], label=validation_dvf, batch_size=batch_size), steps=1, verbose=1)
