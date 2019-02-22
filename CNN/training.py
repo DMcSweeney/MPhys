@@ -34,13 +34,14 @@ class LossHistory(Callback):
     def on_batch_end(self, batch, logs={}):
         self.losses.append(logs.get('loss'))
 
+
 """
 def shuffle_inplace(fixed, moving, dvf):
     assert len(fixed[:, ...]) == len(moving[:, ...]) == len(dvf[:, ...])
     p = np.random.permutation(len(fixed[:, ...]))
     return fixed[p], moving[p], dvf[p]
 
-  
+
 def generator(inputs, label, batch_size=3):
     x_dim, y_dim, z_dim, channel = inputs[0].shape[1:]
     fixed_input, moving_input = inputs
@@ -74,6 +75,7 @@ def gen_flow_for_two_inputs(inputs, label, batch_Size = 3 ):
             #np.testing.assert_array_equal(X1i[0],X2i[0])
             yield [x1i[0],x2i], x1i[1]
 """
+
 
 def train():
     # Load DATA
@@ -190,15 +192,8 @@ def train():
     # print(model.summary())
     plot_model(model, to_file='model.png')
 
-<<<<<<< HEAD
     model.compile(optimizer='Adam', loss='mean_squared_error', metrics=["val_loss"])
     model.fit_generator(generator=generator(inputs=[train_fixed, train_moving], label=train_dvf, batch_size=batch_size),
-=======
-    model.compile(optimizer='Adam', loss='mean_squared_error', metrics=["accuracy"])
-
-    model.fit_generator(generator=generator(inputs=[train_fixed, train_moving], label=train_dvf,
-                        batch_size=batch_size),
->>>>>>> 2228d30cdaa25a091d3a077091d5960c6bb10298
                         steps_per_epoch=math.ceil(train_fixed.shape[0]/batch_size),
                         epochs=100, verbose=1,
                         callbacks=callbacks,
