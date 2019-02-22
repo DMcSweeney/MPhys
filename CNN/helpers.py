@@ -41,8 +41,8 @@ class Helpers(object):
 
     @staticmethod
     def normalise(input):
-        maxi = max(input)
-        mini = min(input)
+        maxi = max(input.all())
+        mini = min(input.all())
         med_maxi = np.median(maxi)
         med_mini = np.median(mini)
         normal_input = (input-med_mini)/(med_maxi-med_mini)
