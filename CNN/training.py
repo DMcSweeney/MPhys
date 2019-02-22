@@ -35,48 +35,6 @@ class LossHistory(Callback):
         self.losses.append(logs.get('loss'))
 
 
-"""
-def shuffle_inplace(fixed, moving, dvf):
-    assert len(fixed[:, ...]) == len(moving[:, ...]) == len(dvf[:, ...])
-    p = np.random.permutation(len(fixed[:, ...]))
-    return fixed[p], moving[p], dvf[p]
-
-
-def generator(inputs, label, batch_size=3):
-    x_dim, y_dim, z_dim, channel = inputs[0].shape[1:]
-    fixed_input, moving_input = inputs
-    batch_fixed, batch_moving = np.zeros((batch_size, x_dim, y_dim, z_dim, channel)), np.zeros(
-        (batch_size, x_dim, y_dim, z_dim, channel))
-    # add 3 due to 3D vector
-    batch_label = np.zeros((batch_size, x_dim, y_dim, z_dim, 3))
-    while True:
-        for i in range(batch_size):
-            # Random index from dataset
-            index = np.random.choice(len(label), 1)
-            batch_fixed[i], batch_moving[i] = inputs[0][index, ...], inputs[1][index, ...]
-            batch_label[i] = label[index, ...]
-        yield ({'input_1': batch_fixed, 'input_2': batch_moving}, {'dvf': batch_label})
-
-gen = ImageDataGenerator(horizontal_flip = True,
-                         vertical_flip = False,
-                         width_shift_range = 0.1,
-                         height_shift_range = 0.1,
-                         zoom_range = 0.1,
-                         rotation_range = 40)
-
-def gen_flow_for_two_inputs(inputs, label, batch_Size = 3 ):
-    x1, x2 = inputs
-    genX1 = gen.flow(X1,label,  batch_size=batch_size,seed=666)
-    genX2 = gen.flow(X1,X2, batch_size=batch_size,seed=666)
-    while True:
-            X1i = genX1.next()
-            X2i = genX2.next()
-            #Assert arrays are equal - this was for peace of mind, but slows down training
-            #np.testing.assert_array_equal(X1i[0],X2i[0])
-            yield [x1i[0],x2i], x1i[1]
-"""
-
-
 def train():
     # Load DATA
     fixed_image, moving_image, dvf_label = load.data_reader(fixed_dir, moving_dir, dvf_dir)
@@ -175,10 +133,10 @@ def train():
                  kernel_initializer=RandomNormal(mean=0.0, stddev=1e-5))(dvf)
 
     # Callbacks
-    reduce_lr = ReduceLROnPlateau(monitor='val_acc', factor=0.2,
+    reduce_lr = ReduceLROnPlateau(monitor='val_loss', factor=0.2,
                                   patience=5, min_lr=0.001)
     history = LossHistory()
-    checkpoint = ModelCheckpoint('best_model.h5', monitor='val_acc',
+    checkpoint = ModelCheckpoint('best_model.h5', monitor='val_loss',
                                  verbose=1, save_best_only=True, period=1)
     tensorboard = TensorBoard(log_dir='./logs', batch_size=batch_size,
                               write_graph=True, write_grads=True, update_freq='epoch')

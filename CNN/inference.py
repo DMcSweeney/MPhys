@@ -8,20 +8,16 @@ helper = Helpers()
 
 
 # On server
-fixed_dir = "/hepgpu3-data1/dmcsween/DataWithInv/fixed"
-moving_dir = "/hepgpu3-data1/dmcsween/DataWithInv/moving"
-dvf_dir = "/hepgpu3-data1/dmcsween/DataWithInv/DVF"
+fixed_dir = "/hepgpu3-data1/dmcsween/Data128/ResampleData/fixed"
+moving_dir = "/hepgpu3-data1/dmcsween/Data128/ResampleData/moving"
+dvf_dir = "/hepgpu3-data1/dmcsween/Data128/ResampleData/DVF"
 """
 # On laptop
 fixed_dir = "E:/MPhys/Data128/PlanningCT"
 moving_dir = "E:/MPhys/Data128/PET_Rigid"
 dvf_dir = "E:/MPhys/Data128/DVF"
 """
-<<<<<<< HEAD
 batch_size = 1
-=======
-batch_size = 3
->>>>>>> 2228d30cdaa25a091d3a077091d5960c6bb10298
 
 
 def inference():

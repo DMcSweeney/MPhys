@@ -20,6 +20,13 @@ class Helpers(object):
                     index = np.random.choice(len(label), 1)
                     batch_fixed[i], batch_moving[i] = inputs[0][index, ...], inputs[1][index, ...]
                     batch_label[i] = label[index, ...]
+                    if np.random.uniform() > 0.5:
+                        batch_fixed = Helpers.flip(input=batch_fixed)
+                        batch_moving = Helpers.flip(input=batch_moving)
+                    batch_fixed = Helpers.noise(batch_fixed, batch_size)
+                    batch_moving = Helpers.noise(batch_moving, batch_size)
+                    batch_fixed = Helpers.normalise(batch_fixed)
+                    batch_moving = Helpers.normalise(batch_moving)
                 yield ({'input_1': batch_fixed, 'input_2': batch_moving}, {'dvf': batch_label})
         else:
             while True:
@@ -27,7 +34,32 @@ class Helpers(object):
                     # Random index from dataset
                     index = np.random.choice(len(label), 1)
                     batch_fixed[i], batch_moving[i] = inputs[0][index, ...], inputs[1][index, ...]
+                    batch_fixed = Helpers.normalise(batch_fixed)
+                    batch_moving = Helpers.normalise(batch_moving)
                 yield ({'input_1': batch_fixed, 'input_2': batch_moving})
+
+    @staticmethod
+    def normalise(input):
+        max = max(input)
+        min = min(input)
+        med_max = np.median(max)
+        med_min = np.median(min)
+        normal_input = (input-med_min)/(med_max-med_min)
+        return np.clip(normal_input, a_min=0, a_max=1)
+
+    @staticmethod
+    def flip(input):
+        return np.flip(input, axis=1)
+
+    @staticmethod
+    def noise(input, batch_size):
+        random = np.random.uniform()
+        var_original = np.var(input[:, 100:110, 10:20, 60:70])
+        var_multiplied = np.var(random*input[:, 100:110, 10:20, 60:70])
+        var_noise = var_multiplied - random**2 * var_original
+        std_noise = np.sqrt(var_noise)
+        noise_field = np.random.normal(loc=0, scale=std_noise, size=input.shape)
+        return input + noise_field
 
     @staticmethod
     def shuffle_inplace(fixed, moving, dvf):
@@ -58,7 +90,6 @@ class Helpers(object):
             batch_size = input_.shape[0]
             print("affine shape", base_affine.shape)
             print("Input shape", input_.shape)
-            #affine = [base_affine[idx] for idx in range(batch_size)]
             [nib.save(nib.Nifti1Image(input_[idx, ...], base_affine[idx, ...]),
                       os.path.join(file_path,
                                    file_prefix + '%s.nii' % idx))
