@@ -52,7 +52,26 @@ def generator(inputs, label, batch_size=3):
             index = np.random.choice(len(label), 1)
             batch_fixed[i], batch_moving[i] = inputs[0][index, ...], inputs[1][index, ...]
             batch_label[i] = label[index, ...]
+            if np.random.uniform() > 0.5 :
+                batch_fixed = flip(input = batch_fixed)
+                batch_moving = flip(input = batch_moving)
+            batch_fixed = noise(batch_fixed, batch_size)
+            batch_moving = noise(batch_moving, batch_size)
         yield ({'input_1': batch_fixed, 'input_2': batch_moving}, {'dvf': batch_label})
+
+
+def flip(input):
+    return np.flip(input, axis=1)
+
+def noise(input, batch_size):
+    random = np.random.uniform()
+    var_original = np.var(input[:, 100:110, 10:20, 60:70]) #to be decided
+    var_multiplied = np.var(random*input[:, 100:110, 10:20, 60:70])
+    var_noise = var_multiplied - random**2 * var_original
+    std_noise = sqrt(var_noise)
+    noise_field = np.random.normal(loc = 0, scale = std_noise, size = input.shape)
+    return input + noise_field
+
 
 gen = ImageDataGenerator(horizontal_flip = True,
                          vertical_flip = False,
@@ -151,10 +170,10 @@ def train():
     dvf = Conv3D(3, kernel_size=1, activation=activation, padding='same', name='dvf',
                  kernel_initializer=RandomNormal(mean=0.0, stddev=1e-5))(dvf)
     # Callbacks
-    reduce_lr = ReduceLROnPlateau(monitor='val_acc', factor=0.2,
+    reduce_lr = ReduceLROnPlateau(monitor='val_loss', factor=0.2,
                                   patience=5, min_lr=0.001)
     history = LossHistory()
-    checkpoint = ModelCheckpoint('best_model.h5', monitor='val_acc',
+    checkpoint = ModelCheckpoint('best_model.h5', monitor='val_loss',
                                  verbose=1, save_best_only=True, period=1)
     tensorboard = TensorBoard(log_dir='./logs', histogram_freq=1,
                               batch_size=4, write_graph=True, write_grads=True, update_freq='epoch')
@@ -167,7 +186,7 @@ def train():
     # print(model.summary())
     plot_model(model, to_file='model.png')
 
-    model.compile(optimizer='Adam', loss='mean_squared_error', metrics=["accuracy"])
+    model.compile(optimizer='Adam', loss='mean_squared_error', metrics=["accuracy", "val_loss"])
     model.fit_generator(generator=generator(inputs=[train_fixed, train_moving], label=train_dvf,
                         batch_size=batch_size),
                         steps_per_epoch=math.ceil(train_fixed.shape[0]/batch_size),
