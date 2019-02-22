@@ -123,6 +123,7 @@ RegNet/
 *.JPG
 *.nii
 *.h5
+*.tar.gz
 #Config file
 *.ini
 *.png
