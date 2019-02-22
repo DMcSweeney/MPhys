@@ -41,11 +41,11 @@ class Helpers(object):
 
     @staticmethod
     def normalise(input):
-        max = max(input)
-        min = min(input)
-        med_max = np.median(max)
-        med_min = np.median(min)
-        normal_input = (input-med_min)/(med_max-med_min)
+        maxi = max(input)
+        mini = min(input)
+        med_maxi = np.median(maxi)
+        med_mini = np.median(mini)
+        normal_input = (input-med_mini)/(med_maxi-med_mini)
         return np.clip(normal_input, a_min=0, a_max=1)
 
     @staticmethod
