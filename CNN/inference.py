@@ -8,9 +8,9 @@ helper = Helpers()
 
 
 # On server
-fixed_dir = "/hepgpu3-data1/dmcsween/Data128/ResampleData/fixed"
-moving_dir = "/hepgpu3-data1/dmcsween/Data128/ResampleData/moving"
-dvf_dir = "/hepgpu3-data1/dmcsween/Data128/ResampleData/DVF"
+fixed_dir = "/hepgpu3-data1/dmcsween/DataTwoWay128/fixed"
+moving_dir = "/hepgpu3-data1/dmcsween/DataTwoWay128/moving"
+dvf_dir = "/hepgpu3-data1/dmcsween/DataTwoWay128/DVF"
 """
 # On laptop
 fixed_dir = "E:/MPhys/Data128/PlanningCT"
