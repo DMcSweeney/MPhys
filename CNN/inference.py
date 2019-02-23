@@ -46,6 +46,9 @@ def inference():
     model.compile(optimizer='Adam', loss='mean_squared_error', metrics=["accuracy"])
     dvf = model.predict_generator(helper.generator([test_fixed, test_moving], label=test_dvf, predict=True, batch_size=batch_size), steps=math.ceil(
         test_fixed.shape[0]/batch_size), verbose=1)
+    test_loss = model.evaluate_generator(helper.generator(
+        [test_fixed, test_moving], label=test_dvf, predict=True, batch_sie=batch_size), steps=math.ceil(
+            test_fixed.shape[0]/batch_size), verbose=1)
 
     print('Save DVF')
     # Save images
@@ -53,7 +56,7 @@ def inference():
     helper.write_images(test_moving, test_moving_affine,
                         file_path='./outputs/', file_prefix='moving')
     helper.write_images(dvf, test_fixed_affine, file_path='./outputs/', file_prefix='dvf')
-
+    print("Test Loss:", test_loss)
     # Save warped
 
 
