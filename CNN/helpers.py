@@ -39,12 +39,12 @@ def generator(inputs, label, batch_size=4, predict=False):
 
 
 def normalise(input):
+    # Normalise inputs
     maxval = np.amax(input, axis=(1, 2, 3, 4))
     minval = np.amin(input, axis=(1, 2, 3, 4))
     median_max = np.median(maxval)
     median_min = np.median(minval)
     normal_input = (input-median_min)/(median_max-median_min)
-    print("Output shape:", normal_input.shape)
     return np.clip(normal_input, a_min=0, a_max=1)
 
 
