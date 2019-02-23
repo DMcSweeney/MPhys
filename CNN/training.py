@@ -13,9 +13,9 @@ import math
 
 helper = Helpers()
 # If on server
-fixed_dir = "/hepgpu3-data1/dmcsween/DataWithInv/fixed"
-moving_dir = "/hepgpu3-data1/dmcsween/DataWithInv/moving"
-dvf_dir = "/hepgpu3-data1/dmcsween/DataWithInv/DVF"
+fixed_dir = "/hepgpu3-data1/dmcsween/DataTwoWay128/fixed"
+moving_dir = "/hepgpu3-data1/dmcsween/DataTwoWay128/moving"
+dvf_dir = "/hepgpu3-data1/dmcsween/DataTwoWay128/DVF"
 """
 # If on laptop
 fixed_dir = "E:/MPhys/DataSplit/TrainingSet/PCT"
