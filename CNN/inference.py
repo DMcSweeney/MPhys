@@ -1,10 +1,8 @@
 """Inference file for CNN registration on unseen data"""
 from keras.models import load_model
-from helpers import Helpers
+import helpers as helper
 import dataLoader as load
 import math
-
-helper = Helpers()
 
 
 # On server
