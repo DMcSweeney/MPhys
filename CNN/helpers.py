@@ -20,12 +20,12 @@ def generator(inputs, label, batch_size=4, predict=False):
                 batch_fixed[i], batch_moving[i] = inputs[0][index, ...], inputs[1][index, ...]
                 batch_label[i] = label[index, ...]
                 if np.random.uniform() > 0.5:
-                    batch_fixed = Helpers.flip(input=batch_fixed)
-                    batch_moving = Helpers.flip(input=batch_moving)
-                batch_fixed = Helpers.noise(batch_fixed, batch_size)
-                batch_moving = Helpers.noise(batch_moving, batch_size)
-            batch_fixed = Helpers.normalise(batch_fixed)
-            batch_moving = Helpers.normalise(batch_moving)
+                    batch_fixed = flip(input=batch_fixed)
+                    batch_moving = flip(input=batch_moving)
+                batch_fixed = noise(batch_fixed, batch_size)
+                batch_moving = noise(batch_moving, batch_size)
+            batch_fixed = normalise(batch_fixed)
+            batch_moving = normalise(batch_moving)
             yield ({'input_1': batch_fixed, 'input_2': batch_moving}, {'dvf': batch_label})
     else:
         while True:
@@ -33,8 +33,8 @@ def generator(inputs, label, batch_size=4, predict=False):
                 # Random index from dataset
                 index = np.random.choice(len(label), 1)
                 batch_fixed[i], batch_moving[i] = inputs[0][index, ...], inputs[1][index, ...]
-            batch_fixed = Helpers.normalise(batch_fixed)
-            batch_moving = Helpers.normalise(batch_moving)
+            batch_fixed = normalise(batch_fixed)
+            batch_moving = normalise(batch_moving)
             yield ({'input_1': batch_fixed, 'input_2': batch_moving})
 
 
