@@ -46,15 +46,18 @@ def normalise(input):
     median_max = np.median(maxval)
     print("med_maxi:", median_max)
     median_min = np.median(minval)
+    print("denominator:", median_max-median_min)
     normal_input = (input-median_min)/(median_max-median_min)
     return np.clip(normal_input, a_min=0, a_max=1)
 
 
 def flip(input):
+    # Flip image along x axis
     return np.flip(input, axis=1)
 
 
 def noise(input, batch_size):
+    # Add gaussian noise to image
     random = np.random.uniform()
     var_original = np.var(input[:, 100:110, 10:20, 60:70])
     var_multiplied = np.var(random*input[:, 100:110, 10:20, 60:70])
