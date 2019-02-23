@@ -102,7 +102,7 @@ def write_masks(patient_dir, contour_path, image_path, index, img_format='nii'):
     print("Done Writing masks")
 
 
-def organise_scans(input_path, rigid_output_path, dvf_output_path, pet_output_path):
+def organise_scans(input_path, rigid_output_path, dvf_output_path, pet_output_path, pct_output_path):
     for folder in os.listdir(input_path):
         print("Folder", folder)
         if folder == 'Rigid':
@@ -140,6 +140,16 @@ def organise_scans(input_path, rigid_output_path, dvf_output_path, pet_output_pa
                 pet_out_filepath = os.path.join(
                     pet_output_path, '{}_inv.nii'.format(patient))
                 shutil.move(patient_path, pet_out_filepath)
+        if folder == 'PlanningCT':
+            pct_path = os.path.join(input_path, folder)
+            for patient_path in os.listdir(pct_path):
+                patient_ext = patient_path.split('/')[-1]
+                patient = os.path.splitext(patient_path)[0]
+                print(patient)
+                patient_path = os.path.join(pct_path, patient_ext)
+                pct_out_filepath = os.path.join(
+                    pct_output_path, '{}_inv.nii'.format(patient))
+                shutil.move(patient_path, pct_out_filepath)
         # Write for Fixed image to change name to patient_inv.nii
         else:
             print('No important info')
@@ -147,7 +157,7 @@ def organise_scans(input_path, rigid_output_path, dvf_output_path, pet_output_pa
 
 def main(argv=None):
     organise_scans(input_path='/mnt/e/MPhys/resample_data128/', rigid_output_path='/mnt/e/MPhys/DataResampled128/moving',
-                   dvf_output_path='/mnt/e/MPhys/DataResampled128/DVF', pet_output_path='/mnt/e/MPhys/DataResampled128/fixed')
+                   dvf_output_path='/mnt/e/MPhys/DataResampled128/DVF', pet_output_path='/mnt/e/MPhys/DataResampled128/fixed', pct_output_path='/mnt/e/MPhys/DataResampled128/moving')
 
 
 if __name__ == '__main__':
