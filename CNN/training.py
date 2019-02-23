@@ -140,7 +140,7 @@ def train():
     checkpoint = ModelCheckpoint('best_model.h5', monitor='val_loss',
                                  verbose=1, save_best_only=True, period=1)
     tensorboard = TensorBoard(log_dir='./logs', batch_size=batch_size,
-                              write_graph=True, write_grads=True, update_freq='epoch')
+                              write_graph=True, write_grads=True, update_freq='epoch', write_images=True, histogram_freq=1)
     callbacks = [reduce_lr, history, checkpoint, tensorboard]
 
     # Train
