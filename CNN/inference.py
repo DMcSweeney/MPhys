@@ -27,9 +27,6 @@ def inference():
     moving_array, moving_affine = moving_predict.get_data()
     dvf_array, dvf_affine = dvf_label.get_data(is_image=False)
 
-    print("Fixed affine:", fixed_affine.shape)
-    print("DVF affine:", dvf_affine.shape)
-
     print('Shuffle')
     fixed_array, moving_array, dvf_array = helper.shuffle_inplace(
         fixed_array, moving_array, dvf_array)
@@ -47,7 +44,7 @@ def inference():
     print("Moving input", test_moving.shape)
     model = load_model('best_model.h5')
     model.compile(optimizer='Adam', loss='mean_squared_error', metrics=["accuracy"])
-    dvf = model.predict_generator(helper.generator([test_fixed, test_moving], label=test_dvf, predict=True), steps=math.ceil(
+    dvf = model.predict_generator(helper.generator([test_fixed, test_moving], label=test_dvf, predict=True, batch_size=batch_size), steps=math.ceil(
         test_fixed.shape[0]/batch_size), verbose=1)
 
     print('Save DVF')

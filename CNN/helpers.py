@@ -22,6 +22,7 @@ def generator(inputs, label, batch_size=4, predict=False):
                 if np.random.uniform() > 0.5:
                     batch_fixed = flip(input=batch_fixed)
                     batch_moving = flip(input=batch_moving)
+                    # Need to flip DVF
                 batch_fixed = noise(batch_fixed, batch_size)
                 batch_moving = noise(batch_moving, batch_size)
             batch_fixed = normalise(batch_fixed)
