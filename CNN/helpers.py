@@ -41,7 +41,7 @@ def generator(inputs, label, batch_size=4, predict=False):
 def normalise(input):
     print("Input Shape:", input.shape)
     maxval = np.amax(input, axis=(1, 2, 3, 4))
-    minval = np.amax(input, axis=(1, 2, 3, 4))
+    minval = np.amin(input, axis=(1, 2, 3, 4))
     print("maxval:", maxval)
     median_max = np.median(maxval)
     print("med_maxi:", median_max)
