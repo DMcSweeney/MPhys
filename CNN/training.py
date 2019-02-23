@@ -7,11 +7,10 @@ from keras.initializers import RandomNormal
 from keras.utils import plot_model
 from keras.callbacks import ReduceLROnPlateau, Callback, ModelCheckpoint, TensorBoard
 import dataLoader as load
-from helpers import Helpers
+import helpers as helper
 import math
 
 
-helper = Helpers()
 # If on server
 fixed_dir = "/hepgpu3-data1/dmcsween/DataTwoWay128/fixed"
 moving_dir = "/hepgpu3-data1/dmcsween/DataTwoWay128/moving"
