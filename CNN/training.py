@@ -6,9 +6,8 @@ from keras.models import Model
 from keras.initializers import RandomNormal
 from keras.utils import plot_model
 from keras.callbacks import ReduceLROnPlateau, Callback, ModelCheckpoint
-import tensorflow as tf
 import dataLoader as load
-import TrainValTensorboard as tb
+from TrainValTensorboard import TrainValTensorBoard
 import helpers as helper
 import math
 
@@ -141,7 +140,7 @@ def train():
     history = LossHistory()
     checkpoint = ModelCheckpoint('best_model.h5', monitor='val_loss',
                                  verbose=1, save_best_only=True, period=1)
-    tensorboard = tb.TrainValTensorboard(write_graph=False)
+    tensorboard = TrainValTensorboard(write_graph=False)
     callbacks = [reduce_lr, history, checkpoint, tensorboard]
 
     # Train
