@@ -26,7 +26,6 @@ dvf_dir = "E:/MPhys/DataSplit/TrainingSet/DVF"
 # Parameters to tweak
 batch_size = 4
 activation = 'relu'
-tf.enable_eager_execution()
 
 
 class LossHistory(Callback):
