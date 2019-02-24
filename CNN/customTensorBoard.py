@@ -9,7 +9,7 @@ class TrainValTensorBoard(TensorBoard):
     def __init__(self, log_dir='./logs', **kwargs):
         # Make the original `TensorBoard` log to a subdirectory 'training'
         training_log_dir = os.path.join(log_dir, 'training')
-        super().__init__(training_log_dir, **kwargs)
+        super(TrainValTensorBoard, self).__init__(training_log_dir, **kwargs)
 
         # Log the validation metrics to a separate subdirectory
         self.val_log_dir = os.path.join(log_dir, 'validation')
@@ -17,7 +17,7 @@ class TrainValTensorBoard(TensorBoard):
     def set_model(self, model):
         # Setup writer for validation metrics
         self.val_writer = tf.summary.FileWriter(self.val_log_dir)
-        super().set_model(model)
+        super(TrainValTensorBoard, self).set_model(model)
 
     def on_epoch_end(self, epoch, logs=None):
         logs = logs or {}
@@ -32,8 +32,8 @@ class TrainValTensorBoard(TensorBoard):
 
         # Pass the remaining logs to `TensorBoard.on_epoch_end`
         logs = {k: v for k, v in logs.items() if not k.startswith('val_')}
-        super().on_epoch_end(epoch, logs)
+        super(TrainValTensorBoard, self).on_epoch_end(epoch, logs)
 
     def on_train_end(self, logs=None):
-        super().on_train_end(logs)
+        super(TrainValTensorBoard, self).on_train_end(logs)
         self.val_writer.close()

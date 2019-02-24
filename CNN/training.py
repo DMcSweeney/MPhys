@@ -11,7 +11,6 @@ from customTensorBoard import TrainValTensorBoard
 import helpers as helper
 import math
 
-TrainValTensorBoard = TrainValTensorBoard()
 
 # If on server
 fixed_dir = "/hepgpu3-data1/dmcsween/DataTwoWay128/fixed"
