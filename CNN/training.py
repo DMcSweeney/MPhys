@@ -7,10 +7,11 @@ from keras.initializers import RandomNormal
 from keras.utils import plot_model
 from keras.callbacks import ReduceLROnPlateau, Callback, ModelCheckpoint
 import dataLoader as load
-from TrainValTensorboard import TrainValTensorBoard
+from customTensorBoard import TrainValTensorBoard
 import helpers as helper
 import math
 
+TrainValTensorBoard = TrainValTensorBoard()
 
 # If on server
 fixed_dir = "/hepgpu3-data1/dmcsween/DataTwoWay128/fixed"
@@ -140,7 +141,7 @@ def train():
     history = LossHistory()
     checkpoint = ModelCheckpoint('best_model.h5', monitor='val_loss',
                                  verbose=1, save_best_only=True, period=1)
-    tensorboard = TrainValTensorboard(write_graph=False)
+    tensorboard = TrainValTensorBoard(write_graph=False)
     callbacks = [reduce_lr, history, checkpoint, tensorboard]
 
     # Train
