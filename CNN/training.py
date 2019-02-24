@@ -5,8 +5,10 @@ from keras.layers import Conv3DTranspose, BatchNormalization
 from keras.models import Model
 from keras.initializers import RandomNormal
 from keras.utils import plot_model
-from keras.callbacks import ReduceLROnPlateau, Callback, ModelCheckpoint, TensorBoard
+from keras.callbacks import ReduceLROnPlateau, Callback, ModelCheckpoint
+import tensorflow as tf
 import dataLoader as load
+import TrainValTensorboard as tb
 import helpers as helper
 import math
 
@@ -24,6 +26,7 @@ dvf_dir = "E:/MPhys/DataSplit/TrainingSet/DVF"
 # Parameters to tweak
 batch_size = 4
 activation = 'relu'
+tf.enable_eager_execution()
 
 
 class LossHistory(Callback):
@@ -139,8 +142,7 @@ def train():
     history = LossHistory()
     checkpoint = ModelCheckpoint('best_model.h5', monitor='val_loss',
                                  verbose=1, save_best_only=True, period=1)
-    tensorboard = TensorBoard(log_dir='./logs', batch_size=batch_size,
-                              write_graph=True, write_grads=True, update_freq='epoch', write_images=True, histogram_freq=1)
+    tensorboard = tb.TrainValTensorboard(write_graph=False)
     callbacks = [reduce_lr, history, checkpoint, tensorboard]
 
     # Train
