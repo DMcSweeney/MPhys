@@ -140,7 +140,7 @@ def train():
 
     # Callbacks
     reduce_lr = ReduceLROnPlateau(monitor='val_loss', factor=0.2,
-                                  patience=5, min_lr=0.001)
+                                  patience=5, min_lr=0.00001)
     history = LossHistory()
     checkpoint = ModelCheckpoint('best_model.h5', monitor='val_loss',
                                  verbose=1, save_best_only=True, period=1)
@@ -158,10 +158,10 @@ def train():
     model.compile(optimizer='Adam', loss='mean_squared_error')
     model.fit_generator(generator=helper.generator(inputs=[train_fixed, train_moving], label=train_dvf, batch_size=batch_size),
                         steps_per_epoch=math.ceil(train_fixed.shape[0]/batch_size),
-                        epochs=10, verbose=1,
+                        epochs=75, verbose=1,
                         callbacks=callbacks,
                         validation_data=helper.generator(
-                            inputs=[validation_fixed, validation_moving], label=validation_dvf),
+                            inputs=[validation_fixed, validation_moving], label=validation_dvf, batch_size=batch_size),
                         validation_steps=math.ceil(validation_fixed.shape[0]/batch_size))
 
     # accuracy = model.evaluate_generator(generator(
