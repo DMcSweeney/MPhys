@@ -6,7 +6,6 @@ from keras.models import Model
 from keras.initializers import RandomNormal
 from keras.utils import plot_model
 from keras.callbacks import ReduceLROnPlateau, Callback, ModelCheckpoint
-from keras import optimizers
 import dataLoader as load
 from customTensorBoard import TrainValTensorBoard
 import helpers as helper
@@ -26,6 +25,7 @@ dvf_dir = "E:/MPhys/DataSplit/TrainingSet/DVF"
 # Parameters to tweak
 batch_size = 4
 activation = 'relu'
+momentum = 0.9
 
 
 class LossHistory(Callback):
@@ -75,25 +75,25 @@ def train():
                 padding='same', name='downsample2')(x1)
     x1 = Conv3D(16, (3, 3, 3), strides=2, activation=activation,
                 padding='same', name='downsample3')(x1)
-    x1 = BatchNormalization(axis=-1, momentum=0.5)(x1)
+    x1 = BatchNormalization(axis=-1, momentum=momentum)(x1)
 
     x1 = Conv3D(64, (3, 3, 3), activation=activation, padding='same', name='down_1a')(x1)
     x1 = Conv3D(64, (3, 3, 3), activation=activation, padding='same', name='down_1b')(x1)
     x1 = Conv3D(64, (3, 3, 3), activation=activation, padding='same', name='down_1c')(x1)
-    x1 = BatchNormalization(axis=-1, momentum=0.5)(x1)
+    x1 = BatchNormalization(axis=-1, momentum=momentum)(x1)
 
     x = MaxPooling3D(pool_size=(2, 2, 2), padding='same', name='Pool_1')(x1)
 
     x2 = Conv3D(128, (3, 3, 3), activation=activation, padding='same', name='down_2a')(x)
     x2 = Conv3D(128, (3, 3, 3), activation=activation, padding='same', name='down_2b')(x2)
     x2 = Conv3D(128, (3, 3, 3), activation=activation, padding='same', name='down_2c')(x2)
-    x2 = BatchNormalization(axis=-1, momentum=0.5)(x2)
+    x2 = BatchNormalization(axis=-1, momentum=momentum)(x2)
 
     x = MaxPooling3D(pool_size=(2, 2, 2), padding='same', name='Pool_2')(x2)
 
     x3 = Conv3D(256, (3, 3, 3), activation=activation, padding='same', name='down_3a')(x)
     x3 = Conv3D(256, (3, 3, 3), activation=activation, padding='same', name='down_3b')(x3)
-    x3 = BatchNormalization(axis=-1, momentum=0.5)(x3)
+    x3 = BatchNormalization(axis=-1, momentum=momentum)(x3)
 
     x = MaxPooling3D(pool_size=(2, 2, 2), padding='same', name='Pool_3')(x3)
 
@@ -111,7 +111,7 @@ def train():
     y2 = Conv3DTranspose(128, (3, 3, 3), activation=activation, padding='same', name='Up_2a')(x)
     y2 = Conv3DTranspose(128, (3, 3, 3), activation=activation, padding='same', name='Up_2b')(y2)
     y2 = Conv3DTranspose(128, (3, 3, 3), activation=activation, padding='same', name='Up_2c')(y2)
-    y2 = BatchNormalization(axis=-1, momentum=0.5)(y2)
+    y2 = BatchNormalization(axis=-1, momentum=momentum)(y2)
 
     merge2 = concatenate([x2, y2])
 
@@ -119,7 +119,7 @@ def train():
     y1 = Conv3DTranspose(64, (3, 3, 3), activation=activation, padding='same', name='Up_1a')(x)
     y1 = Conv3DTranspose(64, (3, 3, 3), activation=activation, padding='same', name='Up_1b')(y1)
     y1 = Conv3DTranspose(64, (3, 3, 3), activation=activation, padding='same', name='Up_1c')(y1)
-    y1 = BatchNormalization(axis=-1, momentum=0.5)(y1)
+    y1 = BatchNormalization(axis=-1, momentum=momentum)(y1)
 
     merge1 = concatenate([x1, y1])
 
