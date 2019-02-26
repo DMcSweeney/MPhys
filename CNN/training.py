@@ -130,7 +130,7 @@ def train():
                                name='upsample_dvf2')(upsample)
     upsample = Conv3DTranspose(64, (3, 3, 3), strides=2, activation=activation, padding='same',
                                name='upsample_dvf3')(upsample)
-    upsample = BatchNormalization(axis=-1, momentumum=0.5)(upsample)
+    upsample = BatchNormalization(axis=-1, momentum=0.5)(upsample)
 
     dvf = Conv3D(64, kernel_size=3, activation=activation,
                  padding='same', name='dvf_64features')(upsample)
