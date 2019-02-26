@@ -93,8 +93,7 @@ def split_data(fixed_image, moving_image, dvf_label, split_ratio):
 def write_images(input_, base_affine, file_path=None, file_prefix=''):
     if file_path is not None:
         batch_size = input_.shape[0]
-        print("affine shape", base_affine.shape)
-        print("Input shape", input_.shape)
+        print(type(input))
         [nib.save(nib.Nifti1Image(input_[idx, ...], base_affine[idx, ...]),
                   os.path.join(file_path,
                                file_prefix + '%s.nii' % idx))

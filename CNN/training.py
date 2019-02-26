@@ -6,6 +6,7 @@ from keras.models import Model
 from keras.initializers import RandomNormal
 from keras.utils import plot_model
 from keras.callbacks import ReduceLROnPlateau, Callback, ModelCheckpoint
+from keras import optimizers
 import dataLoader as load
 from customTensorBoard import TrainValTensorBoard
 import helpers as helper
@@ -72,25 +73,25 @@ def train():
                 padding='same', name='downsample2')(x1)
     x1 = Conv3D(16, (3, 3, 3), strides=2, activation=activation,
                 padding='same', name='downsample3')(x1)
-    x1 = BatchNormalization(axis=1, momentum=0.5)(x1)
+    x1 = BatchNormalization(axis=-1, momentum=0.5)(x1)
 
     x1 = Conv3D(64, (3, 3, 3), activation=activation, padding='same', name='down_1a')(x1)
     x1 = Conv3D(64, (3, 3, 3), activation=activation, padding='same', name='down_1b')(x1)
     x1 = Conv3D(64, (3, 3, 3), activation=activation, padding='same', name='down_1c')(x1)
-    x1 = BatchNormalization(axis=1, momentum=0.5)(x1)
+    x1 = BatchNormalization(axis=-1, momentum=0.5)(x1)
 
     x = MaxPooling3D(pool_size=(2, 2, 2), padding='same', name='Pool_1')(x1)
 
     x2 = Conv3D(128, (3, 3, 3), activation=activation, padding='same', name='down_2a')(x)
     x2 = Conv3D(128, (3, 3, 3), activation=activation, padding='same', name='down_2b')(x2)
     x2 = Conv3D(128, (3, 3, 3), activation=activation, padding='same', name='down_2c')(x2)
-    x2 = BatchNormalization(axis=1, momentum=0.5)(x2)
+    x2 = BatchNormalization(axis=-1, momentum=0.5)(x2)
 
     x = MaxPooling3D(pool_size=(2, 2, 2), padding='same', name='Pool_2')(x2)
 
     x3 = Conv3D(256, (3, 3, 3), activation=activation, padding='same', name='down_3a')(x)
     x3 = Conv3D(256, (3, 3, 3), activation=activation, padding='same', name='down_3b')(x3)
-    x3 = BatchNormalization(axis=1, momentum=0.5)(x3)
+    x3 = BatchNormalization(axis=-1, momentum=0.5)(x3)
     """
     x = MaxPooling3D(pool_size=(2, 2, 2), padding='same', name='Pool_3')(x3)
 
@@ -108,7 +109,7 @@ def train():
     y2 = Conv3DTranspose(128, (3, 3, 3), activation=activation, padding='same', name='Up_2a')(x)
     y2 = Conv3DTranspose(128, (3, 3, 3), activation=activation, padding='same', name='Up_2b')(y2)
     y2 = Conv3DTranspose(128, (3, 3, 3), activation=activation, padding='same', name='Up_2c')(y2)
-    y2 = BatchNormalization(axis=1, momentum=0.5)(y2)
+    y2 = BatchNormalization(axis=-1, momentum=0.5)(y2)
 
     merge2 = concatenate([x2, y2])
 
@@ -116,7 +117,7 @@ def train():
     y1 = Conv3DTranspose(64, (3, 3, 3), activation=activation, padding='same', name='Up_1a')(x)
     y1 = Conv3DTranspose(64, (3, 3, 3), activation=activation, padding='same', name='Up_1b')(y1)
     y1 = Conv3DTranspose(64, (3, 3, 3), activation=activation, padding='same', name='Up_1c')(y1)
-    y1 = BatchNormalization(axis=1, momentum=0.5)(y1)
+    y1 = BatchNormalization(axis=-1, momentum=0.5)(y1)
 
     merge1 = concatenate([x1, y1])
 
@@ -127,12 +128,13 @@ def train():
                                name='upsample_dvf2')(upsample)
     upsample = Conv3DTranspose(64, (3, 3, 3), strides=2, activation=activation, padding='same',
                                name='upsample_dvf3')(upsample)
-    upsample = BatchNormalization(axis=1, momentumum=0.5)(upsample)
+    upsample = BatchNormalization(axis=-1, momentumum=0.5)(upsample)
 
-    dvf = Conv3D(64, kernel_size=3, activation=activation, padding='same', name='dvf_64features',
-                 kernel_initializer=RandomNormal(mean=0.0, stddev=1e-5))(upsample)
-    dvf = Conv3D(3, kernel_size=1, activation=activation, padding='same', name='dvf',
-                 kernel_initializer=RandomNormal(mean=0.0, stddev=1e-5))(dvf)
+    dvf = Conv3D(64, kernel_size=3, activation=activation,
+                 padding='same', name='dvf_64features')(upsample)
+    dvf = Conv3D(3, kernel_size=3, activation=activation, padding='same', name='dvf')(dvf)
+    # dvf = Conv3D(3, kernel_size=1, activation=activation, padding='same', name='dvf',
+    #             kernel_initializer=RandomNormal(mean=0.0, stddev=1e-5))(dvf)
 
     # Callbacks
     reduce_lr = ReduceLROnPlateau(monitor='val_loss', factor=0.2,
@@ -150,8 +152,8 @@ def train():
 
     # print(model.summary())
     plot_model(model, to_file='model.png')
-
-    model.compile(optimizer='Adam', loss='mean_squared_error')
+    Adam = optimizers.Adam(lr=0.001)
+    model.compile(optimizer=Adam, loss='mean_squared_error')
     model.fit_generator(generator=helper.generator(inputs=[train_fixed, train_moving], label=train_dvf, batch_size=batch_size),
                         steps_per_epoch=math.ceil(train_fixed.shape[0]/batch_size),
                         epochs=100, verbose=1,
