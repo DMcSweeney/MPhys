@@ -154,8 +154,8 @@ def train():
 
     # print(model.summary())
     plot_model(model, to_file='model.png')
-    Adam = optimizers.Adam(lr=0.001)
-    model.compile(optimizer=Adam, loss='mean_squared_error')
+    #Adam = optimizers.Adam(lr=0.001)
+    model.compile(optimizer='Adam', loss='mean_squared_error')
     model.fit_generator(generator=helper.generator(inputs=[train_fixed, train_moving], label=train_dvf, batch_size=batch_size),
                         steps_per_epoch=math.ceil(train_fixed.shape[0]/batch_size),
                         epochs=10, verbose=1,
