@@ -94,7 +94,7 @@ def train():
     x3 = Conv3D(256, (3, 3, 3), activation=activation, padding='same', name='down_3a')(x)
     x3 = Conv3D(256, (3, 3, 3), activation=activation, padding='same', name='down_3b')(x3)
     x3 = BatchNormalization(axis=-1, momentum=0.5)(x3)
-    """
+
     x = MaxPooling3D(pool_size=(2, 2, 2), padding='same', name='Pool_3')(x3)
 
     x4 = Conv3D(512, (3, 3, 3), activation=activation, padding='same', name='down_4a')(x)
@@ -106,8 +106,8 @@ def train():
     y3 = BatchNormalization()(y3)
 
     merge3 = concatenate([x3, y3])
-    """
-    x = UpSampling3D(size=(2, 2, 2), name='UpSamp_3')(x3)
+
+    x = UpSampling3D(size=(2, 2, 2), name='UpSamp_3')(merge3)
     y2 = Conv3DTranspose(128, (3, 3, 3), activation=activation, padding='same', name='Up_2a')(x)
     y2 = Conv3DTranspose(128, (3, 3, 3), activation=activation, padding='same', name='Up_2b')(y2)
     y2 = Conv3DTranspose(128, (3, 3, 3), activation=activation, padding='same', name='Up_2c')(y2)
