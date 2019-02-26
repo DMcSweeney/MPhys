@@ -41,9 +41,9 @@ def train():
     fixed_image, moving_image, dvf_label = load.data_reader(fixed_dir, moving_dir, dvf_dir)
 
     # Turn into numpy arrays
-    fixed_array, _ = fixed_image.get_data()
-    moving_array, _ = moving_image.get_data()
-    dvf_array, _ = dvf_label.get_data(is_image=False)
+    fixed_array, fixed_affine = fixed_image.get_data()
+    moving_array, moving_affine = moving_image.get_data()
+    dvf_array, dvf_affine = dvf_label.get_data(is_image=False)
     # Shuffle arrays
     fixed_array, moving_array, dvf_array = helper.shuffle_inplace(
         fixed_array, moving_array, dvf_array)
@@ -52,7 +52,9 @@ def train():
     # Training/Validation/Test = 80/15/5 split
     test_fixed, test_moving, test_dvf, train_fixed, train_moving, train_dvf = helper.split_data(
         fixed_array, moving_array, dvf_array, split_ratio=0.05)
-
+    # Test affine
+    test_fixed_affine, test_moving_affine, test_dvf_affine, train_fixed_affine, train_moving_affine, train_dvf_affine = helper.split_data(
+        fixed_affine, moving_affine, dvf_affine, split_ratio=0.05)
     # Split training into validation and training set
     validation_fixed, validation_moving, validation_dvf, train_fixed, train_moving, train_dvf = helper.split_data(
         train_fixed, train_moving, train_dvf, split_ratio=0.15)
@@ -156,7 +158,7 @@ def train():
     model.compile(optimizer=Adam, loss='mean_squared_error')
     model.fit_generator(generator=helper.generator(inputs=[train_fixed, train_moving], label=train_dvf, batch_size=batch_size),
                         steps_per_epoch=math.ceil(train_fixed.shape[0]/batch_size),
-                        epochs=100, verbose=1,
+                        epochs=10, verbose=1,
                         callbacks=callbacks,
                         validation_data=helper.generator(
                             inputs=[validation_fixed, validation_moving], label=validation_dvf),
@@ -165,6 +167,14 @@ def train():
     # accuracy = model.evaluate_generator(generator(
     #    inputs=[validation_fixed, validation_moving], label=validation_dvf, batch_size=batch_size), steps=1, verbose=1)
     model.save('model.h5')
+
+    """Testing to see where issue with DVF is """
+    dvf = model.predict(helper.generator([test_fixed, test_moving], label=test_dvf, predict=True, batch_size=batch_size), steps=math.ceil(
+        test_fixed.shape[0]/batch_size), verbose=1)
+    helper.write_images(test_fixed, test_fixed_affine, file_path='./outputs/', file_prefix='fixed')
+    helper.write_images(test_moving, test_moving_affine,
+                        file_path='./outputs/', file_prefix='moving')
+    helper.write_images(dvf, test_fixed_affine, file_path='./outputs/', file_prefix='dvf')
 
 
 def main(argv=None):
