@@ -27,8 +27,8 @@ def generator(inputs, label, batch_size=4, predict=False):
                 """
                 batch_fixed = noise(batch_fixed, batch_size)
                 batch_moving = noise(batch_moving, batch_size)
-            #batch_fixed = normalise(batch_fixed)
-            #batch_moving = normalise(batch_moving)
+            batch_fixed = normalise(batch_fixed)
+            batch_moving = normalise(batch_moving)
             yield ({'input_1': batch_fixed, 'input_2': batch_moving}, {'dvf': batch_label})
     else:
         while True:

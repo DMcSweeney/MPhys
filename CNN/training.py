@@ -72,25 +72,25 @@ def train():
                 padding='same', name='downsample2')(x1)
     x1 = Conv3D(16, (3, 3, 3), strides=2, activation=activation,
                 padding='same', name='downsample3')(x1)
-    x1 = BatchNormalization()(x1)
+    x1 = BatchNormalization(axis=1, momentum=0.5)(x1)
 
     x1 = Conv3D(64, (3, 3, 3), activation=activation, padding='same', name='down_1a')(x1)
     x1 = Conv3D(64, (3, 3, 3), activation=activation, padding='same', name='down_1b')(x1)
     x1 = Conv3D(64, (3, 3, 3), activation=activation, padding='same', name='down_1c')(x1)
-    x1 = BatchNormalization()(x1)
+    x1 = BatchNormalization(axis=1, momentum=0.5)(x1)
 
     x = MaxPooling3D(pool_size=(2, 2, 2), padding='same', name='Pool_1')(x1)
 
     x2 = Conv3D(128, (3, 3, 3), activation=activation, padding='same', name='down_2a')(x)
     x2 = Conv3D(128, (3, 3, 3), activation=activation, padding='same', name='down_2b')(x2)
     x2 = Conv3D(128, (3, 3, 3), activation=activation, padding='same', name='down_2c')(x2)
-    x2 = BatchNormalization()(x2)
+    x2 = BatchNormalization(axis=1, momentum=0.5)(x2)
 
     x = MaxPooling3D(pool_size=(2, 2, 2), padding='same', name='Pool_2')(x2)
 
     x3 = Conv3D(256, (3, 3, 3), activation=activation, padding='same', name='down_3a')(x)
     x3 = Conv3D(256, (3, 3, 3), activation=activation, padding='same', name='down_3b')(x3)
-    x3 = BatchNormalization()(x3)
+    x3 = BatchNormalization(axis=1, momentum=0.5)(x3)
     """
     x = MaxPooling3D(pool_size=(2, 2, 2), padding='same', name='Pool_3')(x3)
 
@@ -108,7 +108,7 @@ def train():
     y2 = Conv3DTranspose(128, (3, 3, 3), activation=activation, padding='same', name='Up_2a')(x)
     y2 = Conv3DTranspose(128, (3, 3, 3), activation=activation, padding='same', name='Up_2b')(y2)
     y2 = Conv3DTranspose(128, (3, 3, 3), activation=activation, padding='same', name='Up_2c')(y2)
-    y2 = BatchNormalization()(y2)
+    y2 = BatchNormalization(axis=1, momentum=0.5)(y2)
 
     merge2 = concatenate([x2, y2])
 
@@ -116,7 +116,7 @@ def train():
     y1 = Conv3DTranspose(64, (3, 3, 3), activation=activation, padding='same', name='Up_1a')(x)
     y1 = Conv3DTranspose(64, (3, 3, 3), activation=activation, padding='same', name='Up_1b')(y1)
     y1 = Conv3DTranspose(64, (3, 3, 3), activation=activation, padding='same', name='Up_1c')(y1)
-    y1 = BatchNormalization()(y1)
+    y1 = BatchNormalization(axis=1, momentum=0.5)(y1)
 
     merge1 = concatenate([x1, y1])
 
@@ -127,7 +127,7 @@ def train():
                                name='upsample_dvf2')(upsample)
     upsample = Conv3DTranspose(64, (3, 3, 3), strides=2, activation=activation, padding='same',
                                name='upsample_dvf3')(upsample)
-    upsample = BatchNormalization()(upsample)
+    upsample = BatchNormalization(axis=1, momentumum=0.5)(upsample)
 
     dvf = Conv3D(64, kernel_size=3, activation=activation, padding='same', name='dvf_64features',
                  kernel_initializer=RandomNormal(mean=0.0, stddev=1e-5))(upsample)
