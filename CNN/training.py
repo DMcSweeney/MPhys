@@ -25,7 +25,7 @@ dvf_dir = "E:/MPhys/DataSplit/TrainingSet/DVF"
 # Parameters to tweak
 batch_size = 4
 activation = 'relu'
-momentum = 0.9
+momentum = 0.75
 
 
 class LossHistory(Callback):
@@ -169,7 +169,7 @@ def train():
     model.save('model.h5')
 
     """Testing to see where issue with DVF is """
-    dvf = model.predict(helper.generator([test_fixed, test_moving], label=test_dvf, predict=True, batch_size=batch_size), steps=math.ceil(
+    dvf = model.predict(helper.generator([test_fixed, test_moving], label=test_dvf, predict=True, batch_size=1), steps=math.ceil(
         test_fixed.shape[0]/batch_size), verbose=1)
     helper.write_images(test_fixed, test_fixed_affine, file_path='./outputs/', file_prefix='fixed')
     helper.write_images(test_moving, test_moving_affine,
