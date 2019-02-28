@@ -3,10 +3,10 @@
 from keras.layers import Input, Conv3D, MaxPooling3D, concatenate, UpSampling3D
 from keras.layers import Conv3DTranspose, BatchNormalization
 from keras.models import Model
-from keras.initializers import RandomNormal
 from keras.utils import plot_model
 from keras.callbacks import ReduceLROnPlateau, Callback, ModelCheckpoint
 import dataLoader as load
+import layers as myLayer
 from customTensorBoard import TrainValTensorBoard
 import helpers as helper
 import math
@@ -47,7 +47,8 @@ def train():
     # Shuffle arrays
     fixed_array, moving_array, dvf_array = helper.shuffle_inplace(
         fixed_array, moving_array, dvf_array)
-
+    fixed_affine, moving_affine, dvf_affine = helper.shuffle_inplace(
+        fixed_affine, moving_affine, dvf_affine)
     # Split into test and training set
     # Training/Validation/Test = 80/15/5 split
     test_fixed, test_moving, test_dvf, train_fixed, train_moving, train_dvf = helper.split_data(
@@ -67,10 +68,12 @@ def train():
     fixed_image = Input(shape=(train_fixed.shape[1:]))  # Ignore batch but include channel
     moving_image = Input(shape=(train_moving.shape[1:]))
 
-    input = concatenate([fixed_image, moving_image])
+    # Correlation layers
+    correlation_out = myLayer.correlation_layer(
+        fixed_image, moving_image, shape=train_fixed.shape[1:4], max_displacement=20, stride=2)
 
     x1 = Conv3D(64, (3, 3, 3), strides=2, activation=activation,
-                padding='same', name='downsample1')(input)
+                padding='same', name='downsample1')(correlation_out)
     x1 = Conv3D(32, (3, 3, 3), strides=2, activation=activation,
                 padding='same', name='downsample2')(x1)
     x1 = Conv3D(16, (3, 3, 3), strides=2, activation=activation,
@@ -130,13 +133,12 @@ def train():
                                name='upsample_dvf2')(upsample)
     upsample = Conv3DTranspose(64, (3, 3, 3), strides=2, activation=activation, padding='same',
                                name='upsample_dvf3')(upsample)
-    upsample = BatchNormalization(axis=-1, momentum=0.5)(upsample)
+    upsample = BatchNormalization(axis=-1, momentum=momentum)(upsample)
 
     dvf = Conv3D(64, kernel_size=3, activation=activation,
                  padding='same', name='dvf_64features')(upsample)
     #dvf = Conv3D(3, kernel_size=3, activation=activation, padding='same', name='dvf')(dvf)
-    dvf = Conv3D(3, kernel_size=1, activation=activation, padding='same', name='dvf',
-                 kernel_initializer=RandomNormal(mean=0.0, stddev=1e-5))(dvf)
+    dvf = Conv3D(3, kernel_size=1, activation=None, padding='same', name='dvf')(dvf)
 
     # Callbacks
     reduce_lr = ReduceLROnPlateau(monitor='val_loss', factor=0.2,
