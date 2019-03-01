@@ -4,6 +4,7 @@ Script containing useful functions for Jigsaw CNN
 import numpy as np
 from itertools import product
 import dataLoader as load
+import math
 # On server
 fixed_dir = "/hepgpu3-data1/dmcsween/DataTwoWay128/fixed"
 moving_dir = "/hepgpu3-data1/dmcsween/DataTwoWay128/moving"
@@ -15,7 +16,7 @@ class JigsawMaker:
         self.cell_num = number_cells_per_dim**dims
         self.cell_shape = input_array.shape[1:4]/4
         # self.max_hamming_set =  # Calc this
-        self.total_permutations = self.cell_num!
+        self.total_permutations = math.factorial(self.cell_num)
 
 
 def average_pix(input_image):
