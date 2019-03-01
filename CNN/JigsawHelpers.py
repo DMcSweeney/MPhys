@@ -28,7 +28,7 @@ def divide_input(input_array, number_cells_per_dim=4, dims=3):
     # Key should be cube position
     # Value is sliced array
     total_cells = number_cells_per_dim**dims
-    sliced_x, sliced_y, sliced_z = input_array.shape[1:4]/number_cells_per_dim
+    sliced_x, sliced_y, sliced_z = *tuple([x/number_cells_per_dim for x in input_array.shape[1:4]])
     cells = {key: input_array[:, prod[0]:prod[0]+sliced_x, prod[1]:prod[1]+sliced_y, prod[2]:prod[2]+sliced_z, :]
              for key in range(total_cells) for prod in product(range(0, number_cells_per_dim), repeat=dims)}
     return cells
