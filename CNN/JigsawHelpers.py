@@ -53,10 +53,12 @@ def get_data(fixed_dir, moving_dir, dvf_dir):
 
 def main(argv=None):
     # Load data into arrays
-    fixed_array = get_data()
+    fixed_array = get_data(fixed_dir, moving_dir, dvf_dir)
     # Divide input_
-
+    fixed_cells = divide_input(fixed_array)
     # Check shapes
+    for key, val in fixed_cells.items():
+        print('Cell_{} Shape:'.format(key), val.shape)
 
 
 if __name__ == '__main__':
