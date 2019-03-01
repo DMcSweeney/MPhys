@@ -34,9 +34,9 @@ def divide_input(input_array, number_cells_per_dim=4, dims=3):
     return cells
 
 
-def jigsaw_mix():
+def jigsaw_mix(air_threshold=3):
     dict_of_all_input_pos = {k: v for k, v in enumerate(inputs)}
-    dict_no_air = {k: v for k, v in dict_of_all_input_pos.items() if v > threshold else None}
+    dict_no_air = {k: v for k, v in dict_of_all_input_pos.items() if v > air_threshold else None}
     # Then ignore none when shuffling
     # Dictionary useful for putting things back together
 
