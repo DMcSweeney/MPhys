@@ -12,7 +12,7 @@ dvf_dir = "/hepgpu3-data1/dmcsween/DataTwoWay128/DVF"
 
 
 class JigsawMaker:
-    def __init__(self, number_cells_per_dim=4, input_array, dims=3):
+    def __init__(self, input_array, number_cells_per_dim=4, dims=3):
         self.cell_num = number_cells_per_dim**dims
         self.cell_shape = input_array.shape[1:4]/4
         # self.max_hamming_set =  # Calc this
