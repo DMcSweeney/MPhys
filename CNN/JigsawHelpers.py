@@ -61,19 +61,19 @@ def get_data(fixed_dir, moving_dir, dvf_dir):
     fixed_array, fixed_affine = fixed_predict.get_data()
     moving_array, moving_affine = moving_predict.get_data()
     dvf_array, dvf_affine = dvf_label.get_data(is_image=False)
-    return fixed_array
+    return fixed_array, fixed_affine
 
 
 def main(argv=None):
     # Load data into arrays
-    fixed_array = get_data(fixed_dir, moving_dir, dvf_dir)
+    fixed_array, fixed_affine = get_data(fixed_dir, moving_dir, dvf_dir)
     # Divide input_
     fixed_cells = divide_input(fixed_array)
     # Check shapes
     puzzle_array = solve_jigsaw(fixed_cells, fixed_array)
     print(puzzle_array.shape)
     first_img = puzzle_array[0, ...]
-    help.write_images(first_img, fixed_array, file_path="./jigsaw_out/", file_prefix='test')
+    help.write_images(first_img, fixed_affine, file_path="./jigsaw_out/", file_prefix='test')
 
 
 if __name__ == '__main__':
