@@ -31,8 +31,8 @@ def divide_input(input_array, number_cells_per_dim=4, dims=3):
     sliced_dims = tuple([int(x/number_cells_per_dim) for x in input_array.shape[1:4]])
     print("Sliced Dims:", sliced_dims)
     sliced_x, sliced_y, sliced_z = sliced_dims
-    cells = {key: np.array(input_array[:, prod[0]*sliced_x: prod[0]*sliced_x+sliced_x, prod[1]*sliced_y: prod[1]*sliced_y+sliced_y, prod[2]*sliced_z: prod[2]*sliced_z+sliced_z, :])
-             for key in range(total_cells) for prod in product(range(0, number_cells_per_dim), repeat=dims)}
+    cells = {prod: np.array(input_array[:, prod[0]*sliced_x: prod[0]*sliced_x+sliced_x, prod[1]*sliced_y: prod[1]*sliced_y+sliced_y, prod[2]*sliced_z: prod[2]*sliced_z+sliced_z, :])
+             for prod in product(range(0, number_cells_per_dim), repeat=dims)}
     return cells
 
 
@@ -43,6 +43,9 @@ def jigsaw_mix(air_threshold=3):
     # Then ignore none when shuffling
     # Dictionary useful for putting things back together
 """
+
+
+# def solve_jigsaw(cells):
 
 
 def get_data(fixed_dir, moving_dir, dvf_dir):
