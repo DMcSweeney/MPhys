@@ -71,9 +71,6 @@ def main(argv=None):
     fixed_cells = divide_input(fixed_array)
     # Check shapes
     puzzle_array = solve_jigsaw(fixed_cells, fixed_array)
-    print(puzzle_array.shape)
-    first_img = puzzle_array[0, :, :, :, :]
-    print("First Image:", first_img.shape)
     help.write_images(first_img, fixed_affine, file_path="./jigsaw_out/", file_prefix='test')
 
 
