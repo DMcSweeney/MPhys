@@ -4,6 +4,7 @@ Script containing useful functions for Jigsaw CNN
 import numpy as np
 from itertools import product
 import dataLoader as load
+import helpers as help
 import math
 # On server
 fixed_dir = "/hepgpu3-data1/dmcsween/DataTwoWay128/fixed"
@@ -27,7 +28,6 @@ def average_pix(input_image):
 def divide_input(input_array, number_cells_per_dim=4, dims=3):
     # Key should be cube position
     # Value is sliced array
-    total_cells = number_cells_per_dim**dims
     sliced_dims = tuple([int(x/number_cells_per_dim) for x in input_array.shape[1:4]])
     print("Sliced Dims:", sliced_dims)
     sliced_x, sliced_y, sliced_z = sliced_dims
@@ -45,13 +45,18 @@ def jigsaw_mix(air_threshold=3):
 """
 
 
-# def solve_jigsaw(cells):
+def solve_jigsaw(cells, input_array):
+    puzzle_array = np.zeros(shape=input_array.shape)
+    for key, value in cells.items():
+        x, y, z = key
+        puzzle_array[:, x*value.shape[1]:x*value.shape[1]+value.shape[1], y*value.shape[2]:y *
+                     value.shape[2]+value.shape[2], z*value.shape[3]:z*value.shape[3]+value.shape[3], :] = value
+    return puzzle_array
 
 
 def get_data(fixed_dir, moving_dir, dvf_dir):
     print('Load data to Transform')
     fixed_predict, moving_predict, dvf_label = load.data_reader(fixed_dir, moving_dir, dvf_dir)
-
     print('Turn into numpy arrays')
     fixed_array, fixed_affine = fixed_predict.get_data()
     moving_array, moving_affine = moving_predict.get_data()
@@ -65,8 +70,10 @@ def main(argv=None):
     # Divide input_
     fixed_cells = divide_input(fixed_array)
     # Check shapes
-    for key, val in fixed_cells.items():
-        print('Cell_{} Shape:'.format(key), val.shape)
+    puzzle_array = solve_jigsaw(fixed_cells, fixed_array)
+    print(puzzle_array.shape)
+    first_img = puzzle_array[0, ...]
+    help.write_images(first_img, fixed_array, file_path="./jigsaw_out/", file_prefix='test')
 
 
 if __name__ == '__main__':
