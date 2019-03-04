@@ -70,8 +70,12 @@ def solve_jigsaw(cells, input_array):
     puzzle_array = np.zeros(shape=input_array.shape)
     for key, value in cells.items():
         x, y, z = key
-        puzzle_array[:, x*value.shape[1]:x*value.shape[1]+value.shape[1], y*value.shape[2]:y *
-                     value.shape[2]+value.shape[2], z*value.shape[3]: z*value.shape[3]+value.shape[3], :] = value
+        if input_array.dims == 5:
+            puzzle_array[:, x*value.shape[1]:x*value.shape[1]+value.shape[1], y*value.shape[2]:y *
+                         value.shape[2]+value.shape[2], z*value.shape[3]: z*value.shape[3]+value.shape[3], :] = value
+        else:
+            puzzle_array[x*value.shape[1]:x*value.shape[1]+value.shape[1], y*value.shape[2]:y *
+                         value.shape[2]+value.shape[2], z*value.shape[3]: z*value.shape[3]+value.shape[3], :] = value
     return puzzle_array
 
 
