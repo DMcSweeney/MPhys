@@ -46,7 +46,7 @@ def jigsaw_mix(air_threshold=3):
 """
 
 
-def shuffle_jigsaw(input_dict, number_cells_per_dim=4):
+def shuffle_jigsaw(input_dict, number_cells_per_dim=4, dims=3):
     # Randomly assign key to value
     list_keys = []
     for key in input_dict.keys():
