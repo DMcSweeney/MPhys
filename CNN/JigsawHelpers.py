@@ -23,7 +23,7 @@ class JigsawMaker:
 
 def average_pix(input_image):
     # Average along batch axis
-    return np.mean(input_image, axis=0)
+    return np.mean(input_image, axis=0, keepdims=True)
 
 
 def average_cell(input_dict):
@@ -34,16 +34,11 @@ def divide_input(input_array, number_cells_per_dim=4, dims=3):
     # Key should be cube position
     # Value is sliced array
     print("Input Dimensions:", input_array.ndim)
-    if input_array.ndim == 5:
-        sliced_dims = tuple([int(x/number_cells_per_dim) for x in input_array.shape[1:4]])
-        sliced_x, sliced_y, sliced_z = sliced_dims
-        cells = {prod: np.array(input_array[:, prod[0]*sliced_x: prod[0]*sliced_x+sliced_x, prod[1]*sliced_y: prod[1]*sliced_y+sliced_y, prod[2]*sliced_z: prod[2]*sliced_z+sliced_z, :])
-                 for prod in product(range(0, number_cells_per_dim), repeat=dims)}
-    else:
-        sliced_dims = tuple([int(x/number_cells_per_dim) for x in input_array.shape[:3]])
-        sliced_x, sliced_y, sliced_z = sliced_dims
-        cells = {prod: np.array(input_array[prod[0]*sliced_x: prod[0]*sliced_x+sliced_x, prod[1]*sliced_y: prod[1]*sliced_y+sliced_y, prod[2]*sliced_z: prod[2]*sliced_z+sliced_z, :])
-                 for prod in product(range(0, number_cells_per_dim), repeat=dims)}
+    sliced_dims = tuple([int(x/number_cells_per_dim) for x in input_array.shape[1:4]])
+    sliced_x, sliced_y, sliced_z = sliced_dims
+    cells = {prod: np.array(input_array[:, prod[0]*sliced_x: prod[0]*sliced_x+sliced_x, prod[1]*sliced_y: prod[1]*sliced_y+sliced_y, prod[2]*sliced_z: prod[2]*sliced_z+sliced_z, :])
+             for prod in product(range(0, number_cells_per_dim), repeat=dims)}
+
     return cells
 
 
@@ -70,12 +65,8 @@ def solve_jigsaw(cells, input_array):
     puzzle_array = np.zeros(shape=input_array.shape)
     for key, value in cells.items():
         x, y, z = key
-        if input_array.dims == 5:
-            puzzle_array[:, x*value.shape[1]:x*value.shape[1]+value.shape[1], y*value.shape[2]:y *
-                         value.shape[2]+value.shape[2], z*value.shape[3]: z*value.shape[3]+value.shape[3], :] = value
-        else:
-            puzzle_array[x*value.shape[1]:x*value.shape[1]+value.shape[1], y*value.shape[2]:y *
-                         value.shape[2]+value.shape[2], z*value.shape[3]: z*value.shape[3]+value.shape[3], :] = value
+        puzzle_array[:, x*value.shape[1]:x*value.shape[1]+value.shape[1], y*value.shape[2]:y *
+                     value.shape[2]+value.shape[2], z*value.shape[3]: z*value.shape[3]+value.shape[3], :] = value
     return puzzle_array
 
 
