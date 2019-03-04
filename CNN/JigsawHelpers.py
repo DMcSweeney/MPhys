@@ -51,9 +51,10 @@ def shuffle_jigsaw(input_dict, number_cells_per_dim=4, dims=3):
     list_keys = []
     for key in input_dict.keys():
         list_keys.append(key)
+    shuffle_keys = random.sample(list_keys, len(list_keys))
     print("New Keys:", random.sample(list_keys, len(list_keys)))
-    shuffle_dict = {prod: input_dict[random_key] for random_key in random.sample(
-        list_keys, len(list_keys)) for prod in product(range(0, number_cells_per_dim), repeat=dims)}
+    shuffle_dict = {prod: input_dict[shuffle_keys[i]] for prod, i in enumerate(
+        list(product(range(0, number_cells_per_dim), repeat=dims)))}
     return shuffle_dict
 
 
