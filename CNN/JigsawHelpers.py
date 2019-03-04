@@ -26,6 +26,10 @@ def average_pix(input_image):
     return np.mean(input_image, axis=0)
 
 
+def average_cell(input_dict):
+    return {key: np.mean(value) for key, value in input_dict.items()}
+
+
 def divide_input(input_array, number_cells_per_dim=4, dims=3):
     # Key should be cube position
     # Value is sliced array
@@ -78,12 +82,17 @@ def get_data(fixed_dir, moving_dir, dvf_dir):
 def main(argv=None):
     # Load data into arrays
     fixed_array, fixed_affine = get_data(fixed_dir, moving_dir, dvf_dir)
+    # Get average images
+    avg_img = average_pix(fixed_array)
     # Divide input_
-    fixed_cells = divide_input(fixed_array)
-    shuffle_image = shuffle_jigsaw(fixed_cells)
+    fixed_cells = divide_input(avg_img)
+    avg_dict = average_cell(fixed_cells)
+    # shuffle_image = shuffle_jigsaw(fixed_cells)
     # Check shapes
-    puzzle_array = solve_jigsaw(shuffle_image, fixed_array)
-    help.write_images(puzzle_array, fixed_affine, file_path="./jigsaw_out/", file_prefix='shuffle')
+    puzzle_array = solve_jigsaw(fixed_cells, fixed_array)
+    for key, value in avg_dict.items():
+        print("Avg Value in cell_{} is {}".format(key, value))
+    help.write_images(puzzle_array, fixed_affine, file_path="./jigsaw_out/", file_prefix='average')
 
 
 if __name__ == '__main__':
