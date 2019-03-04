@@ -48,12 +48,10 @@ def jigsaw_mix(air_threshold=3):
 
 def shuffle_jigsaw(input_dict, number_cells_per_dim=4, dims=3):
     # Randomly assign key to value
-    list_keys = []
-    for key in input_dict.keys():
-        list_keys.append(key)
+    list_keys = [key for key in input_dict.keys()]
     shuffle_keys = random.sample(list_keys, len(list_keys))
     print("New Keys:", random.sample(list_keys, len(list_keys)))
-    shuffle_dict = {prod: input_dict[shuffle_keys[i]] for prod, i in enumerate(
+    shuffle_dict = {prod: input_dict[shuffle_keys[i]] for i, prod in enumerate(
         list(product(range(0, number_cells_per_dim), repeat=dims)))}
     return shuffle_dict
 
