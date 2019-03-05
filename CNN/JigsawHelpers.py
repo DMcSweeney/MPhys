@@ -7,10 +7,17 @@ import dataLoader as load
 import helpers as help
 import math
 import random
+"""
 # On server with PET and PCT in
 fixed_dir = "/hepgpu3-data1/dmcsween/DataTwoWay128/fixed"
 moving_dir = "/hepgpu3-data1/dmcsween/DataTwoWay128/moving"
 dvf_dir = "/hepgpu3-data1/dmcsween/DataTwoWay128/DVF"
+"""
+# On Tom PC with PET and PCT in
+fixed_dir = "C:\\Users\\heyst\\Desktop\\MPHYS\\PET"
+moving_dir = "C:\\Users\\heyst\\Desktop\\MPHYS\\PCT"
+dvf_dir = "C:\\Users\\heyst\\Desktop\\MPHYS\\DVF"
+
 
 
 class JigsawMaker:
@@ -19,7 +26,7 @@ class JigsawMaker:
         self.cell_shape = input_array.shape[1:4]/4
         # self.max_hamming_set =  # Calc this
         self.total_permutations = math.factorial(self.cell_num)
-
+        self.colourJitter = colourJitter
 
 def average_pix(input_image):
     # Average along batch axis
@@ -79,22 +86,44 @@ def get_data(fixed_dir, moving_dir, dvf_dir):
     dvf_array, dvf_affine = dvf_label.get_data(is_image=False)
     return fixed_array, fixed_affine
 
+def jitter(input_array, Jitter):
+    image_number =  input_array.shape[0]
+    x_dim = input_array.shape[1] - Jitter * 2
+    y_dim = input_array.shape[2] - Jitter * 2
+    z_dim = input_array.shape[3] - Jitter * 2
+    return_array = np.empty((image_number,x_dim, y_dim,z_dim,1), np.float32)
+
+    for i in range(image_number):
+        print(image_number)
+        x_jit = random.randrange(Jitter * 2 + 1)
+        y_jit = random.randrange(Jitter * 2 + 1)
+        z_jit  = random.randrange(Jitter * 2 + 1)
+        print(".")
+        return_array[i,:,:,:,:] = input_array[i,x_jit:x_dim + x_jit, y_jit:y_dim + y_jit, z_jit:z_dim + z_jit,:]
+
+
+
+
+    return return_array
 
 def main(argv=None):
     # Load data into arrays
     fixed_array, fixed_affine = get_data(fixed_dir, moving_dir, dvf_dir)
     # Get average images'
     print("Fixed Array Shape:", fixed_array.shape)
-    avg_img = average_pix(fixed_array)
+    #avg_img = average_pix(fixed_array)
     # Divide input_
-    fixed_cells = divide_input(avg_img)
-    avg_dict = average_cell(fixed_cells)
+    #fixed_cells = divide_input(avg_img)
+    #avg_dict = average_cell(fixed_cells)
     # shuffle_image = shuffle_jigsaw(fixed_cells)
     # Check shapes
-    puzzle_array = solve_jigsaw(fixed_cells, fixed_array)
-    for key, value in avg_dict.items():
-        print("Avg Value in cell_{} is {}".format(key, value))
-    help.write_images(puzzle_array, fixed_affine, file_path="./jigsaw_out/", file_prefix='average')
+    #puzzle_array = solve_jigsaw(fixed_cells, fixed_array)
+    print(fixed_array[1,1,1,1,0])
+    jitter_array = jitter(fixed_array,2)
+    print(jitter_array[1,1,1,1,0])
+#    for key, value in avg_dict.items():
+#        print("Avg Value in cell_{} is {}".format(key, value))
+#    help.write_images(puzzle_array, fixed_affine, file_path="./jigsaw_out/", file_prefix='average')
 
 
 if __name__ == '__main__':
