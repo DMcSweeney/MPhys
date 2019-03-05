@@ -7,6 +7,7 @@ import dataLoader as load
 import helpers as help
 import math
 import random
+from numba import jit
 # On server with PET and PCT in
 fixed_dir = "/hepgpu3-data1/dmcsween/DataTwoWay128/fixed"
 moving_dir = "/hepgpu3-data1/dmcsween/DataTwoWay128/moving"
@@ -46,8 +47,9 @@ def shuffle_jigsaw(input_dict, fix_dict, number_cells_per_dim=4, dims=3):
     list_keys = [key for key in input_dict.keys()]
     shuffle_keys = random.sample(list_keys, len(list_keys))
     print("New Keys:", shuffle_keys)
-    shuffle_dict = {new_key: input_dict[shuffle_keys[i]] for i, new_key in enumerate(
-        list(random.shuffle(shuffle_keys)))}
+    print("Type:", type(random.shuffle(shuffle_keys)))
+    shuffle_dict = {new_key: input_dict[shuffle_keys[i]]
+                    for i, new_key in enumerate(random.shuffle(shuffle_keys))}
     return shuffle_dict
 
 
@@ -72,6 +74,7 @@ def split_shuffle_fix(input_dict, threshold=-900):
     return shuffle_dict, fix_dict
 
 
+@jit
 def get_data(fixed_dir, moving_dir, dvf_dir):
     # Load data from directory
     fixed_predict, moving_predict, dvf_label = load.data_reader(fixed_dir, moving_dir, dvf_dir)
