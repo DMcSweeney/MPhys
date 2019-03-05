@@ -42,7 +42,7 @@ def divide_input(input_array, number_cells_per_dim=4, dims=3):
     return cells
 
 
-def shuffle_jigsaw(input_dict, fix_dict number_cells_per_dim=4, dims=3):
+def shuffle_jigsaw(input_dict, fix_dict, number_cells_per_dim=4, dims=3):
     # Randomly assign key to value
     list_keys = [key for key in input_dict.keys()]
     shuffle_keys = random.sample(list_keys, len(list_keys))
@@ -90,7 +90,7 @@ def main(argv=None):
     # Divide input_
     image_cells = divide_input(fixed_array)
     shuffle_cells, fix_cells = split_shuffle_fix(image_cells)
-    shuffle_image = shuffle_jigsaw(shuffle_cells)
+    shuffle_image = shuffle_jigsaw(shuffle_cells, fix_cells)
     print("{} cells have been shuffled. This is {} permutations.".format(
         len(shuffle_cells.keys()), math.factorial(len(shuffle_cells.keys()))))
     # Check shapes
