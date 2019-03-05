@@ -97,4 +97,4 @@ def write_images(input_, base_affine, file_path=None, file_prefix=''):
         [nib.save(nib.Nifti1Image(input_[idx, ...], base_affine[idx, ...]),
                   os.path.join(file_path,
                                file_prefix + '%s.nii' % idx))
-         for idx in range(batch_size)]
+         for idx in range(1)]
