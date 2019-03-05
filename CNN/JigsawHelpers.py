@@ -42,22 +42,13 @@ def divide_input(input_array, number_cells_per_dim=4, dims=3):
     return cells
 
 
-"""
-def jigsaw_mix(air_threshold=3):
-    dict_of_all_input_pos = {k: v for k, v in enumerate(inputs)}
-    dict_no_air = {k: v for k, v in dict_of_all_input_pos.items() if v > air_threshold else None}
-    # Then ignore none when shuffling
-    # Dictionary useful for putting things back together
-"""
-
-
-def shuffle_jigsaw(input_dict, number_cells_per_dim=4, dims=3):
+def shuffle_jigsaw(input_dict, fix_dict number_cells_per_dim=4, dims=3):
     # Randomly assign key to value
     list_keys = [key for key in input_dict.keys()]
     shuffle_keys = random.sample(list_keys, len(list_keys))
     print("New Keys:", random.sample(list_keys, len(list_keys)))
     shuffle_dict = {prod: input_dict[shuffle_keys[i]] for i, prod in enumerate(
-        list(product(range(0, number_cells_per_dim), repeat=dims)))}
+        list(product(range(0, number_cells_per_dim), repeat=dims))) if prod not in fix_dict.keys()}
     return shuffle_dict
 
 
