@@ -97,13 +97,13 @@ def main(argv=None):
     fixed_array, fixed_affine = get_data(fixed_dir, moving_dir, dvf_dir)
 
     # Divide input_
-    image_cells = divide_input(avg_img)
+    image_cells = divide_input(fixed_array)
     shuffle_cells, fix_cells = split_shuffle_fix(image_cells)
     shuffle_image = shuffle_jigsaw(shuffle_cells)
     print("{} cells have been shuffled. This is {} permutations.".format(
         len(shuffle_cells.keys()), math.factorial(len(shuffle_cells.keys()))))
     # Check shapes
-    puzzle_array = solve_jigsaw(fixed_cells, fix_cells, fixed_array)
+    puzzle_array = solve_jigsaw(shuffle_image, fix_cells, fixed_array)
 
     help.write_images(puzzle_array, fixed_affine,
                       file_path="./jigsaw_out/", file_prefix='shuffle_fix')
