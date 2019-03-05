@@ -61,13 +61,25 @@ def shuffle_jigsaw(input_dict, number_cells_per_dim=4, dims=3):
     return shuffle_dict
 
 
-def solve_jigsaw(cells, input_array):
+def solve_jigsaw(shuffled_cells, fixed_cells, input_array):
+    # Put array back together
+    all_cells = {}
     puzzle_array = np.zeros(shape=input_array.shape)
-    for key, value in cells.items():
+    all_cells.update(shuffled_cells)
+    all_cells.update(fixed_cells)
+    for key, value in all_cells.items():
         x, y, z = key
         puzzle_array[:, x*value.shape[1]:x*value.shape[1]+value.shape[1], y*value.shape[2]:y *
                      value.shape[2]+value.shape[2], z*value.shape[3]: z*value.shape[3]+value.shape[3], :] = value
     return puzzle_array
+
+
+def split_shuffle_fix(input_dict, threshold=-900):
+    # Split into cells to shuffle and those to stay fixed
+    # To reduce possible permutations
+    shuffle_dict = {key: value if np.mean(value) > threshold for key, value in input_dict.items()}
+    fix_dict = {key: value if np.mean(value) <= threshold for key, value in input_dict.items()}
+    return shuffle_dict, fix_dict
 
 
 def get_data(fixed_dir, moving_dir, dvf_dir):
@@ -83,18 +95,18 @@ def get_data(fixed_dir, moving_dir, dvf_dir):
 def main(argv=None):
     # Load data into arrays
     fixed_array, fixed_affine = get_data(fixed_dir, moving_dir, dvf_dir)
-    # Get average images'
-    print("Fixed Array Shape:", fixed_array.shape)
-    avg_img = average_pix(fixed_array)
+
     # Divide input_
-    fixed_cells = divide_input(avg_img)
-    avg_dict = average_cell(fixed_cells)
-    # shuffle_image = shuffle_jigsaw(fixed_cells)
+    image_cells = divide_input(avg_img)
+    shuffle_cells, fix_cells = split_shuffle_fix(image_cells)
+    shuffle_image = shuffle_jigsaw(shuffle_cells)
+    print("{} cells have been shuffled. This is {} permutations.".format(
+        len(shuffle_cells.keys()), math.factorial(len(shuffle_cells.keys()))))
     # Check shapes
-    puzzle_array = solve_jigsaw(fixed_cells, fixed_array)
-    for key, value in avg_dict.items():
-        print("Avg Value in cell_{} is {}".format(key, value))
-    help.write_images(puzzle_array, fixed_affine, file_path="./jigsaw_out/", file_prefix='average')
+    puzzle_array = solve_jigsaw(fixed_cells, fix_cells, fixed_array)
+
+    help.write_images(puzzle_array, fixed_affine,
+                      file_path="./jigsaw_out/", file_prefix='shuffle_fix')
 
 
 if __name__ == '__main__':
