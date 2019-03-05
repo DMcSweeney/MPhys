@@ -46,62 +46,60 @@ def shuffle_jigsaw(input_dict, fix_dict, number_cells_per_dim=4, dims=3):
     # Randomly assign key to value
     list_keys = [key for key in input_dict.keys()]
     shuffle_keys = random.sample(list_keys, len(list_keys))
-    print("New Keys:", shuffle_keys)
-    print("Type:", type(random.shuffle(shuffle_keys)))
     shuffle_dict = {new_key: input_dict[shuffle_keys[i]]
-                    for i, new_key in enumerate(random.sample(list_keys, len(list_keys))}
+                    for i, new_key in enumerate(random.sample(list_keys, len(list_keys)))}
     return shuffle_dict
 
 
 def solve_jigsaw(shuffled_cells, fixed_cells, input_array):
     # Put array back together
-    all_cells={}
-    puzzle_array=np.zeros(shape=input_array.shape)
+    all_cells = {}
+    puzzle_array = np.zeros(shape=input_array.shape)
     all_cells.update(shuffled_cells)
     all_cells.update(fixed_cells)
     for key, value in all_cells.items():
-        x, y, z=key
+        x, y, z = key
         puzzle_array[:, x*value.shape[1]:x*value.shape[1]+value.shape[1], y*value.shape[2]:y *
-                     value.shape[2]+value.shape[2], z*value.shape[3]: z*value.shape[3]+value.shape[3], :]=value
+                     value.shape[2]+value.shape[2], z*value.shape[3]: z*value.shape[3]+value.shape[3], :] = value
     return puzzle_array
 
 
 def split_shuffle_fix(input_dict, threshold=-900):
     # Split into cells to shuffle and those to stay fixed
     # To reduce possible permutations
-    shuffle_dict={key: value for key, value in input_dict.items() if np.mean(value) > threshold}
-    fix_dict={key: value for key, value in input_dict.items() if np.mean(value) <= threshold}
+    shuffle_dict = {key: value for key, value in input_dict.items() if np.mean(value) > threshold}
+    fix_dict = {key: value for key, value in input_dict.items() if np.mean(value) <= threshold}
     return shuffle_dict, fix_dict
 
 
 @jit
 def get_data(fixed_dir, moving_dir, dvf_dir):
     # Load data from directory
-    fixed_predict, moving_predict, dvf_label=load.data_reader(fixed_dir, moving_dir, dvf_dir)
-    fixed_array, fixed_affine=fixed_predict.get_data()
-    moving_array, moving_affine=moving_predict.get_data()
-    dvf_array, dvf_affine=dvf_label.get_data(is_image=False)
+    fixed_predict, moving_predict, dvf_label = load.data_reader(fixed_dir, moving_dir, dvf_dir)
+    fixed_array, fixed_affine = fixed_predict.get_data()
+    moving_array, moving_affine = moving_predict.get_data()
+    dvf_array, dvf_affine = dvf_label.get_data(is_image=False)
     return fixed_array, fixed_affine
 
 
 def main(argv=None):
     print("Load data into arrays")
-    fixed_array, fixed_affine=get_data(fixed_dir, moving_dir, dvf_dir)
+    fixed_array, fixed_affine = get_data(fixed_dir, moving_dir, dvf_dir)
 
     print("Divide input")
-    image_cells=divide_input(fixed_array)
+    image_cells = divide_input(fixed_array)
 
     print("Fix cells below threshold")
-    shuffle_cells, fix_cells=split_shuffle_fix(image_cells)
+    shuffle_cells, fix_cells = split_shuffle_fix(image_cells)
 
     print("Shuffle cells")
-    shuffle_image=shuffle_jigsaw(shuffle_cells, fix_cells)
+    shuffle_image = shuffle_jigsaw(shuffle_cells, fix_cells)
 
     print("{} cells have been shuffled. This is {} permutations.".format(
         len(shuffle_cells.keys()), math.factorial(len(shuffle_cells.keys()))))
 
     print("Solve puzzle")
-    puzzle_array=solve_jigsaw(shuffle_image, fix_cells, fixed_array)
+    puzzle_array = solve_jigsaw(shuffle_image, fix_cells, fixed_array)
 
     help.write_images(puzzle_array, fixed_affine,
                       file_path="./jigsaw_out/", file_prefix='shuffle_fix')
