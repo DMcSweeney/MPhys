@@ -64,7 +64,7 @@ def solve_jigsaw(shuffled_cells, fixed_cells, input_array):
     return puzzle_array
 
 
-def split_shuffle_fix(input_dict, threshold=-900):
+def split_shuffle_fix(input_dict, threshold=-500):
     # Split into cells to shuffle and those to stay fixed
     # To reduce possible permutations
     shuffle_dict = {key: value for key, value in input_dict.items() if np.mean(value) > threshold}
@@ -77,8 +77,6 @@ def get_data(fixed_dir, moving_dir, dvf_dir):
     # Load data from directory
     fixed_predict, moving_predict, dvf_label = load.data_reader(fixed_dir, moving_dir, dvf_dir)
     fixed_array, fixed_affine = fixed_predict.get_data()
-    moving_array, moving_affine = moving_predict.get_data()
-    dvf_array, dvf_affine = dvf_label.get_data(is_image=False)
     return fixed_array, fixed_affine
 
 
