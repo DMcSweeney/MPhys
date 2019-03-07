@@ -25,6 +25,8 @@ def generator(image_array, batch_size=1, num_permutations=50):
             input_array = np.zeros((len(shuffle_dict.keys()), list(cells.values(
             ))[0].shape[0], list(cells.values())[0].shape[1], list(cells.values())[0].shape[2], 1))
             label_array = np.zeros((len(shuffle_dict.keys()), 1))
+            print("Input Shape:", input_array.shape)
+            print("Output Shape:", label_array.shape)
             # Hamming distance
             start_time = time.time()
             hamming_set = hamming.gen_max_hamming_set(num_permutations, shuffle_dict)
@@ -39,9 +41,6 @@ def generator(image_array, batch_size=1, num_permutations=50):
                     input_array[i] = value + key
                 for key in shuffle_dict.keys():
                     label_array[i] = key
-
-        print("Input Shape:", input_array.shape)
-        print("Output Shape:", label_array.shape)
         return input_array, label_array
         # yield ({'input': input_array}, {'output': label_array})
 
