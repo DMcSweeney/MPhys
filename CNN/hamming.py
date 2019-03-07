@@ -22,7 +22,6 @@ def hamming_distance(array1, array2):
 
 
 @jit
-
 def gen_max_hamming_set(N, moving_dict):
     """
     Generate permutation set with max hamming distance
@@ -65,13 +64,12 @@ def gen_max_hamming_set(N, moving_dict):
         # Return index where max value was found
         j = np.argmax(np.sum(hamming_dist), axis=0)
         # Remove NUM_PERMUTATIONS-i column
-        hamming_dist[:, NUM_PERMUTATIONS - (i+1)] np.zeros((N), dtype=np.uint8)
+        hamming_dist[:, NUM_PERMUTATIONS - (i+1)] = np.zeros((N), dtype=np.uint8)
 
         b = time.time()
         print("Took {} seconds to do one loop".format(b-a))
 
         return max_hamming_set
-
 
 
 def main(num_permutations=50, moving_dict):
