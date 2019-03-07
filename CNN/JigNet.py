@@ -1,17 +1,15 @@
 from keras.layers import (Dense, Dropout, Concatenate, Input, Activation, Flatten, Conv3D,
                           MaxPooling3d, GlobalAveragePooling3D, BatchNormalization, add)
 from keras.models import Model
-from keras.callbacks import ModelCheckpoint, ReduceLROnPlateau, EarlyStopping, TensorBoard
+from keras.callbacks import ModelCheckpoint, ReduceLROnPlateau, EarlyStopping
 from keras import optimizers
 from time import strftime, localtime
-import warnings
+import dataLoader as load
 import os
-import pickle
-import resnetBottom
 from DataGenerator import DataGenerator
-import numpy as np
-import h5py
+
 #  from keras.utils import plot_model
+
 
 class LossHistory(Callback):
     def on_train_begin(self, logs={}):
@@ -20,23 +18,23 @@ class LossHistory(Callback):
     def on_batch_end(self, batch, logs={}):
         self.losses.append(logs.get('loss'))
 
-def trian(tileSize=64, numPuzzles=9):
+
+def train(tileSize=64, numPuzzles=9):
     # On server with PET and PCT in
     image_dir = "/hepgpu3-data1/dmcsween/DataTwoWay128/fixed"
-    moving_dir = "/hepgpu3-data1/dmcsween/DataTwoWay128/moving"
-    dvf_dir = "/hepgpu3-data1/dmcsween/DataTwoWay128/DVF"
+    # Think we only need one directory since this uses both PET and PCT as fixed
+    # moving_dir = "/hepgpu3-data1/dmcsween/DataTwoWay128/moving"
 
     image_data, __image, __label = load.data_reader(image_dir, moving_dir, dvf_dir)
 
-    image_array, image_affine = image_data_image.get_data()
+    image_array, image_affine = image_data.get_data()
 
-    fixed_image = Input(shape=(train_fixed.shape[1:]))
-
+    fixed_image = Input(shape=(image_array.shape[1:]))
 
     validation_dataset, validation_moving, validation_dvf, train_dataset, train_moving, train_dvf = helper.split_data(
         fixed_image, __image, __label, split_ratio=0.15)
 
-    image = Input(shape=(train_dataset.shape[1:]))  
+    image = Input(shape=(train_dataset.shape[1:]))
 
     x = Conv3D(64, (7, 7, 7), strides=2, padding='same')(inputTensor)
     x = Activation('relu')(x)
@@ -48,7 +46,7 @@ def trian(tileSize=64, numPuzzles=9):
     x = Conv3D(128, (3, 3, 3), strides=2, padding='same')(x)
     x = Activation('relu')(x)
 
-    x = Conv3D(256, (3, 3 ,3), strides=2 , padding='same')(x)
+    x = Conv3D(256, (3, 3, 3), strides=2, padding='same')(x)
     x = Activation('relu')(x)
 
     x = Conv3D(512, (3, 3, 3), strides=2, padding='same')(x)
@@ -59,7 +57,7 @@ def trian(tileSize=64, numPuzzles=9):
     model = Model(image, x, name='Jigsaw_Model')
 
     dataGenerator = DataGenerator(batchSize=batch_size, meanTensor=normalize_mean,
-                              stdTensor=normalize_std, maxHammingSet=max_hamming_set[:hamming_set_size])
+                                  stdTensor=normalize_std, maxHammingSet=max_hamming_set[:hamming_set_size])
 
     # Output all data from a training session into a dated folder
     outputPath = './model_data/{}'.format(strftime('%b_%d_%H:%M:%S', localtime()))
@@ -98,7 +96,6 @@ def trian(tileSize=64, numPuzzles=9):
         batch_size,
         workers=n_workers,
         use_multiprocessing=USE_MULTIPROCESSING)
-
 
 
 def main(argv=None):
