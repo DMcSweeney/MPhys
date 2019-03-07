@@ -22,8 +22,8 @@ def generator(image_array, batch_size=1, num_permutations=50):
             # Figure out which should move
 
             shuffle_dict, fix_dict = help.split_shuffle_fix(jittered_dict)
-            input_array = np.zeros((len(shuffle_dict.keys(
-            )), cells["(0,0,0)"].shape[0], cells["(0,0,0)"].shape[1], cells["(0,0,0)"].shape[2], 1))
+            input_array = np.zeros((len(shuffle_dict.keys()), list(cells.values(
+            ))[0].shape[0], list(cells.values())[0].shape[1], list(cells.values())[0].shape[2], 1))
             label_array = np.zeros((len(shuffle_dict.keys()), 1))
             # Hamming distance
             start_time = time.time()
