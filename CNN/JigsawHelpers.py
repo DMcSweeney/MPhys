@@ -45,6 +45,7 @@ def divide_input(input_array, number_cells_per_dim=4, dims=3):
 def shuffle_jigsaw(input_dict, shuffle_keys, number_cells_per_dim=4, dims=3):
     # Randomly assign key to value
     list_keys = [key for key in input_dict.keys()]
+    print(shuffle_keys[0, :])
     shuffle_dict = {new_key: input_dict[shuffle_keys[0, i]]
                     for i, new_key in enumerate(random.sample(list_keys, len(list_keys)))}
     return shuffle_dict
