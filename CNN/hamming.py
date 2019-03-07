@@ -22,22 +22,23 @@ def hamming_distance(array1, array2):
 
 
 @jit
-def gen_max_hamming_set(N, moving_cells):
+def gen_max_hamming_set(N, moving_dict):
     """
     Generate permutation set with max hamming distance
     N - number of permutations in returned set
     """
     # Figure out number of moving and fixed cells
-    moving_cells = list(moving_cells)
+    moving_cells = [key for key in moving_dict.keys()]
+    num_moving = len(moving_cells)
     # Sample 1 M permutations since 64! is too large (~10^89)
     NUM_PERMUTATIONS = 1000000
     # permutation set contains 1M permutations of all moving elements
-    permutation_set = np.zeros((NUM_PERMUTATIONS, moving_cells), dtype=np.uint8)
+    permutation_set = np.zeros((NUM_PERMUTATIONS, num_moving), dtype=np.uint8)
     # Populate this array
-    for i,  elem in enumerate(permutations(moving_cells), len(moving_cells)):
+    for i,  elem in enumerate(permutations(moving_cells), num_moving):
         permutation_set[i] = elem
     # Array containing the permutations with top permutation dist.
-    max_hamming_set = np.zeros((N, moving_cells), dtype=np.uint8)
+    max_hamming_set = np.zeros((N, num_moving), dtype=np.uint8)
     j = random.randint(0, NUM_PERMUTATIONS)
     hamming_dist = np.zeros((N, NUM_PERMUTATIONS), dtype=np.uint8)
     for i in range(N):
@@ -49,7 +50,7 @@ def gen_max_hamming_set(N, moving_cells):
         for idx in range(j, NUM_PERMUTATIONS - (i+1)):
             permutation_set[idx] = permutation_set[idx+1]
         # Replace last element with 0
-        permutation_set[NUM_PERMUTATIONS - (i+1)] = np.zeros((1, moving_cells), dtype=np.uint8)
+        permutation_set[NUM_PERMUTATIONS - (i+1)] = np.zeros((1, num_moving), dtype=np.uint8)
 
         # Calculate hamming distance
         a1 = time.time()
@@ -71,9 +72,9 @@ def gen_max_hamming_set(N, moving_cells):
         return max_hamming_set
 
 
-def main(num_permutations=50, moving_cells):
+def main(num_permutations=50, moving_dict):
     start_time = time.time()
-    permutations = gen_max_hamming_set(num_permutations, moving_cells)
+    permutations = gen_max_hamming_set(num_permutations, moving_dict)
     end_time = time.time()
     print("Took {} to generate {} permutations". format(end_time - start_time, num_permutations))
 
