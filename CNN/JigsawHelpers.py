@@ -42,7 +42,8 @@ def divide_input(input_array, number_cells_per_dim=4, dims=3):
     return cells
 
 
-def shuffle_jigsaw(input_dict, fix_dict, number_cells_per_dim=4, dims=3):
+
+def shuffle_jigsaw(input_dict, number_cells_per_dim=4, dims=3):
     # Randomly assign key to value
     list_keys = [key for key in input_dict.keys()]
     shuffle_keys = random.sample(list_keys, len(list_keys))
@@ -72,11 +73,28 @@ def split_shuffle_fix(input_dict, threshold=-500):
     return shuffle_dict, fix_dict
 
 
+
+def jitter(input_array, Jitter=2):
+    image_number = input_array.shape[0]
+    x_dim = input_array.shape[1] - Jitter * 2
+    y_dim = input_array.shape[2] - Jitter * 2
+    z_dim = input_array.shape[3] - Jitter * 2
+    return_array = np.empty((image_number, x_dim, y_dim, z_dim, 1), np.float32)
+
+    for i in range(image_number):
+        x_jit = random.randrange(Jitter * 2 + 1)
+        y_jit = random.randrange(Jitter * 2 + 1)
+        z_jit = random.randrange(Jitter * 2 + 1)
+        return_array[i, :, :, :, :] = input_array[i, x_jit:x_dim +
+                                                  x_jit, y_jit:y_dim + y_jit, z_jit:z_dim + z_jit, :]
+    return return_array
+
+
 @jit
 def get_data(fixed_dir, moving_dir, dvf_dir):
     # Load data from directory
-    fixed_predict, moving_predict, dvf_label = load.data_reader(fixed_dir, moving_dir, dvf_dir)
-    fixed_array, fixed_affine = fixed_predict.get_data()
+    fixed, moving, dvf = load.data_reader(fixed_dir, moving_dir, dvf_dir)
+    fixed_array, fixed_affine = fixed.get_data()
     return fixed_array, fixed_affine
 
 
