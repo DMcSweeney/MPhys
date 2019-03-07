@@ -42,6 +42,7 @@ def divide_input(input_array, number_cells_per_dim=4, dims=3):
     return cells
 
 
+
 def shuffle_jigsaw(input_dict, number_cells_per_dim=4, dims=3):
     # Randomly assign key to value
     list_keys = [key for key in input_dict.keys()]
@@ -70,6 +71,7 @@ def split_shuffle_fix(input_dict, threshold=-500):
     shuffle_dict = {key: value for key, value in input_dict.items() if np.mean(value) > threshold}
     fix_dict = {key: value for key, value in input_dict.items() if np.mean(value) <= threshold}
     return shuffle_dict, fix_dict
+
 
 
 def jitter(input_array, Jitter=2):
