@@ -18,9 +18,14 @@ class LossHistory(Callback):
     def on_batch_end(self, batch, logs={}):
         self.losses.append(logs.get('loss'))
 
+<<<<<<< HEAD
 
 def train(tileSize=64, numPuzzles=9):
     # On server with PET and PCT in
+=======
+def trian():
+    # load Data
+>>>>>>> 63ff764a3e6dbb6d5087e2d769efc0c733c7b2e0
     image_dir = "/hepgpu3-data1/dmcsween/DataTwoWay128/fixed"
     # Think we only need one directory since this uses both PET and PCT as fixed
     # moving_dir = "/hepgpu3-data1/dmcsween/DataTwoWay128/moving"
@@ -34,7 +39,13 @@ def train(tileSize=64, numPuzzles=9):
     validation_dataset, validation_moving, validation_dvf, train_dataset, train_moving, train_dvf = helper.split_data(
         fixed_image, __image, __label, split_ratio=0.15)
 
+<<<<<<< HEAD
     image = Input(shape=(train_dataset.shape[1:]))
+=======
+
+    #CNN structure
+    modelInputs = Input(shape=(train_dataset.shape[1:]))
+>>>>>>> 63ff764a3e6dbb6d5087e2d769efc0c733c7b2e0
 
     x = Conv3D(64, (7, 7, 7), strides=2, padding='same')(inputTensor)
     x = Activation('relu')(x)
@@ -54,14 +65,20 @@ def train(tileSize=64, numPuzzles=9):
 
     x = GlobalAveragePooling3D()(x)
 
-    model = Model(image, x, name='Jigsaw_Model')
+    model = Model(inputs = modelINputs, x, name='Jigsaw_Model')
+
+
+
+
 
     dataGenerator = DataGenerator(batchSize=batch_size, meanTensor=normalize_mean,
                                   stdTensor=normalize_std, maxHammingSet=max_hamming_set[:hamming_set_size])
 
     # Output all data from a training session into a dated folder
-    outputPath = './model_data/{}'.format(strftime('%b_%d_%H:%M:%S', localtime()))
+    outputPath = ""
     os.makedirs(outputPath)
+
+    #callbacks
     checkpointer = ModelCheckpoint(
         outputPath +
         '/weights_improvement.hdf5',
@@ -71,10 +88,8 @@ def train(tileSize=64, numPuzzles=9):
     reduce_lr_plateau = ReduceLROnPlateau(
         monitor='val_loss', patience=3, verbose=1)
     early_stop = EarlyStopping(monitor='val_loss', patience=5, verbose=1)
-    # tBoardLogger = TensorBoard(log_dir=outputPath, histogram_freq=5,
-    # batch_size=batch_size, write_graph=True, write_grads=True,
-    # write_images=True)
 
+    #BUILD Model
     opt = optimizers.Adam(lr=0.001, beta_1=0.9, beta_2=0.999)
     model.compile(optimizer=opt,
                   loss='categorical_crossentropy',
