@@ -1,7 +1,7 @@
 """
 Script containing functions necessary for hamming calculations
 """
-from itertools import permutations
+import itertools
 import numpy as np
 import random
 import time
@@ -35,7 +35,7 @@ def gen_max_hamming_set(N, moving_dict):
     # permutation set contains 1M permutations of all moving elements
     permutation_set = np.zeros((NUM_PERMUTATIONS, num_moving), dtype=np.uint8)
     # Populate this array
-    for i,  elem in enumerate(permutations(moving_cells, num_moving)):
+    for i,  elem in enumerate(itertools.permutations(range(num_moving), num_moving)):
         permutation_set[i, ...] = elem
     # Array containing the permutations with top permutation dist.
     max_hamming_set = np.zeros((N, num_moving), dtype=np.uint8)
