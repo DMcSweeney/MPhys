@@ -71,6 +71,25 @@ def split_shuffle_fix(input_dict, threshold=-500):
     fix_dict = {key: value for key, value in input_dict.items() if np.mean(value) <= threshold}
     return shuffle_dict, fix_dict
 
+def jitter(input_array, Jitter):
+    image_number =  input_array.shape[0]
+    x_dim = input_array.shape[1] - Jitter * 2
+    y_dim = input_array.shape[2] - Jitter * 2
+    z_dim = input_array.shape[3] - Jitter * 2
+    return_array = np.empty((image_number,x_dim, y_dim,z_dim,1), np.float32)
+
+    for i in range(image_number):
+        print(image_number)
+        x_jit = random.randrange(Jitter * 2 + 1)
+        y_jit = random.randrange(Jitter * 2 + 1)
+        z_jit  = random.randrange(Jitter * 2 + 1)
+        print(".")
+        return_array[i,:,:,:,:] = input_array[i,x_jit:x_dim + x_jit, y_jit:y_dim + y_jit, z_jit:z_dim + z_jit,:]
+
+
+
+
+    return return_array
 
 @jit
 def get_data(fixed_dir, moving_dir, dvf_dir):
@@ -96,32 +115,11 @@ def main(argv=None):
     print("{} cells have been shuffled. This is {} permutations.".format(
         len(shuffle_cells.keys()), math.factorial(len(shuffle_cells.keys()))))
 
-<<<<<<< HEAD
-def main(argv=None):
-    # Load data into arrays
-    fixed_array, fixed_affine = get_data(fixed_dir, moving_dir, dvf_dir)
-    # Get average images'
-    print("Fixed Array Shape:", fixed_array.shape)
-    avg_img = average_pix(fixed_array)
-    Divide input_
-    fixed_cells = divide_input(avg_img)
-    avg_dict = average_cell(fixed_cells)
-    shuffle_image = shuffle_jigsaw(fixed_cells)
-    Check shapes
-    puzzle_array = solve_jigsaw(fixed_cells, fixed_array)
-    print(fixed_array[1,1,1,1,0 ])
-    jitter_array = jitter(fixed_array,2)
-    print(jitter_array[1,1,1,1,0])
-    for key, value in avg_dict.items():
-        print("Avg Value in cell_{} is {}".format(key, value))
-        help.write_images(puzzle_array, fixed_affine, file_path="./jigsaw_out/", file_prefix='average')
-=======
     print("Solve puzzle")
     puzzle_array = solve_jigsaw(shuffle_image, fix_cells, fixed_array)
 
     help.write_images(puzzle_array, fixed_affine,
                       file_path="./jigsaw_out/", file_prefix='shuffle_fix')
->>>>>>> 005e29a20bc187c942bbdaf1dadb38bf83f42dcd
 
 
 if __name__ == '__main__':
