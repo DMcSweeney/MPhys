@@ -111,19 +111,19 @@ def main(argv=None):
     fixed_array, fixed_affine = get_data(fixed_dir, moving_dir, dvf_dir)
     # Get average images'
     print("Fixed Array Shape:", fixed_array.shape)
-    #avg_img = average_pix(fixed_array)
-    # Divide input_
-    #fixed_cells = divide_input(avg_img)
-    #avg_dict = average_cell(fixed_cells)
-    # shuffle_image = shuffle_jigsaw(fixed_cells)
-    # Check shapes
-    #puzzle_array = solve_jigsaw(fixed_cells, fixed_array)
-    print(fixed_array[1,1,1,1,0])
+    avg_img = average_pix(fixed_array)
+    Divide input_
+    fixed_cells = divide_input(avg_img)
+    avg_dict = average_cell(fixed_cells)
+    shuffle_image = shuffle_jigsaw(fixed_cells)
+    Check shapes
+    puzzle_array = solve_jigsaw(fixed_cells, fixed_array)
+    print(fixed_array[1,1,1,1,0 ])
     jitter_array = jitter(fixed_array,2)
     print(jitter_array[1,1,1,1,0])
-#    for key, value in avg_dict.items():
-#        print("Avg Value in cell_{} is {}".format(key, value))
-#    help.write_images(puzzle_array, fixed_affine, file_path="./jigsaw_out/", file_prefix='average')
+    for key, value in avg_dict.items():
+        print("Avg Value in cell_{} is {}".format(key, value))
+        help.write_images(puzzle_array, fixed_affine, file_path="./jigsaw_out/", file_prefix='average')
 
 
 if __name__ == '__main__':
