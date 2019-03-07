@@ -36,7 +36,7 @@ def gen_max_hamming_set(N, moving_dict):
     permutation_set = np.zeros((NUM_PERMUTATIONS, num_moving), dtype=np.uint8)
     # Populate this array
     for i,  elem in enumerate(permutations(moving_cells), num_moving):
-        permutation_set[i] = elem
+        permutation_set[i, ...] = elem
     # Array containing the permutations with top permutation dist.
     max_hamming_set = np.zeros((N, num_moving), dtype=np.uint8)
     j = random.randint(0, NUM_PERMUTATIONS)
