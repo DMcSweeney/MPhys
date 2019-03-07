@@ -21,7 +21,7 @@ def hamming_distance(array1, array2):
     return distance
 
 
-@jit
+# @jit
 def gen_max_hamming_set(N, moving_dict):
     """
     Generate permutation set with max hamming distance

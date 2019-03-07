@@ -23,7 +23,7 @@ def generator(image_array, batch_size=1, num_permutations=50):
 
             shuffle_dict, fix_dict = help.split_shuffle_fix(jittered_dict)
             input_array = np.zeros((len(shuffle_dict.keys()), list(cells.values(
-            ))[0].shape[0], list(cells.values())[0].shape[1], list(cells.values())[0].shape[2], 1))
+            ))[0].shape[1], list(cells.values())[0].shape[2], list(cells.values())[0].shape[3], 1))
             label_array = np.zeros((len(shuffle_dict.keys()), 1))
             print("Input Shape:", input_array.shape)
             print("Output Shape:", label_array.shape)
