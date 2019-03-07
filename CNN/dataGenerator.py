@@ -18,7 +18,7 @@ def generator(image_array, batch_size=1, num_permutations=50):
             hamming_set = {}
             cells = help.divide_input(image_array)
             # jitter
-            jittered_dict = {key: help.jitter(value[idx]) for key, value in cells.items()}
+            jittered_dict = {key: help.jitter(value[idx, ...]) for key, value in cells.items()}
             # Figure out which should move
             shuffle_dict, fix_dict = help.split_shuffle_fix(jittered_dict)
             input_array = np.zeros((len(shuffle_dict.keys()), cells.values(
