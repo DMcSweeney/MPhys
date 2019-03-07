@@ -74,6 +74,7 @@ def split_shuffle_fix(input_dict, threshold=-500):
 
 def jitter(input_array, Jitter=2):
     # image_number = input_array.shape[0]
+    print(input_array.shape)
     x_dim = input_array.shape[1] - Jitter * 2
     y_dim = input_array.shape[2] - Jitter * 2
     z_dim = input_array.shape[3] - Jitter * 2
