@@ -70,14 +70,3 @@ def gen_max_hamming_set(N, moving_dict):
         print("Took {} seconds to do one loop".format(b-a))
 
         return max_hamming_set
-
-
-def main(num_permutations=50, moving_dict):
-    start_time = time.time()
-    permutations = gen_max_hamming_set(num_permutations, moving_dict)
-    end_time = time.time()
-    print("Took {} to generate {} permutations". format(end_time - start_time, num_permutations))
-
-
-if __name__ == '__main__':
-    main()
