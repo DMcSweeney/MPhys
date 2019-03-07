@@ -20,9 +20,10 @@ def generator(image_array, batch_size=1, num_permutations=50):
             # jitter
             jittered_dict = {key: help.jitter(value[idx, ...]) for key, value in cells.items()}
             # Figure out which should move
+            print(type(cells.values()[0]))
             shuffle_dict, fix_dict = help.split_shuffle_fix(jittered_dict)
             input_array = np.zeros((len(shuffle_dict.keys()), cells.values(
-            ).shape[0], cells.values().shape[1], cells.values().shape[2], 1))
+            )[0].shape[0], cells.values()[0].shape[1], cells.values()[0].shape[2], 1))
             label_array = np.zeros((len(shuffle_dict.keys()), 1))
             # Hamming distance
             start_time = time.time()
