@@ -58,7 +58,7 @@ def gen_max_hamming_set(N, moving_dict):
             for k in range(NUM_PERMUTATIONS-i):
                 # Iterate over all in hamming_distance and permutation set
                 # Calculate hamming dist of all combinations
-                hamming_dist[j, k] = hamming_distance(max_hamming_set[j], permutation_set(k))
+                hamming_dist[j, k] = hamming_distance(max_hamming_set[j], permutation_set[k])
         b1 = time.time()
         print("Took {} seconds to calculate hamming distances".format(b1-a1))
         # Return index where max value was found
