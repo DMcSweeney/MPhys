@@ -101,7 +101,7 @@ def main(argv=None):
     print("Load data into arrays")
     fixed_array, fixed_affine = get_data(fixed_dir, moving_dir, dvf_dir)
 
-    avg_array = help.average_pix(fixed_array)
+    avg_array = average_pix(fixed_array)
 
     print("Divide input")
     image_cells = divide_input(avg_array)
