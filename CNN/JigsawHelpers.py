@@ -64,7 +64,7 @@ def solve_jigsaw(shuffled_cells, fixed_cells, input_array):
     return puzzle_array
 
 
-def split_shuffle_fix(input_dict, threshold=-400):
+def split_shuffle_fix(input_dict, threshold=-650):
     # Split into cells to shuffle and those to stay fixed
     # To reduce possible permutations
     shuffle_dict = {key: value for key, value in input_dict.items() if np.mean(value) > threshold}
