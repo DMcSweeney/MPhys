@@ -97,6 +97,15 @@ def get_data(fixed_dir, moving_dir, dvf_dir):
     return fixed_array, fixed_affine
 
 
+def get_moveable_keys(input_array):
+    avg_array = average_pix(input_array)
+    image_cells = divide_input(avg_array)
+    shuffle_cells, fix_cells = split_shuffle_fix(image_cells)
+    # These are positions of cubes that can can be shuffled
+    list_avail_keys = [key for key in shuffle_cells.keys()]
+    return list_avail_keys
+
+
 def main(argv=None):
     print("Load data into arrays")
     fixed_array, fixed_affine = get_data(fixed_dir, moving_dir, dvf_dir)
@@ -114,8 +123,6 @@ def main(argv=None):
 
     # print("{} cells have been shuffled. This is {} permutations.".format(
     #    len(shuffle_cells.keys()), math.factorial(len(shuffle_cells.keys()))))
-    for key in shuffle_cells.keys():
-        print("Key:", key)
 
     print("Solve puzzle")
     puzzle_array = solve_jigsaw(shuffle_image, fix_cells, fixed_array)

@@ -11,7 +11,7 @@ moving_dir = "/hepgpu3-data1/dmcsween/DataTwoWay128/moving"
 dvf_dir = "/hepgpu3-data1/dmcsween/DataTwoWay128/DVF"
 
 
-def generator(image_array, batch_size=1, num_permutations=50):
+def generator(image_array, avail_keys, batch_size=1, num_permutations=50):
     # Divide array into cubes
     while True:
         for idx in range(batch_size):
@@ -49,8 +49,10 @@ def generator(image_array, batch_size=1, num_permutations=50):
 def main(argv=None):
     print("Load data")
     fixed_array, fixed_affine = help.get_data(fixed_dir, moving_dir, dvf_dir)
+    print("Get moveable keys")
+    avail_keys = help.get_moveable_keys(fixed_array)
     print("Generator")
-    input_array, label_array = generator(fixed_array)
+    input_array, label_array = generator(fixed_array, avail_keys)
     print("Labels:", label_array)
 
 

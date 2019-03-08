@@ -6,7 +6,7 @@ from keras import optimizers
 from time import strftime, localtime
 import dataLoader as load
 import os
-from DataGenerator import DataGenerator
+import dataGenerator as generator
 import JigsawHelpers as help
 #  from keras.utils import plot_model
 
@@ -29,10 +29,7 @@ def train(tileSize=64, numPuzzles=9):
 
     image_array, image_affine = image_data.get_data()
 
-    # Get moving cubes from average image
-    avg_array = help.average_pix(image_array)
-    div_avg = help.divide_input(avg_array)
-    moving_dict, fix_dict = help.split_shuffle_fix(div_avg)
+    list_avail_keys = help.get_moveable_keys(image_array)
 
     fixed_image = Input(shape=(image_array.shape[1:]))
 
@@ -86,7 +83,7 @@ def train(tileSize=64, numPuzzles=9):
                   loss='categorical_crossentropy',
                   metrics=['accuracy'])
 
-    history = model.fit_generator(generator=dataGenerator.generate(train_dataset),
+    history = model.fit_generator(generator=generator(image_array, list_avail_keys),
                                   epochs=num_epochs,
                                   steps_per_epoch=train_dataset.shape[0] // batch_size,
                                   validation_data=dataGenerator.generate(
