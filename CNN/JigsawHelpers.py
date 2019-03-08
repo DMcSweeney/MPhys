@@ -64,7 +64,7 @@ def solve_jigsaw(shuffled_cells, fixed_cells, input_array):
     return puzzle_array
 
 
-def split_shuffle_fix(input_dict, threshold=-500):
+def split_shuffle_fix(input_dict, threshold=-600):
     # Split into cells to shuffle and those to stay fixed
     # To reduce possible permutations
     shuffle_dict = {key: value for key, value in input_dict.items() if np.mean(value) > threshold}
@@ -101,8 +101,10 @@ def main(argv=None):
     print("Load data into arrays")
     fixed_array, fixed_affine = get_data(fixed_dir, moving_dir, dvf_dir)
 
+    avg_array = help.average_pix(fixed_array)
+
     print("Divide input")
-    image_cells = divide_input(fixed_array)
+    image_cells = divide_input(avg_array)
 
     print("Fix cells below threshold")
     shuffle_cells, fix_cells = split_shuffle_fix(image_cells)
@@ -110,8 +112,10 @@ def main(argv=None):
     print("Shuffle cells")
     shuffle_image = shuffle_jigsaw(shuffle_cells, fix_cells)
 
-    print("{} cells have been shuffled. This is {} permutations.".format(
-        len(shuffle_cells.keys()), math.factorial(len(shuffle_cells.keys()))))
+    # print("{} cells have been shuffled. This is {} permutations.".format(
+    #    len(shuffle_cells.keys()), math.factorial(len(shuffle_cells.keys()))))
+    for key in shuffle_cells.keys():
+        print("Key:", key)
 
     print("Solve puzzle")
     puzzle_array = solve_jigsaw(shuffle_image, fix_cells, fixed_array)

@@ -7,7 +7,7 @@ from time import strftime, localtime
 import dataLoader as load
 import os
 from DataGenerator import DataGenerator
-
+import JigsawHelpers as help
 #  from keras.utils import plot_model
 
 
@@ -28,6 +28,11 @@ def train(tileSize=64, numPuzzles=9):
     image_data, __image, __label = load.data_reader(image_dir, moving_dir, dvf_dir)
 
     image_array, image_affine = image_data.get_data()
+
+    # Get moving cubes from average image
+    avg_array = help.average_pix(image_array)
+    div_avg = help.divide_input(avg_array)
+    moving_dict, fix_dict = help.split_shuffle_fix(div_avg)
 
     fixed_image = Input(shape=(image_array.shape[1:]))
 
