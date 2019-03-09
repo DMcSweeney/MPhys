@@ -34,6 +34,7 @@ def generator(image_array, avail_keys, batch_size=1, num_permutations=50):
             print("Took {} to generate {} permutations". format(
                 end_time - start_time, num_permutations))
             print("Hamming Set Shape:", hamming_set.shape)
+            print(hamming_set)
             # Shuffle according to hamming
             hamming_dict = help.shuffle_jigsaw(shuffle_dict, hamming_set)
             # Yield
