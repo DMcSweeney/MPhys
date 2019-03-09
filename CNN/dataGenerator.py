@@ -21,7 +21,7 @@ def generator(image_array, avail_keys, batch_size=1, num_permutations=50):
             jittered_dict = {key: help.jitter(value[idx, ...]) for key, value in cells.items()}
             # Figure out which should move
 
-            shuffle_dict, fix_dict = help.split_shuffle_fix(jittered_dict, avail_keys)
+            shuffle_dict, fix_dict = help.avail_keys_shuffle(jittered_dict, avail_keys)
             input_array = np.zeros((len(shuffle_dict.keys()), list(cells.values(
             ))[0].shape[1], list(cells.values())[0].shape[2], list(cells.values())[0].shape[3], 1))
             label_array = np.zeros((len(shuffle_dict.keys()), 1))
