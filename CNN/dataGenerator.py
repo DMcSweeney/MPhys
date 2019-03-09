@@ -44,7 +44,7 @@ def generator(image_array, avail_keys, batch_size=1, num_permutations=50):
                     input_array[i] = value + key
                 for key in shuffle_dict.keys():
                     label_array[i] = key
-        return input_array, label_array
+        return input_array, label_array, hamming_dict, fix_dict
         # yield ({'input': input_array}, {'output': label_array})
 
 
@@ -55,8 +55,13 @@ def main(argv=None):
     avail_keys = help.get_moveable_keys(fixed_array)
     print("Avail keys:", type(avail_keys))
     print("Generator")
-    input_array, label_array = generator(fixed_array, avail_keys)
+    input_array, label_array, hamming_dict, fix_dict = generator(fixed_array, avail_keys)
     print("Labels:", label_array)
+    print("Solve puzzle")
+    puzzle_array = help.solve_jigsaw(hamming_dict, fix_dict, fixed_array)
+
+    help.write_images(puzzle_array, fixed_affine,
+                      file_path="./jigsaw_out/", file_prefix='hamming')
 
 
 if __name__ == '__main__':
