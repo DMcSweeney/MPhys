@@ -68,4 +68,4 @@ def gen_max_hamming_set(N, moving_cells):
         b = time.time()
         print("Took {} seconds to do one loop".format(b-a))
 
-        return max_hamming_set
+    return max_hamming_set
