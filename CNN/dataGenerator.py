@@ -29,7 +29,7 @@ def generator(image_array, avail_keys, batch_size=1, num_permutations=50):
             print("Output Shape:", label_array.shape)
             # Hamming distance
             start_time = time.time()
-            hamming_set = hamming.gen_max_hamming_set(num_permutations, shuffle_dict)
+            hamming_set = hamming.gen_max_hamming_set(num_permutations, avail_keys)
             end_time = time.time()
             print("Took {} to generate {} permutations". format(
                 end_time - start_time, num_permutations))

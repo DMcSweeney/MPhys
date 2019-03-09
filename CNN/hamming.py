@@ -27,14 +27,14 @@ def gen_max_hamming_set(N, moving_cells):
     N - number of permutations in returned set
     """
     # Figure out number of moving and fixed cells
-    # moving_cells = [key for key in moving_dict.keys()]
+    #moving_cells = [key for key in moving_dict.keys()]
     num_moving = len(moving_cells)
     # Sample 1 M permutations since 64! is too large (~10^89)
     NUM_PERMUTATIONS = 1000000
     # permutation set contains 1M permutations of all moving elements
     permutation_set = np.zeros((NUM_PERMUTATIONS, num_moving), dtype=np.uint8)
     # Populate this array
-    for i,  elem in enumerate(list(itertools.islice(itertools.permutations(num_moving, range(num_moving)), NUM_PERMUTATIONS))):
+    for i,  elem in enumerate(list(itertools.islice(itertools.permutations(range(num_moving), num_moving), NUM_PERMUTATIONS))):
         permutation_set[i, ...] = elem
     # Array containing the permutations with top permutation dist.
     max_hamming_set = np.zeros((N, num_moving), dtype=np.uint8)
