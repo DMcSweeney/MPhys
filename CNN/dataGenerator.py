@@ -41,7 +41,8 @@ def generator(image_array, avail_keys, batch_size=1, num_permutations=50):
             for i in range(len(hamming_dict.keys())):
                 for key, value in hamming_dict.items():
                     print("Value shape:", value.shape)
-                    input_array[i, :, :, :, :] = [value, key]
+                    input_array[i, :value.shape[0], :value.shape[1], :value.shape[2], :] = value
+                    np.insert(input_array, i, key, axis=-1)
                 for key in shuffle_dict.keys():
                     label_array[i] = key
         return input_array, label_array, hamming_dict, fix_dict
