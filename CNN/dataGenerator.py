@@ -3,6 +3,7 @@ Script containing generator for JigNet
 """
 import numpy as np
 import JigsawHelpers as help
+import helpers as helper
 import hamming
 import time
 import random
@@ -70,8 +71,8 @@ def main(argv=None):
     print("Solve puzzle")
     puzzle_array = help.solve_jigsaw(shuffle_dict, fix_dict, fixed_array)
 
-    help.write_images(puzzle_array, fixed_affine,
-                      file_path="./jigsaw_out/", file_prefix='hamming')
+    helper.write_images(puzzle_array, fixed_affine,
+                        file_path="./jigsaw_out/", file_prefix='hamming')
 
 
 if __name__ == '__main__':
