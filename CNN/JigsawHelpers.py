@@ -15,11 +15,20 @@ dvf_dir = "/hepgpu3-data1/dmcsween/DataTwoWay128/DVF"
 
 
 class JigsawMaker:
-    def __init__(self, input_array, number_cells_per_dim=4, dims=3):
+    def __init__(self, cropSize, cellSize, tileSize, colourJitter, input_array,
+                 number_cells_per_dim=4, dims=3):
+        self.cropSize = cropSize
+        self.cellSize = cellSize
+        self.tileSize = tileSize
+        self.colourJitter = colourJitter
         self.cell_num = number_cells_per_dim**dims
         self.cell_shape = input_array.shape[1:4]/4
         # self.max_hamming_set =  # Calc this
         self.total_permutations = math.factorial(self.cell_num)
+
+        self.tileLocationRange = tileLocationRange
+        self.maxHammingSet = np.array(maxHammingSet, dtype=np.uint8)
+        self.numPermutations = self.maxHammingSet.shape[0]
 
 
 def average_pix(input_image):

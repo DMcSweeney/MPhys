@@ -5,6 +5,7 @@ import numpy as np
 import JigsawHelpers as help
 import hamming
 import time
+import random
 
 fixed_dir = "/hepgpu3-data1/dmcsween/DataTwoWay128/fixed"
 moving_dir = "/hepgpu3-data1/dmcsween/DataTwoWay128/moving"
@@ -16,12 +17,17 @@ def generator(image_array, avail_keys, batch_size=1, num_permutations=50):
     while True:
         for idx in range(batch_size):
             hamming_set = {}
-            cells = help.divide_input(image_array)
-            # jitter
-            jittered_dict = {key: help.jitter(value[idx, ...]) for key, value in cells.items()}
-            # Figure out which should move
 
+            # Divide image into cubes
+            cells = help.divide_input(image_array)
+
+            # Jitter
+            jittered_dict = {key: help.jitter(value[idx, ...]) for key, value in cells.items()}
+
+            # Figure out which should move
             shuffle_dict, fix_dict = help.avail_keys_shuffle(jittered_dict, avail_keys)
+
+            # Create placeholders
             input_array = np.zeros((len(shuffle_dict.keys()), list(cells.values(
             ))[0].shape[1], list(cells.values())[0].shape[2], list(cells.values())[0].shape[3], 1))
             label_array = np.zeros((len(shuffle_dict.keys()), 1))
@@ -36,8 +42,10 @@ def generator(image_array, avail_keys, batch_size=1, num_permutations=50):
             print("Hamming Set Shape:", hamming_set.shape)
             print(hamming_set)
             # Shuffle according to hamming
-            hamming_dict = help.shuffle_jigsaw(shuffle_dict, hamming_set)
-            # Yield
+            random_idx = random.randrange(hamming_set.shape[0])
+
+            shuffle_dict = help.shuffle_jigsaw(shuffle_dict, hamming_set[random_idx])
+            """
             for i in range(len(hamming_dict.keys())):
                 for key, value in hamming_dict.items():
                     print("Value shape:", value.shape)
@@ -45,7 +53,9 @@ def generator(image_array, avail_keys, batch_size=1, num_permutations=50):
                     np.insert(input_array, i, key, axis=-1)
                 for key in shuffle_dict.keys():
                     label_array[i] = key
-        return input_array, label_array, hamming_dict, fix_dict
+            """
+        return shuffle_dict, fix_dict
+        # return input_array, label_array, hamming_dict, fix_dict
         # yield ({'input': input_array}, {'output': label_array})
 
 
@@ -56,10 +66,9 @@ def main(argv=None):
     avail_keys = help.get_moveable_keys(fixed_array)
     print("Avail keys:", type(avail_keys))
     print("Generator")
-    input_array, label_array, hamming_dict, fix_dict = generator(fixed_array, avail_keys)
-    print("Labels:", label_array)
+    shuffle_dict, fix_dict = generator(fixed_array, avail_keys)
     print("Solve puzzle")
-    puzzle_array = help.solve_jigsaw(hamming_dict, fix_dict, fixed_array)
+    puzzle_array = help.solve_jigsaw(shuffle_dict, fix_dict, fixed_array)
 
     help.write_images(puzzle_array, fixed_affine,
                       file_path="./jigsaw_out/", file_prefix='hamming')
