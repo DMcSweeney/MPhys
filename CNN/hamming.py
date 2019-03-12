@@ -22,7 +22,7 @@ def hamming_distance(array1, array2):
     return distance
 
 
-def gen_max_hamming_set(N, moving_cells):
+def YEET_gen_max_hamming_set(N, moving_cells):
     """
     Generate permutation set with max hamming distance
     N - number of permutations in returned set
@@ -39,11 +39,19 @@ def gen_max_hamming_set(N, moving_cells):
         permutation_set[i, ...] = elem
     # Array containing the permutations with top permutation dist.
     max_hamming_set = np.zeros((N, num_moving), dtype=np.uint8)
-    #j = random.randint(0, NUM_PERMUTATIONS)
+    j = random.randint(0, NUM_PERMUTATIONS)
     hamming_dist = np.zeros((N, NUM_PERMUTATIONS), dtype=np.uint8)
 
     for i in range(N):
         a = time.time()
+        # Randomly assign a value to each element of max_hamming_set
+        # Here, we move one element from permutation_set into max_hamming_set
+        max_hamming_set[i] = permutation_set[j]
+        # Replace the jth element by shifting all below it up one
+        for idx in range(j, NUM_PERMUTATIONS - (i+1)):
+            permutation_set[idx] = permutation_set[idx+1]
+        # Replace last element with 0
+        permutation_set[NUM_PERMUTATIONS - (i+1)] = np.zeros((1, num_moving), dtype=np.uint8)
         # Calculate hamming distance
         a1 = time.time()
         for j in range(i+1):
@@ -57,17 +65,27 @@ def gen_max_hamming_set(N, moving_cells):
         print("Sum", np.sum(hamming_dist))
         j = np.argmax(np.sum(hamming_dist, axis=0))
         print("J val:", j)
-        # Randomly assign a value to each element of max_hamming_set
-        # Here, we move one element from permutation_set into max_hamming_set
-        max_hamming_set[i] = permutation_set[j]
-        # Replace the jth element by shifting all below it up one
-        for idx in range(j, NUM_PERMUTATIONS - (i+1)):
-            permutation_set[idx] = permutation_set[idx+1]
-        # Replace last element with 0
-        permutation_set[NUM_PERMUTATIONS - (i+1)] = np.zeros((1, num_moving), dtype=np.uint8)
+
         # Remove NUM_PERMUTATIONS-i column
         hamming_dist[:, NUM_PERMUTATIONS - (i+1)] = np.zeros((N), dtype=np.uint8)
         b = time.time()
         print("Took {} seconds to do one loop".format(b-a))
 
     return max_hamming_set
+
+
+"""
+def YETgen_max_hamming_set(N, moving_cells):
+    num_moving = len(moving_cells)
+    NUM_PERM = 1000000
+    # Create set containing 1M permutations
+    permutation_set = np.zeros((NUM_PERM, num_moving), dtype=np.uint8)
+    for i,  elem in enumerate(list(itertools.islice(itertools.permutations(range(num_moving), num_moving), NUM_PERMUTATIONS))):
+        print("Elem:", elem)
+        permutation_set[i, ...] = elem
+    max_dist_set = np.zeros((N, num_moving), dtype=np.uint8)
+    hamming_dist = np.zeros((N, NUM_PERM), dtype=np.uint8)
+    idx = random.randint(0, NUM_PERM)
+    for i in range(N):
+        max_dist_set[i] = permutation_set[idx]
+"""
