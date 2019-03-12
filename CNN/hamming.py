@@ -22,7 +22,7 @@ def hamming_distance(array1, array2):
     return distance
 
 
-def gen_max_hamming_set(N, moving_cells):
+def HIS_gen_max_hamming_set(N, moving_cells):
     """
     Generate permutation set with max hamming distance
     N - number of permutations in returned set
@@ -74,13 +74,12 @@ def gen_max_hamming_set(N, moving_cells):
     return max_hamming_set
 
 
-"""
-def YETgen_max_hamming_set(N, moving_cells):
+def gen_max_hamming_set(N, moving_cells):
     num_moving = len(moving_cells)
     NUM_PERM = 1000000
     # Create set containing 1M permutations
     permutation_set = np.zeros((NUM_PERM, num_moving), dtype=np.uint8)
-    for i,  elem in enumerate(list(itertools.islice(itertools.permutations(range(num_moving), num_moving), NUM_PERMUTATIONS))):
+    for i,  elem in enumerate(list(itertools.islice(itertools.permutations(range(num_moving), num_moving), NUM_PERM))):
         print("Elem:", elem)
         permutation_set[i, ...] = elem
     max_dist_set = np.zeros((N, num_moving), dtype=np.uint8)
@@ -88,4 +87,10 @@ def YETgen_max_hamming_set(N, moving_cells):
     idx = random.randint(0, NUM_PERM)
     for i in range(N):
         max_dist_set[i] = permutation_set[idx]
-"""
+        for j in range(i+1):
+            for k in range(NUM_PERM):
+                hamming_dist[j, k] = hamming_distance(max_dist_set[j], permutation_set[k])
+        print("Hamming Dist Shape:", hamming_dist.shape)
+        idx = np.argmax(np.sum(hamming_dist, axis=0))
+        print("Index:", idx)
+    return max_dist_set
