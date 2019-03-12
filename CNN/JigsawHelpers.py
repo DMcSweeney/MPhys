@@ -7,6 +7,7 @@ import dataLoader as load
 import helpers as help
 import math
 import random
+import time
 from numba import jit
 # On server with PET and PCT in
 fixed_dir = "/hepgpu3-data1/dmcsween/DataTwoWay128/fixed"
@@ -35,6 +36,7 @@ def divide_input(input_array, number_cells_per_dim=4, dims=3):
 
 
 def random_div(input_dict, crop_size=25):
+    np.random.seed(int(time.time()))
     for key, val in input_dict.items():
         x_rand = random.randrange(int(val.shape[1])-crop_size)
         y_rand = random.randrange(int(val.shape[2])-crop_size)
