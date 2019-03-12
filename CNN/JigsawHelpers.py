@@ -14,23 +14,6 @@ moving_dir = "/hepgpu3-data1/dmcsween/DataTwoWay128/moving"
 dvf_dir = "/hepgpu3-data1/dmcsween/DataTwoWay128/DVF"
 
 
-class JigsawMaker:
-    def __init__(self, cropSize, cellSize, tileSize, colourJitter, input_array,
-                 number_cells_per_dim=4, dims=3):
-        self.cropSize = cropSize
-        self.cellSize = cellSize
-        self.tileSize = tileSize
-        self.colourJitter = colourJitter
-        self.cell_num = number_cells_per_dim**dims
-        self.cell_shape = input_array.shape[1:4]/4
-        # self.max_hamming_set =  # Calc this
-        self.total_permutations = math.factorial(self.cell_num)
-
-        self.tileLocationRange = tileLocationRange
-        self.maxHammingSet = np.array(maxHammingSet, dtype=np.uint8)
-        self.numPermutations = self.maxHammingSet.shape[0]
-
-
 def average_pix(input_image):
     # Average along batch axis
     return np.mean(input_image, axis=0, keepdims=True)
@@ -48,6 +31,16 @@ def divide_input(input_array, number_cells_per_dim=4, dims=3):
     cells = {prod: np.array(input_array[:, prod[0]*sliced_x: prod[0]*sliced_x+sliced_x, prod[1]*sliced_y: prod[1]*sliced_y+sliced_y, prod[2]*sliced_z: prod[2]*sliced_z+sliced_z, :])
              for prod in product(range(0, number_cells_per_dim), repeat=dims)}
 
+    return cells
+
+
+def random_div(input_dict, crop_size=25):
+    for key, val in input_dict.values():
+        x_rand = random.randrange(int(val.shape[1])-crop_size)
+        y_rand = random.randrange(int(val.shape[2])-crop_size)
+        z_rand = random.randrange(int(val.shape[3])-crop_size)
+        cells = {key: val[:, x_rand:x_rand+crop_size,
+                          y_rand:y_rand+crop_size, z_rand:z_rand+crop_size, :]}
     return cells
 
 

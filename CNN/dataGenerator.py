@@ -28,6 +28,9 @@ def generator(image_array, avail_keys, batch_size=1, num_permutations=50):
             # Figure out which should move
             shuffle_dict, fix_dict = help.avail_keys_shuffle(cells, avail_keys)
 
+            cropped_dict = help.random_div(shuffle_dict)
+            for val in cropped_dict.values():
+                print(val.shape)
             # Create placeholders
             input_array = np.zeros((len(shuffle_dict.keys()), list(cells.values(
             ))[0].shape[1], list(cells.values())[0].shape[2], list(cells.values())[0].shape[3], 1))
@@ -44,8 +47,8 @@ def generator(image_array, avail_keys, batch_size=1, num_permutations=50):
             print(hamming_set)
             # Shuffle according to hamming
             random_idx = random.randrange(hamming_set.shape[0])
-
-            shuffle_dict = help.shuffle_jigsaw(shuffle_dict, hamming_set[random_idx])
+            # Randomly assign labels to cells
+            shuffle_dict = help.shuffle_jigsaw(cropped_dict, hamming_set[random_idx])
             """
             for i in range(len(hamming_dict.keys())):
                 for key, value in hamming_dict.items():
@@ -55,6 +58,8 @@ def generator(image_array, avail_keys, batch_size=1, num_permutations=50):
                 for key in shuffle_dict.keys():
                     label_array[i] = key
             """
+        # return [val for val in dict.values()]
+        # Label array should be random idx
         return shuffle_dict, fix_dict
         # return input_array, label_array, hamming_dict, fix_dict
         # yield ({'input': input_array}, {'output': label_array})
