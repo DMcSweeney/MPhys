@@ -81,7 +81,7 @@ def gen_max_hamming_set(N, moving_cells):
     for i in range(NUM_PERM):
         np.random.seed(int(time.time()))
         permutation_set[i, ...] = np.random.permutation(num_moving)
-        print("PERM:", permutation_set[i])
+    print(permutation_set)
     max_dist_set = np.zeros((N, num_moving), dtype=np.uint8)
     hamming_dist = np.zeros((N, NUM_PERM), dtype=np.uint8)
     idx = random.randint(0, NUM_PERM)
