@@ -17,16 +17,12 @@ def generator(image_array, avail_keys, batch_size=1, num_permutations=50):
     # Divide array into cubes
     while True:
         for idx in range(batch_size):
-            hamming_set = {}
-
             # Divide image into cubes
             cells = help.divide_input(image_array)
-
             # Jitter
-            jittered_dict = {key: help.jitter(value[idx, ...]) for key, value in cells.items()}
-
+            #jittered_dict = {key: help.jitter(value[idx, ...]) for key, value in cells.items()}
             # Figure out which should move
-            shuffle_dict, fix_dict = help.avail_keys_shuffle(jittered_dict, avail_keys)
+            shuffle_dict, fix_dict = help.avail_keys_shuffle(cells, avail_keys)
 
             cropped_dict = help.random_div(shuffle_dict)
             for val in cropped_dict.values():
@@ -48,19 +44,9 @@ def generator(image_array, avail_keys, batch_size=1, num_permutations=50):
             # Shuffle according to hamming
             random_idx = random.randrange(hamming_set.shape[0])
             # Randomly assign labels to cells
-            shuffle_dict = help.shuffle_jigsaw(cropped_dict, hamming_set[random_idx])
-            """
-            for i in range(len(hamming_dict.keys())):
-                for key, value in hamming_dict.items():
-                    print("Value shape:", value.shape)
-                    input_array[i, :value.shape[0], :value.shape[1], :value.shape[2], :] = value
-                    np.insert(input_array, i, key, axis=-1)
-                for key in shuffle_dict.keys():
-                    label_array[i] = key
-            """
-        # return [val for val in dict.values()]
+            out_dict = help.shuffle_jigsaw(cropped_dict, hamming_set[random_idx])
         # Label array should be random idx
-        return shuffle_dict, fix_dict
+        return [val for val in out_dict.values()], random_idx
         # return input_array, label_array, hamming_dict, fix_dict
         # yield ({'input': input_array}, {'output': label_array})
 
