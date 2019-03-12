@@ -53,9 +53,11 @@ def main(num_permutations=25):
 
     print("Generator")
     list_arrays, index, shuffle_dict, fix_dict = generator(fixed_array, avail_keys, hamming_set)
-    print("Solve puzzle")
-    print(list_arrays)
-    print(index)
+    print("Solve puzzle", index)
+    puzzle_array = help.solve_jigsaw(shuffle_dict, fix_dict, fixed_array)
+
+    help.write_images(puzzle_array, fixed_affine,
+                      file_path="./jigsaw_out/", file_prefix='new_ham')
 
 
 if __name__ == '__main__':

@@ -80,7 +80,6 @@ def gen_max_hamming_set(N, moving_cells):
     permutation_set = np.zeros((NUM_PERM, num_moving), dtype=np.uint8)
     for i in range(NUM_PERM):
         permutation_set[i] = np.random.permutation(num_moving)
-    print(permutation_set)
     max_dist_set = np.zeros((N, num_moving), dtype=np.uint8)
     hamming_dist = np.zeros((N, NUM_PERM), dtype=np.uint8)
     idx = random.randint(0, NUM_PERM)
@@ -92,11 +91,8 @@ def gen_max_hamming_set(N, moving_cells):
             for k in range(NUM_PERM):
                 hamming_dist[j, k] = hamming_distance(max_dist_set[j], permutation_set[k])
         b1 = time.time()
-        print("Took {} seconds to calculate hamming distances".format(b1-a1))
-
-        print("Hamming Dist Shape:", hamming_dist.shape)
-        idx = np.argmax(np.sum(hamming_dist, axis=0))
-        print("Index:", idx)
-        b = time.time()
+        print("Took {} seconds to calculate hamming distances".format(b1-a1)
+        idx=np.argmax(np.sum(hamming_dist, axis=0))
+        b=time.time()
         print("Took {} seconds to do one loop".format(b-a))
     return max_dist_set
