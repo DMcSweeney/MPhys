@@ -22,7 +22,7 @@ def hamming_distance(array1, array2):
     return distance
 
 
-def YEET_gen_max_hamming_set(N, moving_cells):
+def gen_max_hamming_set(N, moving_cells):
     """
     Generate permutation set with max hamming distance
     N - number of permutations in returned set
