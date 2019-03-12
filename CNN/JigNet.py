@@ -18,11 +18,8 @@ class LossHistory(Callback):
     def on_batch_end(self, batch, logs={}):
         self.losses.append(logs.get('loss'))
 
-<<<<<<< HEAD
-def basicModel():
-=======
 
-def train(tileSize=64, numPuzzles=9):
+def basicModel(tileSize=64, numPuzzles=9):
     # On server with PET and PCT in
     image_dir = "/hepgpu3-data1/dmcsween/DataTwoWay128/fixed"
     # Think we only need one directory since this uses both PET and PCT as fixed
@@ -46,7 +43,6 @@ def train(tileSize=64, numPuzzles=9):
         fixed_image, __image, __label, split_ratio=0.15)
 
     # CNN structure
->>>>>>> 49488d8fdd50c5f2641b88f0f0f7cff43c55fc5c
     modelInputs = Input(shape=(train_dataset.shape[1:]))
 
     x = Conv3D(64, (7, 7, 7), strides=2, padding='same')(inputTensor)
@@ -129,7 +125,7 @@ def train(tileSize=64, numPuzzles=9):
 
     # BUILD Model
     model = trivialNet()
-    
+
 
     opt = optimizers.Adam(lr=0.001, beta_1=0.9, beta_2=0.999)
 
