@@ -16,24 +16,25 @@ dvf_dir = "/hepgpu3-data1/dmcsween/DataTwoWay128/DVF"
 def generator(image_array, avail_keys, hamming_set, batch_size=1, num_permutations=50):
     # Divide array into cubes
     while True:
-        # Divide image into cubes
-        cells = help.divide_input(image_array)
-        # Jitter
-        # jittered_dict = {key: help.jitter(value[idx, ...]) for key, value in cells.items()}
-        # Figure out which should move
-        shuffle_dict, fix_dict = help.avail_keys_shuffle(cells, avail_keys)
-        # Random crop within cubes
-        cropped_dict = help.random_div(shuffle_dict)
-        for val in cropped_dict.values():
-            print(val.shape)
+        for i in range(batch_size):
+            # Divide image into cubes
+            cells = help.divide_input(image_array)
+            # Jitter
+            # jittered_dict = {key: help.jitter(value[idx, ...]) for key, value in cells.items()}
+            # Figure out which should move
+            shuffle_dict, fix_dict = help.avail_keys_shuffle(cells, avail_keys)
+            # Random crop within cubes
+            cropped_dict = help.random_div(shuffle_dict)
+            for val in cropped_dict.values():
+                print(val.shape)
 
-        # Shuffle according to hamming
-        random_idx = random.randrange(hamming_set.shape[0])
-        # Randomly assign labels to cells
-        print("Permutation:", hamming_set[random_idx])
-        out_dict = help.shuffle_jigsaw(cropped_dict, hamming_set[random_idx])
-
-    return [val for val in out_dict.values()], random_idx, out_dict, fix_dict
+            # Shuffle according to hamming
+            random_idx = random.randrange(hamming_set.shape[0])
+            # Randomly assign labels to cells
+            print("Permutation:", hamming_set[random_idx])
+            out_dict = help.shuffle_jigsaw(cropped_dict, hamming_set[random_idx])
+            array_list = [helper.normalise(val) for val in out_dict.values()]
+        return array_list, random_idx, out_dict, fix_dict
 
 
 def main(num_permutations=25):
