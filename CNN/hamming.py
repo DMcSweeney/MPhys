@@ -18,6 +18,7 @@ def hamming_distance(array1, array2):
     for i in range(array1.shape[0]):
         if (array1[i] != array2[i]):
             distance += 1
+    print("Distance:", distance)
     return distance
 
 
@@ -38,19 +39,11 @@ def gen_max_hamming_set(N, moving_cells):
         permutation_set[i, ...] = elem
     # Array containing the permutations with top permutation dist.
     max_hamming_set = np.zeros((N, num_moving), dtype=np.uint8)
-    j = random.randint(0, NUM_PERMUTATIONS)
+    #j = random.randint(0, NUM_PERMUTATIONS)
     hamming_dist = np.zeros((N, NUM_PERMUTATIONS), dtype=np.uint8)
+
     for i in range(N):
         a = time.time()
-        # Randomly assign a value to each element of max_hamming_set
-        # Here, we move one element from permutation_set into max_hamming_set
-        max_hamming_set[i] = permutation_set[j]
-        # Replace the jth element by shifting all below it up one
-        for idx in range(j, NUM_PERMUTATIONS - (i+1)):
-            permutation_set[idx] = permutation_set[idx+1]
-        # Replace last element with 0
-        permutation_set[NUM_PERMUTATIONS - (i+1)] = np.zeros((1, num_moving), dtype=np.uint8)
-
         # Calculate hamming distance
         a1 = time.time()
         for j in range(i+1):
@@ -64,6 +57,14 @@ def gen_max_hamming_set(N, moving_cells):
         print("Sum", np.sum(hamming_dist))
         j = np.argmax(np.sum(hamming_dist, axis=0))
         print("J val:", j)
+        # Randomly assign a value to each element of max_hamming_set
+        # Here, we move one element from permutation_set into max_hamming_set
+        max_hamming_set[i] = permutation_set[j]
+        # Replace the jth element by shifting all below it up one
+        for idx in range(j, NUM_PERMUTATIONS - (i+1)):
+            permutation_set[idx] = permutation_set[idx+1]
+        # Replace last element with 0
+        permutation_set[NUM_PERMUTATIONS - (i+1)] = np.zeros((1, num_moving), dtype=np.uint8)
         # Remove NUM_PERMUTATIONS-i column
         hamming_dist[:, NUM_PERMUTATIONS - (i+1)] = np.zeros((N), dtype=np.uint8)
         b = time.time()
