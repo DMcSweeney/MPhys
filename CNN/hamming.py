@@ -61,11 +61,11 @@ def gen_max_hamming_set(N, moving_cells):
         b1 = time.time()
         print("Took {} seconds to calculate hamming distances".format(b1-a1))
         # Return index where max value was found
-        j = np.argmax(np.sum(hamming_dist), axis=0)
+        print("Sum", np.sum(hamming_dist))
+        j = np.argmax(np.sum(hamming_dist, axis=0))
         print("J val:", j)
         # Remove NUM_PERMUTATIONS-i column
         hamming_dist[:, NUM_PERMUTATIONS - (i+1)] = np.zeros((N), dtype=np.uint8)
-        print("Ham set:", max_hamming_set)
         b = time.time()
         print("Took {} seconds to do one loop".format(b-a))
 
