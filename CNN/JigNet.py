@@ -18,23 +18,7 @@ class LossHistory(Callback):
     def on_batch_end(self, batch, logs={}):
         self.losses.append(logs.get('loss'))
 
-
-def train(tileSize=64, numPuzzles=9):
-    # On server with PET and PCT in
-    image_dir = "/hepgpu3-data1/dmcsween/DataTwoWay128/fixed"
-    # Think we only need one directory since this uses both PET and PCT as fixed
-    # moving_dir = "/hepgpu3-data1/dmcsween/DataTwoWay128/moving"
-
-    image_data, __image, __label = load.data_reader(image_dir, moving_dir, dvf_dir)
-
-    image_array, image_affine = image_data.get_data()
-
-    fixed_image = Input(shape=(image_array.shape[1:]))
-
-    validation_dataset, validation_moving, validation_dvf, train_dataset, train_moving, train_dvf = helper.split_data(
-        fixed_image, __image, __label, split_ratio=0.15)
-
-    # CNN structure
+def basicModel():
     modelInputs = Input(shape=(train_dataset.shape[1:]))
 
     x = Conv3D(64, (7, 7, 7), strides=2, padding='same')(inputTensor)
@@ -53,9 +37,49 @@ def train(tileSize=64, numPuzzles=9):
     x = Conv3D(512, (3, 3, 3), strides=2, padding='same')(x)
     x = Activation('relu')(x)
 
-    x = GlobalAveragePooling3D()(x)
+    outputs = GlobalAveragePooling3D()(x)
 
-    model = Model(inputs=modelINputs, x, name='Jigsaw_Model')
+    model = Model(inputs=modelINputs, outputs=outputs  , name='Jigsaw_Model')
+
+    return model
+
+def trivialNet(tileSize=64, numPuzzles, hammingSetSize=10):
+
+    inputShape = (tileSize, tileSize, 3)
+    modelInputs = [Input(inputShape) for _ in range(numPuzzles)]
+    sharedLayer = basicModel()
+    sharedLayers = [sharedLayer(inputTensor) for inputTensor in modelInputs]
+
+    def L1_distance(x): return K.concatenate(
+        [[K.abs(x[i] - x[j]) for j in range(i, numPuzzles )] for i in range(numPuzzles)])
+    both = K.concatenate([[K.abs(x[0] - x[j]) for j in range(numPuzzles)])
+    #  both = K.concatenate([[K.abs(x[i] - x[j]) for j in range(i, 9)] for i in range(9)])
+                 #  output_shape=lambda x: x[0])
+
+    x = Concatenate()(sharedLayers)  # Reconsider what axis to merge
+    x = Dense(512, activation='relu')(x)
+    x = Dense(hammingSetSize, activation='softmax')(x)
+    model = Model(inputs=modelInputs, outputs=x)
+
+    return model
+
+
+def train(tileSize=64, numPuzzles=9):
+    # On server with PET and PCT in
+    image_dir = "/hepgpu3-data1/dmcsween/DataTwoWay128/fixed"
+    # Think we only need one directory since this uses both PET and PCT as fixed
+    # moving_dir = "/hepgpu3-data1/dmcsween/DataTwoWay128/moving"
+
+    image_data, __image, __label = load.data_reader(image_dir, moving_dir, dvf_dir)
+
+    image_array, image_affine = image_data.get_data()
+
+    fixed_image = Input(shape=(image_array.shape[1:]))
+
+    validation_dataset, validation_moving, validation_dvf, train_dataset, train_moving, train_dvf = helper.split_data(
+        fixed_image, __image, __label, split_ratio=0.15)
+
+
 
     dataGenerator = DataGenerator(batchSize=batch_size, meanTensor=normalize_mean,
                                   stdTensor=normalize_std, maxHammingSet=max_hamming_set[:hamming_set_size])
@@ -76,7 +100,13 @@ def train(tileSize=64, numPuzzles=9):
     early_stop = EarlyStopping(monitor='val_loss', patience=5, verbose=1)
 
     # BUILD Model
+    model = trivialNet()
+    
+
     opt = optimizers.Adam(lr=0.001, beta_1=0.9, beta_2=0.999)
+
+
+
     model.compile(optimizer=opt,
                   loss='categorical_crossentropy',
                   metrics=['accuracy'])
