@@ -91,8 +91,8 @@ def gen_max_hamming_set(N, moving_cells):
             for k in range(NUM_PERM):
                 hamming_dist[j, k] = hamming_distance(max_dist_set[j], permutation_set[k])
         b1 = time.time()
-        print("Took {} seconds to calculate hamming distances".format(b1-a1)
-        idx=np.argmax(np.sum(hamming_dist, axis=0))
-        b=time.time()
+        print("Took {} seconds to calculate hamming distances".format(b1-a1))
+        idx = np.argmax(np.sum(hamming_dist, axis=0))
+        b = time.time()
         print("Took {} seconds to do one loop".format(b-a))
     return max_dist_set
