@@ -30,6 +30,12 @@ def train(tileSize=64, numPuzzles=9):
     image_array, image_affine = image_data.get_data()
 
     list_avail_keys = help.get_moveable_keys(image_array)
+    # Get hamming set
+    start_time = time.time()
+    hamming_set = hamming.gen_max_hamming_set(num_permutations, avail_keys)
+    end_time = time.time()
+    print("Took {} to generate {} permutations". format(
+        end_time - start_time, num_permutations))
 
     fixed_image = Input(shape=(image_array.shape[1:]))
 
