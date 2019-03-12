@@ -1,32 +1,64 @@
 """
 Script containing generator for JigNet
 """
+import numpy as np
 import JigsawHelpers as help
+import helpers as helper
 import hamming
 import time
+import random
+
+fixed_dir = "/hepgpu3-data1/dmcsween/DataTwoWay128/fixed"
+moving_dir = "/hepgpu3-data1/dmcsween/DataTwoWay128/moving"
+dvf_dir = "/hepgpu3-data1/dmcsween/DataTwoWay128/DVF"
 
 
-def generator(image_array, batch_size=4, num_permutations=50):
+def generator(image_array, avail_keys, hamming_set, batch_size=1, num_permutations=50):
     # Divide array into cubes
-    cube_list, label_list = []
     while True:
-        for idx in range(batch_size):
-            hamming_set = {}
-            cells = help.divide_input(image_array[idx,  ...])
-            # jitter
-            jittered_dict = {key: help.jitter(value) for key, value in cells.items()}
+        for i in range(batch_size):
+            # Divide image into cubes
+            cells = help.divide_input(image_array)
+            # Jitter
+            # jittered_dict = {key: help.jitter(value[idx, ...]) for key, value in cells.items()}
             # Figure out which should move
-            shuffle_dict, fix_dict = help.split_shuffle_fix(jittered_dict)
-            # Hamming distance
-            start_time = time.time()
-            hamming_set = hamming.gen_max_hamming_set(num_permutations, shuffle_dict)
-            end_time = time.time()
-            print("Took {} to generate {} permutations". format(
-                end_time - start_time, num_permutations))
+            shuffle_dict, fix_dict = help.avail_keys_shuffle(cells, avail_keys)
+            # Random crop within cubes
+            cropped_dict = help.random_div(shuffle_dict)
+            for val in cropped_dict.values():
+                print(val.shape)
+
             # Shuffle according to hamming
-            hamming_dict = help.shuffle_jigsaw(hamming_set)
-            # Yield
-            for key, value in hamming_dict.items():
-                label_list.append(key)
-                cube_list.append(value)
-        yield ({'input': cube_list}, {'output': label_list})
+            random_idx = random.randrange(hamming_set.shape[0])
+            # Randomly assign labels to cells
+            print("Permutation:", hamming_set[random_idx])
+            out_dict = help.shuffle_jigsaw(cropped_dict, hamming_set[random_idx])
+            array_list = [helper.normalise(val) for val in out_dict.values()]
+        return array_list, random_idx, out_dict, fix_dict
+
+
+def main(num_permutations=25):
+    print("Load data")
+    fixed_array, fixed_affine = help.get_data(fixed_dir, moving_dir, dvf_dir)
+    print("Get moveable keys")
+    avail_keys = help.get_moveable_keys(fixed_array)
+    # Hamming distance
+    start_time = time.time()
+    hamming_set = hamming.gen_max_hamming_set(num_permutations, avail_keys)
+    end_time = time.time()
+    print("Took {} to generate {} permutations". format(
+        end_time - start_time, num_permutations))
+    print("Hamming Set Shape:", hamming_set.shape)
+    print(hamming_set)
+
+    print("Generator")
+    list_arrays, index, shuffle_dict, fix_dict = generator(fixed_array, avail_keys, hamming_set)
+    print("Solve puzzle", index)
+    puzzle_array = help.solve_jigsaw(shuffle_dict, fix_dict, fixed_array)
+
+    helper.write_images(puzzle_array, fixed_affine,
+                        file_path="./jigsaw_out/", file_prefix='new_ham')
+
+
+if __name__ == '__main__':
+    main()

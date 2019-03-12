@@ -7,19 +7,12 @@ import dataLoader as load
 import helpers as help
 import math
 import random
+import time
 from numba import jit
 # On server with PET and PCT in
 fixed_dir = "/hepgpu3-data1/dmcsween/DataTwoWay128/fixed"
 moving_dir = "/hepgpu3-data1/dmcsween/DataTwoWay128/moving"
 dvf_dir = "/hepgpu3-data1/dmcsween/DataTwoWay128/DVF"
-
-
-class JigsawMaker:
-    def __init__(self, input_array, number_cells_per_dim=4, dims=3):
-        self.cell_num = number_cells_per_dim**dims
-        self.cell_shape = input_array.shape[1:4]/4
-        # self.max_hamming_set =  # Calc this
-        self.total_permutations = math.factorial(self.cell_num)
 
 
 def average_pix(input_image):
@@ -39,6 +32,17 @@ def divide_input(input_array, number_cells_per_dim=4, dims=3):
     cells = {prod: np.array(input_array[:, prod[0]*sliced_x: prod[0]*sliced_x+sliced_x, prod[1]*sliced_y: prod[1]*sliced_y+sliced_y, prod[2]*sliced_z: prod[2]*sliced_z+sliced_z, :])
              for prod in product(range(0, number_cells_per_dim), repeat=dims)}
 
+    return cells
+
+
+def random_div(input_dict, crop_size=25):
+    np.random.seed(int(time.time()))
+    for key, val in input_dict.items():
+        x_rand = random.randrange(int(val.shape[1])-crop_size)
+        y_rand = random.randrange(int(val.shape[2])-crop_size)
+        z_rand = random.randrange(int(val.shape[3])-crop_size)
+        cells = {key: val[:, x_rand:x_rand+crop_size,
+                          y_rand:y_rand+crop_size, z_rand:z_rand+crop_size, :]}
     return cells
 
 
@@ -64,7 +68,7 @@ def solve_jigsaw(shuffled_cells, fixed_cells, input_array):
     return puzzle_array
 
 
-def split_shuffle_fix(input_dict, threshold=-500):
+def split_shuffle_fix(input_dict, threshold=-700):
     # Split into cells to shuffle and those to stay fixed
     # To reduce possible permutations
     shuffle_dict = {key: value for key, value in input_dict.items() if np.mean(value) > threshold}
@@ -72,19 +76,28 @@ def split_shuffle_fix(input_dict, threshold=-500):
     return shuffle_dict, fix_dict
 
 
-def jitter(input_array, Jitter=2):
-    image_number = input_array.shape[0]
-    x_dim = input_array.shape[1] - Jitter * 2
-    y_dim = input_array.shape[2] - Jitter * 2
-    z_dim = input_array.shape[3] - Jitter * 2
-    return_array = np.empty((image_number, x_dim, y_dim, z_dim, 1), np.float32)
+def avail_keys_shuffle(input_dict, avail_keys, threshold=-700):
+    # Split into cells to shuffle and those to stay fixed
+    # To reduce possible permutations
+    shuffle_dict = {key: value for key, value in input_dict.items() if key in avail_keys}
+    fix_dict = {key: value for key, value in input_dict.items() if key not in avail_keys}
+    return shuffle_dict, fix_dict
 
-    for i in range(image_number):
-        x_jit = random.randrange(Jitter * 2 + 1)
-        y_jit = random.randrange(Jitter * 2 + 1)
-        z_jit = random.randrange(Jitter * 2 + 1)
-        return_array[i, :, :, :, :] = input_array[i, x_jit:x_dim +
-                                                  x_jit, y_jit:y_dim + y_jit, z_jit:z_dim + z_jit, :]
+
+def jitter(input_array, Jitter=2):
+    # image_number = input_array.shape[0]
+    print(input_array.shape)
+    x_dim = input_array.shape[0] - Jitter * 2
+    y_dim = input_array.shape[1] - Jitter * 2
+    z_dim = input_array.shape[2] - Jitter * 2
+    # return_array = np.empty((image_number, x_dim, y_dim, z_dim,1), np.float32)
+    return_array = np.empty((x_dim, y_dim, z_dim, 1), np.float32)
+    # for i in range(image_number):
+    x_jit = random.randrange(Jitter * 2 + 1)
+    y_jit = random.randrange(Jitter * 2 + 1)
+    z_jit = random.randrange(Jitter * 2 + 1)
+    return_array[:, :, :, :] = input_array[x_jit:x_dim +
+                                           x_jit, y_jit:y_dim + y_jit, z_jit:z_dim + z_jit, :]
     return return_array
 
 
@@ -96,12 +109,23 @@ def get_data(fixed_dir, moving_dir, dvf_dir):
     return fixed_array, fixed_affine
 
 
+def get_moveable_keys(input_array):
+    avg_array = average_pix(input_array)
+    image_cells = divide_input(avg_array)
+    shuffle_cells, fix_cells = split_shuffle_fix(image_cells)
+    # These are positions of cubes that can can be shuffled
+    list_avail_keys = [key for key in shuffle_cells.keys()]
+    return list_avail_keys
+
+
 def main(argv=None):
     print("Load data into arrays")
     fixed_array, fixed_affine = get_data(fixed_dir, moving_dir, dvf_dir)
 
+    avg_array = average_pix(fixed_array)
+
     print("Divide input")
-    image_cells = divide_input(fixed_array)
+    image_cells = divide_input(avg_array)
 
     print("Fix cells below threshold")
     shuffle_cells, fix_cells = split_shuffle_fix(image_cells)
@@ -109,8 +133,8 @@ def main(argv=None):
     print("Shuffle cells")
     shuffle_image = shuffle_jigsaw(shuffle_cells, fix_cells)
 
-    print("{} cells have been shuffled. This is {} permutations.".format(
-        len(shuffle_cells.keys()), math.factorial(len(shuffle_cells.keys()))))
+    # print("{} cells have been shuffled. This is {} permutations.".format(
+    #    len(shuffle_cells.keys()), math.factorial(len(shuffle_cells.keys()))))
 
     print("Solve puzzle")
     puzzle_array = solve_jigsaw(shuffle_image, fix_cells, fixed_array)
