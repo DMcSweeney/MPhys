@@ -44,7 +44,6 @@ def main(num_permutations=25):
     fixed_array, fixed_affine = help.get_data(fixed_dir, moving_dir, dvf_dir)
     print("Get moveable keys")
     avail_keys = help.get_moveable_keys(fixed_array)
-    print("Avail keys:", type(avail_keys))
     # Hamming distance
     start_time = time.time()
     hamming_set = hamming.gen_max_hamming_set(num_permutations, avail_keys)
