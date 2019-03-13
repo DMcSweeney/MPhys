@@ -57,7 +57,7 @@ def main(num_permutations=25):
     puzzle_array = help.solve_jigsaw(shuffle_dict, fix_dict, fixed_array)
 
     helper.write_images(puzzle_array, fixed_affine,
-                        file_path="./jigsaw_out/", file_prefix='new_ham')
+                        file_path="./jigsaw_out/", file_prefix='no_rand')
 
 
 if __name__ == '__main__':
