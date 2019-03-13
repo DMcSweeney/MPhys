@@ -24,15 +24,15 @@ def generator(image_array, avail_keys, hamming_set, batch_size=1, num_permutatio
             # Figure out which should move
             shuffle_dict, fix_dict = help.avail_keys_shuffle(cells, avail_keys)
             # Random crop within cubes
-            cropped_dict = help.random_div(shuffle_dict)
-            for val in cropped_dict.values():
-                print(val.shape)
+            #cropped_dict = help.random_div(shuffle_dict)
+            # for val in cropped_dict.values():
+            #    print(val.shape)
 
             # Shuffle according to hamming
             random_idx = random.randrange(hamming_set.shape[0])
             # Randomly assign labels to cells
             print("Permutation:", hamming_set[random_idx])
-            out_dict = help.shuffle_jigsaw(cropped_dict, hamming_set[random_idx])
+            out_dict = help.shuffle_jigsaw(shuffle_dict, hamming_set[random_idx])
             array_list = [helper.normalise(val) for val in out_dict.values()]
         return array_list, random_idx, out_dict, fix_dict
 

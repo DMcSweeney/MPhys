@@ -63,9 +63,10 @@ def basicModel(tileSize=64, numPuzzles=9):
 
     outputs = GlobalAveragePooling3D()(x)
 
-    model = Model(inputs=modelINputs, outputs=outputs  , name='Jigsaw_Model')
+    model = Model(inputs=modelINputs, outputs=outputs, name='Jigsaw_Model')
 
     return model
+
 
 def trivialNet(tileSize=64, numPuzzles, hammingSetSize=10):
 
@@ -75,59 +76,59 @@ def trivialNet(tileSize=64, numPuzzles, hammingSetSize=10):
     sharedLayers = [sharedLayer(inputTensor) for inputTensor in modelInputs]
 
     def L1_distance(x): return K.concatenate(
-        [[K.abs(x[i] - x[j]) for j in range(i, numPuzzles )] for i in range(numPuzzles)])
+        [[K.abs(x[i] - x[j]) for j in range(i, numPuzzles)] for i in range(numPuzzles)])
     both = K.concatenate([[K.abs(x[0] - x[j]) for j in range(numPuzzles)])
     #  both = K.concatenate([[K.abs(x[i] - x[j]) for j in range(i, 9)] for i in range(9)])
                  #  output_shape=lambda x: x[0])
 
-    x = Concatenate()(sharedLayers)  # Reconsider what axis to merge
-    x = Dense(512, activation='relu')(x)
-    x = Dense(hammingSetSize, activation='softmax')(x)
-    model = Model(inputs=modelInputs, outputs=x)
+    x= Concatenate()(sharedLayers)  # Reconsider what axis to merge
+    x= Dense(512, activation='relu')(x)
+    x= Dense(hammingSetSize, activation='softmax')(x)
+    model= Model(inputs=modelInputs, outputs=x)
 
     return model
 
 
 def train(tileSize=64, numPuzzles=9):
     # On server with PET and PCT in
-    image_dir = "/hepgpu3-data1/dmcsween/DataTwoWay128/fixed"
+    image_dir= "/hepgpu3-data1/dmcsween/DataTwoWay128/fixed"
     # Think we only need one directory since this uses both PET and PCT as fixed
     # moving_dir = "/hepgpu3-data1/dmcsween/DataTwoWay128/moving"
 
-    image_data, __image, __label = load.data_reader(image_dir, moving_dir, dvf_dir)
+    image_data, __image, __label= load.data_reader(image_dir, moving_dir, dvf_dir)
 
-    image_array, image_affine = image_data.get_data()
+    image_array, image_affine= image_data.get_data()
 
-    fixed_image = Input(shape=(image_array.shape[1:]))
+    fixed_image= Input(shape=(image_array.shape[1:]))
 
-    validation_dataset, validation_moving, validation_dvf, train_dataset, train_moving, train_dvf = helper.split_data(
+    validation_dataset, validation_moving, validation_dvf, train_dataset, train_moving, train_dvf= helper.split_data(
         fixed_image, __image, __label, split_ratio=0.15)
 
 
 
-    dataGenerator = DataGenerator(batchSize=batch_size, meanTensor=normalize_mean,
+    dataGenerator= DataGenerator(batchSize=batch_size, meanTensor=normalize_mean,
                                   stdTensor=normalize_std, maxHammingSet=max_hamming_set[:hamming_set_size])
 
     # Output all data from a training session into a dated folder
-    outputPath = ""
+    outputPath= ""
     os.makedirs(outputPath)
 
     # callbacks
-    checkpointer = ModelCheckpoint(
+    checkpointer= ModelCheckpoint(
         outputPath +
         '/weights_improvement.hdf5',
         monitor='val_loss',
         verbose=1,
         save_best_only=True)
-    reduce_lr_plateau = ReduceLROnPlateau(
+    reduce_lr_plateau= ReduceLROnPlateau(
         monitor='val_loss', patience=3, verbose=1)
-    early_stop = EarlyStopping(monitor='val_loss', patience=5, verbose=1)
+    early_stop= EarlyStopping(monitor='val_loss', patience=5, verbose=1)
 
     # BUILD Model
-    model = trivialNet()
+    model= trivialNet()
 
 
-    opt = optimizers.Adam(lr=0.001, beta_1=0.9, beta_2=0.999)
+    opt= optimizers.Adam(lr=0.001, beta_1=0.9, beta_2=0.999)
 
 
 
@@ -135,7 +136,7 @@ def train(tileSize=64, numPuzzles=9):
                   loss='categorical_crossentropy',
                   metrics=['accuracy'])
 
-    history = model.fit_generator(generator=generator(image_array, list_avail_keys),
+    history= model.fit_generator(generator=generator(image_array, list_avail_keys),
                                   epochs=num_epochs,
                                   steps_per_epoch=train_dataset.shape[0] // batch_size,
                                   validation_data=dataGenerator.generate(
@@ -145,7 +146,7 @@ def train(tileSize=64, numPuzzles=9):
                                   workers=n_workers,
                                   callbacks=[checkpointer, reduce_lr_plateau, early_stop])
 
-    scores = model.evaluate_generator(
+    scores= model.evaluate_generator(
         dataGenerator.generate(test_dataset),
         steps=test_dataset.shape[0] //
         batch_size,
