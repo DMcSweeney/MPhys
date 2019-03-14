@@ -1,8 +1,9 @@
-from keras.layers import (Dense, Dropout, Concatenate, Input, Activation, Flatten, Conv3D,
-                          MaxPooling3d, GlobalAveragePooling3D, BatchNormalization, add)
+from keras.layers import (Dense, Dropout, Concatenate, Input, Activation, Flatten,
+                          Conv3D, MaxPooling3D, GlobalAveragePooling3D, BatchNormalization, add)
 from keras.models import Model
 from keras.callbacks import ModelCheckpoint, ReduceLROnPlateau, EarlyStopping
 from keras import optimizers
+import backend as K
 from time import strftime, localtime
 import dataLoader as load
 import os
@@ -24,10 +25,10 @@ class LossHistory(Callback):
         self.losses.append(logs.get('loss'))
 
 
-def basicModel(tileSize=32, numPuzzles=23):
+def basicModel(train_dataset, tileSize=32, numPuzzles=23):
 
     # CNN structure
-    modelInputs = Input(shape=(train_dataset.shape[1:]))
+    inputTensor = Input(shape=(train_dataset.shape[1:]))
 
     x = Conv3D(64, (7, 7, 7), strides=2, padding='same')(inputTensor)
     x = Activation('relu')(x)
@@ -47,7 +48,7 @@ def basicModel(tileSize=32, numPuzzles=23):
 
     outputs = GlobalAveragePooling3D()(x)
 
-    model = Model(inputs=modelInputs, outputs=outputs, name='Jigsaw_Model')
+    model = Model(inputs=inputTensor, outputs=outputs, name='Jigsaw_Model')
 
     return model
 
@@ -58,13 +59,6 @@ def trivialNet(numPuzzles, tileSize=32, hammingSetSize=25):
     modelInputs = [Input(inputShape) for _ in range(numPuzzles)]
     sharedLayer = basicModel()
     sharedLayers = [sharedLayer(inputTensor) for inputTensor in modelInputs]
-
-    def L1_distance(x): return K.concatenate(
-        [[K.abs(x[i] - x[j]) for j in range(i, numPuzzles)] for i in range(numPuzzles)])
-    both = K.concatenate([K.abs(x[0] - x[j]) for j in range(numPuzzles)])
-    #  both = K.concatenate([[K.abs(x[i] - x[j]) for j in range(i, 9)] for i in range(9)])
-    #  output_shape=lambda x: x[0])
-
     x = Concatenate()(sharedLayers)  # Reconsider what axis to merge
     x = Dense(512, activation='relu')(x)
     x = Dense(hammingSetSize, activation='softmax')(x)
