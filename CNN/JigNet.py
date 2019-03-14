@@ -1,7 +1,7 @@
 from keras.layers import (Dense, Dropout, Concatenate, Input, Activation, Flatten,
                           Conv3D, MaxPooling3D, GlobalAveragePooling3D, BatchNormalization, add)
 from keras.models import Model
-from keras.callbacks import ModelCheckpoint, ReduceLROnPlateau, EarlyStopping
+from keras.callbacks import ModelCheckpoint, ReduceLROnPlateau, EarlyStopping, Callback
 from keras import optimizers
 from time import strftime, localtime
 import dataLoader as load
