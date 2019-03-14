@@ -36,12 +36,14 @@ def divide_input(input_array, number_cells_per_dim=4, dims=3):
 
 
 def random_div(input_dict, crop_size=25):
+    cells = {}
     for key, val in input_dict.items():
-        x_rand = random.randrange(int(val.shape[1])-crop_size)
-        y_rand = random.randrange(int(val.shape[2])-crop_size)
-        z_rand = random.randrange(int(val.shape[3])-crop_size)
-        cells = {key: val[:, x_rand:x_rand+crop_size,
-                          y_rand:y_rand+crop_size, z_rand:z_rand+crop_size, :]}
+        x_rand = random.randrange(int(val.shape[1]-crop_size))
+        y_rand = random.randrange(int(val.shape[2]-crop_size))
+        z_rand = random.randrange(int(val.shape[3]-crop_size))
+        print("Rand:", x_rand, y_rand, z_rand)
+        cells[key] = val[:, x_rand:x_rand+crop_size,
+                         y_rand:y_rand+crop_size, z_rand:z_rand+crop_size, :]
     return cells
 
 
