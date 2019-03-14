@@ -89,7 +89,7 @@ def train(tileSize=64, numPuzzles=23, num_permutations=25, batch_size=1):
         image_array, moving_array, dvf_array, split_ratio=0.15)
 
     # Output all data from a training session into a dated folder
-    outputPath = "./logdir"
+    #outputPath = "./logdir"
     # callbacks
     """
     checkpointer = ModelCheckpoint(outputPath + '/weights_improvement.hdf5',
@@ -99,7 +99,7 @@ def train(tileSize=64, numPuzzles=23, num_permutations=25, batch_size=1):
     reduce_lr_plateau = ReduceLROnPlateau(monitor='val_loss', patience=3, verbose=1)
     early_stop = EarlyStopping(monitor='val_loss', patience=5, verbose=1)
     """
-    tensorboard = TrainValTensorBoard(write_graph=False)
+    #tensorboard = TrainValTensorBoard(write_graph=False)
     # BUILD Model
     model = trivialNet()
 
@@ -114,8 +114,7 @@ def train(tileSize=64, numPuzzles=23, num_permutations=25, batch_size=1):
                         steps_per_epoch=train_dataset.shape[0] // batch_size,
                         validation_data=gen.generator(
         validation_dataset, list_avail_keys, hamming_set),
-        validation_steps=validation_dataset.shape[0] // batch_size,
-        callbacks=[tensorboard])
+        validation_steps=validation_dataset.shape[0] // batch_size)
 
 
 """
