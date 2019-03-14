@@ -90,8 +90,6 @@ def train(tileSize=64, numPuzzles=23, num_permutations=25, batch_size=1):
 
     # Output all data from a training session into a dated folder
     outputPath = "./logdir"
-    os.makedirs(outputPath)
-
     # callbacks
     checkpointer = ModelCheckpoint(outputPath + '/weights_improvement.hdf5',
                                    monitor='val_loss',
