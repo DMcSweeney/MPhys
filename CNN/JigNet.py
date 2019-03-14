@@ -24,10 +24,10 @@ class LossHistory(Callback):
         self.losses.append(logs.get('loss'))
 
 
-def basicModel(train_dataset, tileSize=32, numPuzzles=23):
+def basicModel(tileSize=32, numPuzzles=23):
 
     # CNN structure
-    inputTensor = Input(shape=(train_dataset.shape[1:]))
+    inputTensor = Input((tileSize, tileSize, tileSize, 1))
 
     x = Conv3D(64, (7, 7, 7), strides=2, padding='same')(inputTensor)
     x = Activation('relu')(x)
@@ -52,7 +52,7 @@ def basicModel(train_dataset, tileSize=32, numPuzzles=23):
     return model
 
 
-def trivialNet(numPuzzles, tileSize=32, hammingSetSize=25):
+def trivialNet(numPuzzles=23, tileSize=32, hammingSetSize=25):
 
     inputShape = (tileSize, tileSize, tileSize, 1)
     modelInputs = [Input(inputShape) for _ in range(numPuzzles)]
