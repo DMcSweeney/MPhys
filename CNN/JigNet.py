@@ -3,7 +3,6 @@ from keras.layers import (Dense, Dropout, Concatenate, Input, Activation, Flatte
 from keras.models import Model
 from keras.callbacks import ModelCheckpoint, ReduceLROnPlateau, EarlyStopping
 from keras import optimizers
-import backend as K
 from time import strftime, localtime
 import dataLoader as load
 import os
