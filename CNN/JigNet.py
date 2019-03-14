@@ -6,9 +6,13 @@ from keras import optimizers
 from time import strftime, localtime
 import dataLoader as load
 import os
+import time
+import hamming
+import helpers as helper
 from customTensorBoard import TrainValTensorBoard
 import dataGenerator as generator
 import JigsawHelpers as help
+
 #  from keras.utils import plot_model
 
 
@@ -43,12 +47,12 @@ def basicModel(tileSize=32, numPuzzles=23):
 
     outputs = GlobalAveragePooling3D()(x)
 
-    model = Model(inputs=modelINputs, outputs=outputs, name='Jigsaw_Model')
+    model = Model(inputs=modelInputs, outputs=outputs, name='Jigsaw_Model')
 
     return model
 
 
-def trivialNet(tileSize=32, numPuzzles, hammingSetSize=25):
+def trivialNet(numPuzzles, tileSize=32, hammingSetSize=25):
 
     inputShape = (tileSize, tileSize, tileSize, 1)
     modelInputs = [Input(inputShape) for _ in range(numPuzzles)]
@@ -69,21 +73,21 @@ def trivialNet(tileSize=32, numPuzzles, hammingSetSize=25):
     return model
 
 
-def train(tileSize=64, numPuzzles=23):
+def train(tileSize=64, numPuzzles=23, num_permutations=25, batch_size=1):
 
     # On server with PET and PCT in
     image_dir = "/hepgpu3-data1/dmcsween/DataTwoWay128/fixed"
     # Think we only need one directory since this uses both PET and PCT as fixed
     # moving_dir = "/hepgpu3-data1/dmcsween/DataTwoWay128/moving"
 
-    image_data, __image, __label = load.data_reader(image_dir, moving_dir, dvf_dir)
+    image_data, __image, __label = load.data_reader(image_dir, image_dir, image_dir)
 
     image_array, image_affine = image_data.get_data()
 
     list_avail_keys = help.get_moveable_keys(image_array)
     # Get hamming set
     start_time = time.time()
-    hamming_set = hamming.gen_max_hamming_set(num_permutations, avail_keys)
+    hamming_set = hamming.gen_max_hamming_set(num_permutations, list_avail_keys)
     end_time = time.time()
     print("Took {} to generate {} permutations". format(
         end_time - start_time, num_permutations))
@@ -114,22 +118,20 @@ def train(tileSize=64, numPuzzles=23):
                   loss='categorical_crossentropy',
                   metrics=['accuracy'])
 
-    history = model.fit_generator(generator=generator(image_array, list_avail_keys, hamming_set),
-                                  epochs=num_epochs,
-                                  steps_per_epoch=train_dataset.shape[0] // batch_size,
-                                  validation_data=dataGenerator.generate(
-        val_dataset),
-        validation_steps=val_dataset.shape[0] // batch_size,
-        use_multiprocessing=USE_MULTIPROCESSING,
-        workers=n_workers,
+    model.fit_generator(generator=generator(train_dataset, list_avail_keys, hamming_set),
+                        epochs=1000, verbose=1,
+                        steps_per_epoch=train_dataset.shape[0] // batch_size,
+                        validation_data=generator(
+        validation_dataset),
+        validation_steps=validation_dataset.shape[0] // batch_size,
         callbacks=[checkpointer, reduce_lr_plateau, early_stop, tensorboard])
 
+
+"""
     scores = model.evaluate_generator(
         dataGenerator.generate(test_dataset),
-        steps=test_dataset.shape[0] //
-        batch_size,
-        workers=n_workers,
-        use_multiprocessing=USE_MULTIPROCESSING)
+        steps=test_dataset.shape[0] //batch_size)
+"""
 
 
 def main(argv=None):

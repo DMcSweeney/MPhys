@@ -19,7 +19,7 @@ dvf_dir = "/hepgpu3-data1/dmcsween/DataTwoWay128/DVF"
 """
 # If on laptop
 fixed_dir = "E:/MPhys/DataSplit/TrainingSet/PCT"
-moving_dir = "E:/MPhys/DataSplit/TrainingSet/PET"
+moving_dir = "E:/MPhys/DataSpit/TrainingSet/PET"
 dvf_dir = "E:/MPhys/DataSplit/TrainingSet/DVF"
 """
 # Parameters to tweak
