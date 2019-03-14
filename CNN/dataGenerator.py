@@ -34,7 +34,7 @@ def generator(image_array, avail_keys, hamming_set, batch_size=1, num_permutatio
             print("Permutation:", hamming_set[random_idx])
             out_dict = help.shuffle_jigsaw(cropped_dict, hamming_set[random_idx])
             array_list = [helper.normalise(val) for val in out_dict.values()]
-        yield ({'inputs': array_list}, {'outputs': random_idx})
+        yield ({'inputs': np.array(array_list)}, {'outputs': random_idx})
 
 
 def main(num_permutations=25):
