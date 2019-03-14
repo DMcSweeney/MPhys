@@ -39,12 +39,13 @@ def random_div(input_dict, crop_size=25):
     cells = {}
     for key, val in input_dict.items():
         holder = np.zeros(val.shape)
+        print("Hold Shape:", holder.shape)
         x_rand = random.randint(0, int(val.shape[1]-crop_size))
         y_rand = random.randint(0, int(val.shape[2]-crop_size))
         z_rand = random.randint(0, int(val.shape[3]-crop_size))
         print("Rand:", x_rand, y_rand, z_rand)
-        holder = val[:, x_rand:x_rand+crop_size,
-                     y_rand:y_rand+crop_size, z_rand:z_rand+crop_size, :]
+        holder[:, 0, 0, 0, :] = val[:, x_rand:x_rand+crop_size,
+                                    y_rand:y_rand+crop_size, z_rand:z_rand+crop_size, :]
         cells[key] = holder
         print("Shape:", cells[key].shape)
     return cells
