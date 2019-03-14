@@ -10,7 +10,7 @@ import time
 import hamming
 import helpers as helper
 from customTensorBoard import TrainValTensorBoard
-import dataGenerator as generator
+import dataGenerator as gen
 import JigsawHelpers as help
 
 #  from keras.utils import plot_model
@@ -109,10 +109,10 @@ def train(tileSize=64, numPuzzles=23, num_permutations=25, batch_size=1):
                   loss='categorical_crossentropy',
                   metrics=['accuracy'])
 
-    model.fit_generator(generator=generator(train_dataset, list_avail_keys, hamming_set),
+    model.fit_generator(generator=gen.generator(train_dataset, list_avail_keys, hamming_set),
                         epochs=1000, verbose=1,
                         steps_per_epoch=train_dataset.shape[0] // batch_size,
-                        validation_data=generator(
+                        validation_data=gen.generator(
         validation_dataset),
         validation_steps=validation_dataset.shape[0] // batch_size,
         callbacks=[checkpointer, reduce_lr_plateau, early_stop, tensorboard])
