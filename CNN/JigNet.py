@@ -85,10 +85,8 @@ def train(tileSize=64, numPuzzles=23, num_permutations=25, batch_size=1):
     print("Took {} to generate {} permutations". format(
         end_time - start_time, num_permutations))
 
-    fixed_image = Input(shape=(image_array.shape[1:]))
-
     validation_dataset, validation_moving, validation_dvf, train_dataset, train_moving, train_dvf = helper.split_data(
-        fixed_image, __image, __label, split_ratio=0.15)
+        image_array, __image, __label, split_ratio=0.15)
 
     # Output all data from a training session into a dated folder
     outputPath = "./logs"
