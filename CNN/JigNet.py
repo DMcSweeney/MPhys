@@ -111,7 +111,7 @@ def train(tileSize=64, numPuzzles=23, num_permutations=25, batch_size=1):
                         epochs=1000, verbose=1,
                         steps_per_epoch=train_dataset.shape[0] // batch_size,
                         validation_data=gen.generator(
-        validation_dataset),
+        validation_dataset, list_avail_keys, hamming_set),
         validation_steps=validation_dataset.shape[0] // batch_size,
         callbacks=[checkpointer, reduce_lr_plateau, early_stop, tensorboard])
 
