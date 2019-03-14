@@ -89,7 +89,7 @@ def train(tileSize=64, numPuzzles=23, num_permutations=25, batch_size=1):
         image_array, moving_array, dvf_array, split_ratio=0.15)
 
     # Output all data from a training session into a dated folder
-    outputPath = "./logs"
+    outputPath = "./logdir"
     os.makedirs(outputPath)
 
     # callbacks
