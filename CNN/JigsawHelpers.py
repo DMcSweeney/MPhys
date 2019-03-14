@@ -44,8 +44,8 @@ def random_div(input_dict, crop_size=25):
         y_rand = random.randint(0, int(val.shape[2]-crop_size))
         z_rand = random.randint(0, int(val.shape[3]-crop_size))
         print("Rand:", x_rand, y_rand, z_rand)
-        holder[:, 0:, 0:, 0:, :] = val[:, x_rand:x_rand+crop_size,
-                                       y_rand:y_rand+crop_size, z_rand:z_rand+crop_size, :]
+        holder[:, x_rand:x_rand+crop_size, y_rand:y_rand+crop_size, z_rand:z_rand+crop_size, :] = val[:, x_rand:x_rand+crop_size,
+                                                                                                      y_rand:y_rand+crop_size, z_rand:z_rand+crop_size, :]
         cells[key] = holder
         print("Shape:", cells[key].shape)
     return cells
