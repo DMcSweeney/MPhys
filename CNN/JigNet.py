@@ -78,7 +78,7 @@ def createSharedAlexnet3D(input_shape=titleSize, nInputs=23, nclass=1000):
     model = Model(inputs=modelInputs, output=fc8d)
 
     return model
-"""
+
 def basicModel(tileSize=32, numPuzzles=23):
 
     # CNN structure
@@ -120,7 +120,7 @@ def trivialNet(numPuzzles=23, tileSize=32, hammingSetSize=25):
 
     return model
 
-"""
+
 def train(tileSize=64, numPuzzles=23, num_permutations=25, batch_size=1):
     # On server with PET and PCT in
     image_dir = "/hepgpu3-data1/dmcsween/DataTwoWay128/fixed"
@@ -155,7 +155,7 @@ def train(tileSize=64, numPuzzles=23, num_permutations=25, batch_size=1):
     tensorboard = TrainValTensorBoard(write_graph=False)
     callbacks = [checkpointer, reduce_lr_plateau, early_stop, tensorboard]
     # BUILD Model
-    model = trivialNet()
+    model = createSharedAlexnet3D()
 
     opt = optimizers.Adam(lr=0.001, beta_1=0.9, beta_2=0.999)
     print(model.summary())
