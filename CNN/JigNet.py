@@ -22,8 +22,63 @@ class LossHistory(Callback):
 
     def on_batch_end(self, batch, logs={}):
         self.losses.append(logs.get('loss'))
+        
+def createSharedAlexnet3D(input_shape=titleSize, nInputs=23, nclass=1000):
 
+    input_layers = [Input(shape= (tileSize, tileSize, tileSize, 1), name="alexnet_input_{}".format(n)) for n in range(nInputs)]
+    conv1 = Conv3D(96, (11,11,11), strides=(4,4,4), activation='relu', padding='valid', name="Convolutional_1")
+    bn1 = BatchNormalization(name="BatchNorm_1")
 
+    conv2 = Conv3D(256, (5,5,5), strides=(1,1,1), activation='relu', padding='same', name="Convolutional_2")
+    bn2 = BatchNormalization(name="BatchNorm_2")
+    
+    maxPool1 = MaxPooling3D(pool_size=(3,3,3), strides=(2,2,2), name="MaxPool_1")
+
+    conv3 = Conv3D(384, (3,3,3), activation='relu', padding='same', name="Convolutional_3")
+    bn3 = BatchNormalization(name="BatchNorm_3")
+
+    maxPool2 = MaxPooling3D(pool_size=(3,3,3), strides=(2,2,2), name="MaxPool_2")
+    conv4 = Conv3D(384, (3,3,3), strides=(1,1,1), padding='same', name="Convolutional_4")
+    
+    bn4 = BatchNormalization(name="BatchNorm_4")
+
+    conv5 = Conv3D(256, (3,3,3), padding='same', name="Convolutional_5")
+    bn5 = BatchNormalization(name="BatchNorm_5")
+
+    fc6 = Dense(4096, activation='relu', name="FullyConnected_1")
+    fc7 = Dense(4096, activation='relu', name="FullyConnected_2")
+    fc8 = Dense(nclass, activation='softmax', name="ClassificationOutput")
+    
+    cnvd1 = [conv1(a) for a in input_layers]
+    bnd1 = [bn1(a) for a in cnvd1]
+
+    cnvd2 = [conv2(a) for a in bnd1]
+    bnd2 = [bn2(a) for a in cnvd2]
+
+    mpd1 = [maxPool1(a) for a in bnd2]
+
+    cnvd3 = [conv3(x) for x in mpd1]
+    bnd3 = [bn3(x) for x in cnvd3]
+
+    mpd2 = [maxPool2(x) for x in bnd3]
+
+    cnvd4 = [conv4(x) for x in mpd2]
+    bnd4 = [bn4(x) for x in cnvd4]
+
+    cnvd5 = [conv5(x) for x in bnd4]
+    bnd5 = [bn5(x) for x in cnvd5]
+
+    fcd6 = [fc6(Flatten()(x)) for x in bnd5]
+
+    concatd = Concatenate()(fcd6)
+
+    fc7d = fc7(concatd)
+    fc8d = fc8(fc7d)
+
+    model = Model(inputs=modelInputs, output=fc8d)
+
+    return model
+"""
 def basicModel(tileSize=32, numPuzzles=23):
 
     # CNN structure
@@ -65,7 +120,7 @@ def trivialNet(numPuzzles=23, tileSize=32, hammingSetSize=25):
 
     return model
 
-
+"""
 def train(tileSize=64, numPuzzles=23, num_permutations=25, batch_size=1):
     # On server with PET and PCT in
     image_dir = "/hepgpu3-data1/dmcsween/DataTwoWay128/fixed"
