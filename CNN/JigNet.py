@@ -38,8 +38,8 @@ def createSharedAlexnet3D(titleSize = 32, numPuzzles=23, hammingSetSize=25):
     bn3 = BatchNormalization(name="BatchNorm_3")
 
     maxPool2 = MaxPooling3D(pool_size=(3,3,3), strides=(2,2,2), name="MaxPool_2")
-    conv4 = Conv3D(384, (3,3,3), strides=(1,1,1), padding='same', name="Convolutional_4")
     
+    conv4 = Conv3D(384, (3,3,3), strides=(1,1,1), padding='same', name="Convolutional_4")
     bn4 = BatchNormalization(name="BatchNorm_4")
 
     conv5 = Conv3D(256, (3,3,3), padding='same', name="Convolutional_5")
