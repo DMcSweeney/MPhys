@@ -3,6 +3,7 @@ from keras.layers import (Dense, Dropout, Concatenate, Input, Activation, Flatte
 from keras.models import Model
 from keras.callbacks import ModelCheckpoint, ReduceLROnPlateau, EarlyStopping, Callback
 from keras import optimizers
+from keras.utils import plot_model
 from time import strftime, localtime
 import dataLoader as load
 import os
@@ -164,6 +165,7 @@ def train(tileSize=64, numPuzzles=23, num_permutations=25, batch_size=1):
 
     opt = optimizers.Adam(lr=0.001, beta_1=0.9, beta_2=0.999)
     print(model.summary())
+    plot_model(model, to_file='model.png')
     model.compile(optimizer=opt,
                   loss='categorical_crossentropy',
                   metrics=['accuracy'])
