@@ -22,33 +22,37 @@ class LossHistory(Callback):
 
     def on_batch_end(self, batch, logs={}):
         self.losses.append(logs.get('loss'))
-        
-def createSharedAlexnet3D(titleSize = 32, numPuzzles=23, hammingSetSize=25):
 
-    input_layers = [Input(shape= (tileSize, tileSize, tileSize, 1), name="alexnet_input_{}".format(n)) for n in range(numPuzzles)]
-    conv1 = Conv3D(96, (11,11,11), strides=(4,4,4), activation='relu', padding='valid', name="Convolutional_1")
+
+def createSharedAlexnet3D(tileSize=32, numPuzzles=23, hammingSetSize=25):
+
+    input_layers = [Input(shape=(tileSize, tileSize, tileSize, 1),
+                          name="alexnet_input_{}".format(n)) for n in range(numPuzzles)]
+    conv1 = Conv3D(96, (11, 11, 11), strides=(4, 4, 4), activation='relu',
+                   padding='valid', name="Convolutional_1")
     bn1 = BatchNormalization(name="BatchNorm_1")
 
-    conv2 = Conv3D(256, (5,5,5), strides=(1,1,1), activation='relu', padding='same', name="Convolutional_2")
+    conv2 = Conv3D(256, (5, 5, 5), strides=(1, 1, 1), activation='relu',
+                   padding='same', name="Convolutional_2")
     bn2 = BatchNormalization(name="BatchNorm_2")
-    
-    maxPool1 = MaxPooling3D(pool_size=(3,3,3), strides=(2,2,2), name="MaxPool_1")
 
-    conv3 = Conv3D(384, (3,3,3), activation='relu', padding='same', name="Convolutional_3")
+    maxPool1 = MaxPooling3D(pool_size=(3, 3, 3), strides=(2, 2, 2), name="MaxPool_1")
+
+    conv3 = Conv3D(384, (3, 3, 3), activation='relu', padding='same', name="Convolutional_3")
     bn3 = BatchNormalization(name="BatchNorm_3")
 
-    maxPool2 = MaxPooling3D(pool_size=(3,3,3), strides=(2,2,2), name="MaxPool_2")
-    
-    conv4 = Conv3D(384, (3,3,3), strides=(1,1,1), padding='same', name="Convolutional_4")
+    maxPool2 = MaxPooling3D(pool_size=(3, 3, 3), strides=(2, 2, 2), name="MaxPool_2")
+
+    conv4 = Conv3D(384, (3, 3, 3), strides=(1, 1, 1), padding='same', name="Convolutional_4")
     bn4 = BatchNormalization(name="BatchNorm_4")
 
-    conv5 = Conv3D(256, (3,3,3), padding='same', name="Convolutional_5")
+    conv5 = Conv3D(256, (3, 3, 3), padding='same', name="Convolutional_5")
     bn5 = BatchNormalization(name="BatchNorm_5")
 
     fc6 = Dense(4096, activation='relu', name="FullyConnected_1")
     fc7 = Dense(4096, activation='relu', name="FullyConnected_2")
     fc8 = Dense(hammingSetSize, activation='softmax', name="ClassificationOutput")
-    
+
     cnvd1 = [conv1(a) for a in input_layers]
     bnd1 = [bn1(a) for a in cnvd1]
 
@@ -78,6 +82,7 @@ def createSharedAlexnet3D(titleSize = 32, numPuzzles=23, hammingSetSize=25):
     model = Model(inputs=modelInputs, output=fc8d)
 
     return model
+
 
 def basicModel(tileSize=32, numPuzzles=23):
 
