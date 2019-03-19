@@ -18,7 +18,6 @@ def generator(image_array, avail_keys, hamming_set, batch_size=1, num_permutatio
     while True:
         for i in range(batch_size):
             idx_array = np.zeros((hamming_set.shape[0], 1), dtype=np.uint8)
-            print("idx shape", idx_array.shape)
             # Divide image into cubes
             cells = help.divide_input(image_array)
             # Figure out which should move
@@ -32,6 +31,7 @@ def generator(image_array, avail_keys, hamming_set, batch_size=1, num_permutatio
             out_dict = help.shuffle_jigsaw(cropped_dict, hamming_set[random_idx])
             array_list = [helper.normalise(val) for val in out_dict.values()]
             idx_array[random_idx, :] = 1
+            print("idx shape", idx_array.shape)
         yield ({'alexnet_input_{}'.format(n): elem for n, elem in enumerate(array_list)}, {'ClassificationOutput': idx_array})
 
 
