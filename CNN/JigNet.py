@@ -153,11 +153,11 @@ def train(tileSize=64, numPuzzles=23, num_permutations=25, batch_size=1):
     outputPath = "./logdir"
     # callbacks
     checkpointer = ModelCheckpoint(outputPath + '/weights_improvement.hdf5',
-                                   monitor='val_loss',
+                                   monitor='val_acc',
                                    verbose=1,
                                    save_best_only=True)
-    reduce_lr_plateau = ReduceLROnPlateau(monitor='val_loss', patience=3, verbose=1)
-    early_stop = EarlyStopping(monitor='val_loss', patience=5, verbose=1)
+    reduce_lr_plateau = ReduceLROnPlateau(monitor='val_acc', patience=3, verbose=1)
+    early_stop = EarlyStopping(monitor='val_acc', patience=5, verbose=1)
     tensorboard = TrainValTensorBoard(write_graph=False)
     callbacks = [checkpointer, reduce_lr_plateau, early_stop, tensorboard]
     # BUILD Model

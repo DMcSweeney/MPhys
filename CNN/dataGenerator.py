@@ -28,7 +28,7 @@ def generator(image_array, avail_keys, hamming_set, batch_size=1, num_permutatio
             cropped_dict = help.random_div(shuffle_dict)
             # Shuffle according to hamming
             # Randomly assign labels to cells
-            print("Permutation:", hamming_set[random_idx])
+            #print("Permutation:", hamming_set[random_idx])
             out_dict = help.shuffle_jigsaw(cropped_dict, hamming_set[random_idx])
             array_list = [helper.normalise(val) for val in out_dict.values()]
             idx_array[i, random_idx] = 1
