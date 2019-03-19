@@ -5,9 +5,7 @@ import numpy as np
 from itertools import product
 import dataLoader as load
 import helpers as help
-import math
 import random
-import time
 from numba import jit
 # On server with PET and PCT in
 fixed_dir = "/hepgpu3-data1/dmcsween/DataTwoWay128/fixed"
@@ -38,13 +36,11 @@ def divide_input(input_array, number_cells_per_dim=4, dims=3):
 def random_div(input_dict, crop_size=25):
     cells = {}
     for key, val in input_dict.items():
-        holder = np.zeros(val.shape)
         x_rand = random.randint(0, int(val.shape[1]-crop_size))
         y_rand = random.randint(0, int(val.shape[2]-crop_size))
         z_rand = random.randint(0, int(val.shape[3]-crop_size))
-        holder[:, x_rand:x_rand+crop_size, y_rand:y_rand+crop_size, z_rand:z_rand+crop_size, :] = val[:, x_rand:x_rand+crop_size,
-                                                                                                      y_rand:y_rand+crop_size, z_rand:z_rand+crop_size, :]
-        cells[key] = holder
+        cells[key] = val[:, x_rand:x_rand+crop_size,
+                         y_rand:y_rand+crop_size, z_rand:z_rand+crop_size, :]
     return cells
 
 
