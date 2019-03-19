@@ -24,7 +24,7 @@ class LossHistory(Callback):
         self.losses.append(logs.get('loss'))
 
 
-def createSharedAlexnet3D(tileSize=32, numPuzzles=23, hammingSetSize=25):
+def createSharedAlexnet3D(tileSize=25, numPuzzles=23, hammingSetSize=25):
 
     input_layers = [Input(shape=(tileSize, tileSize, tileSize, 1),
                           name="alexnet_input_{}".format(n)) for n in range(numPuzzles)]
@@ -36,12 +36,12 @@ def createSharedAlexnet3D(tileSize=32, numPuzzles=23, hammingSetSize=25):
                    padding='same', name="Convolutional_2")
     bn2 = BatchNormalization(name="BatchNorm_2")
 
-    maxPool1 = MaxPooling3D(pool_size=(3, 3, 3), strides=(2, 2, 2), name="MaxPool_1")
+    maxPool1 = MaxPooling3D(strides=(2, 2, 2), padding='same', name="MaxPool_1")
 
     conv3 = Conv3D(384, (3, 3, 3), activation='relu', padding='same', name="Convolutional_3")
     bn3 = BatchNormalization(name="BatchNorm_3")
 
-    maxPool2 = MaxPooling3D(pool_size=(3, 3, 3), strides=(2, 2, 2), name="MaxPool_2")
+    maxPool2 = MaxPooling3D(strides=(2, 2, 2), padding='same', name="MaxPool_2")
 
     conv4 = Conv3D(384, (3, 3, 3), strides=(1, 1, 1), padding='same', name="Convolutional_4")
     bn4 = BatchNormalization(name="BatchNorm_4")
