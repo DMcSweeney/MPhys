@@ -18,12 +18,12 @@ def generator(image_array, avail_keys, hamming_set, batch_size=1, num_permutatio
     print("Image Array", image_array.shape)
     rand_idx = random.randrange(image_array.shape[0])
     print(rand_idx)
-    print(image_array[rand_idx].shape)
+    print(image_array[np.newaxis, rand_idx].shape)
     while True:
         for i in range(batch_size):
             idx_array = np.zeros((1, hamming_set.shape[0]), dtype=np.uint8)
             # Divide image into cubes
-            cells = help.divide_input(image_array[rand_idx])
+            cells = help.divide_input(image_array[np.new_axis, rand_idx])
             # Figure out which should move
             shuffle_dict, fix_dict = help.avail_keys_shuffle(cells, avail_keys)
             # Random crop within cubes
