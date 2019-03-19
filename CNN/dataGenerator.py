@@ -15,6 +15,7 @@ dvf_dir = "/hepgpu3-data1/dmcsween/DataTwoWay128/DVF"
 
 def generator(image_array, avail_keys, hamming_set, batch_size=1, num_permutations=50):
     # Divide array into cubes
+    print("Image Array", image_array.shape)
     while True:
         for i in range(batch_size):
             idx_array = np.zeros((batch_size, hamming_set.shape[0]), dtype=np.uint8)
@@ -30,8 +31,7 @@ def generator(image_array, avail_keys, hamming_set, batch_size=1, num_permutatio
             print("Permutation:", hamming_set[random_idx])
             out_dict = help.shuffle_jigsaw(cropped_dict, hamming_set[random_idx])
             array_list = [helper.normalise(val) for val in out_dict.values()]
-            idx_array[i, random_idx] = 1
-            print("idx shape", idx_array.shape)
+            idx_array[i, random_idx] = 1S
         yield ({'alexnet_input_{}'.format(n): elem for n, elem in enumerate(array_list)}, {'ClassificationOutput': idx_array})
 
 
