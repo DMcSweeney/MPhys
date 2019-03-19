@@ -15,11 +15,9 @@ dvf_dir = "/hepgpu3-data1/dmcsween/DataTwoWay128/DVF"
 
 def generator(image_array, avail_keys, hamming_set, batch_size=1, num_permutations=50):
     # Divide array into cubes
-    print("Image Array", image_array.shape)
-    rand_idx = random.randrange(image_array.shape[0])
-    print(rand_idx)
-    print(image_array[np.newaxis, rand_idx].shape)
     while True:
+        rand_idx = random.randrange(image_array.shape[0])
+        random_idx = random.randrange(hamming_set.shape[0])
         for i in range(batch_size):
             idx_array = np.zeros((1, hamming_set.shape[0]), dtype=np.uint8)
             # Divide image into cubes
@@ -29,7 +27,6 @@ def generator(image_array, avail_keys, hamming_set, batch_size=1, num_permutatio
             # Random crop within cubes
             cropped_dict = help.random_div(shuffle_dict)
             # Shuffle according to hamming
-            random_idx = random.randrange(hamming_set.shape[0])
             # Randomly assign labels to cells
             print("Permutation:", hamming_set[random_idx])
             out_dict = help.shuffle_jigsaw(cropped_dict, hamming_set[random_idx])
