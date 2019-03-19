@@ -17,7 +17,7 @@ def generator(image_array, avail_keys, hamming_set, batch_size=1, num_permutatio
     # Divide array into cubes
     while True:
         for i in range(batch_size):
-            idx_array = np.zeros((1, hamming_set.shape[0]), dtype=np.uint8)
+            idx_array = np.zeros((batch_size, hamming_set.shape[0]), dtype=np.uint8)
             # Divide image into cubes
             cells = help.divide_input(image_array)
             # Figure out which should move
