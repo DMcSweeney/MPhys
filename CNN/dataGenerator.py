@@ -33,7 +33,8 @@ def generator(image_array, avail_keys, hamming_set, crop_size=25, batch_size=8, 
             out_dict = help.shuffle_jigsaw(cropped_dict, hamming_set[random_idx])
             for n, val in enumerate(out_dict.values()):
                 print("N:", n)
-                array_list[i, n] = np.array(helper.normalise(val))
+                print("type:", type(helper.normalise(val)))
+                array_list[i, n] = helper.normalise(val)
             idx_array[i, random_idx] = 1
         yield ({'alexnet_input_{}'.format(n): elem for n, elem in enumerate(array_list)}, {'ClassificationOutput': idx_array})
 
