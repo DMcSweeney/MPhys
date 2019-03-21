@@ -20,7 +20,7 @@ def generator(image_array, avail_keys, hamming_set, batch_size=8, num_permutatio
             rand_idx = random.randrange(image_array.shape[0])
             random_idx = random.randrange(hamming_set.shape[0])
 
-            idx_array = np.zeros((1, hamming_set.shape[0]), dtype=np.uint8)
+            idx_array = np.zeros((batch_size, hamming_set.shape[0]), dtype=np.uint8)
             # Divide image into cubes
             cells = help.divide_input(image_array[np.newaxis, rand_idx])
             # Figure out which should move
