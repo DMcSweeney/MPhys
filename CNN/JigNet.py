@@ -79,9 +79,8 @@ def createSharedAlexnet3D(tileSize=25, numPuzzles=23, hammingSetSize=25):
 
     fc7d = fc7(concatd)
     fc8d = fc8(fc7d)
-    output = K.clip(fc8d, 1e-10, 1.0)
 
-    model = Model(inputs=input_layers, output=output)
+    model = Model(inputs=input_layers, output=fc8d)
 
     return model
 
@@ -163,9 +162,9 @@ def train(tileSize=64, numPuzzles=23, num_permutations=25, batch_size=32):
     callbacks = [checkpointer, reduce_lr_plateau, tensorboard]
     # BUILD Model
     model = createSharedAlexnet3D()
-
+    for layer in model.layers:
+        print(layer.name, layer.output_shape)
     opt = optimizers.Adam(lr=0.1, beta_1=0.9, beta_2=0.999)
-    print(model.summary())
     plot_model(model, to_file='model.png')
     model.compile(optimizer=opt,
                   loss='categorical_crossentropy',
