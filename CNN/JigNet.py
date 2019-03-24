@@ -80,7 +80,7 @@ def createSharedAlexnet3D(tileSize=25, numPuzzles=23, hammingSetSize=25):
     fc7d = fc7(concatd)
     fc8d = fc8(fc7d)
 
-    model = Model(inputs=input_layers, output=K.clip_by_value(fc8d, 10e-8, 1.-10e-8))
+    model = Model(inputs=input_layers, output=K.clip(fc8d, 10e-8, 1.-10e-8))
 
     return model
 
