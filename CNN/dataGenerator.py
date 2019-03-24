@@ -16,7 +16,7 @@ dvf_dir = "/hepgpu3-data1/dmcsween/DataTwoWay128/DVF"
 def generator(image_array, avail_keys, hamming_set, crop_size=25, batch_size=8, num_permutations=50):
     # Divide array into cubes
     idx_array = np.zeros((batch_size, hamming_set.shape[0]), dtype=np.uint8)
-    array_list = np.zeros((batch_size, len(avail_keys)))
+    array_list = np.zeros((batch_size, len(avail_keys), crop_size, crop_size, crop_size, 1))
     while True:
         for i in range(batch_size):
             rand_idx = random.randrange(image_array.shape[0])
@@ -34,7 +34,7 @@ def generator(image_array, avail_keys, hamming_set, crop_size=25, batch_size=8, 
             for n, val in enumerate(out_dict.values()):
                 print("N:", n)
                 print("type:", type(helper.normalise(val)))
-                array_list[i, n] = helper.normalise(val)
+                array_list[i, n, ...] = helper.normalise(val)
             idx_array[i, random_idx] = 1
         yield ({'alexnet_input_{}'.format(n): elem for n, elem in enumerate(array_list)}, {'ClassificationOutput': idx_array})
 
