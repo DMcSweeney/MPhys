@@ -32,11 +32,9 @@ def generator(image_array, avail_keys, hamming_set, crop_size=25, batch_size=8, 
             # print("Permutation:", hamming_set[random_idx])
             out_dict = help.shuffle_jigsaw(cropped_dict, hamming_set[random_idx])
             for n, val in enumerate(out_dict.values()):
-                print("N:", n)
-                print("type:", type(helper.normalise(val)))
                 array_list[i, n, ...] = helper.normalise(val)
             idx_array[i, random_idx] = 1
-        yield ({'alexnet_input_{}'.format(n): elem for n, elem in enumerate(array_list)}, {'ClassificationOutput': idx_array})
+        yield ({'alexnet_input_{}'.format(n): array_list[:, n, ...] for n in range(array_list.shape[1])}, {'ClassificationOutput': idx_array})
 
 
 def main(num_permutations=25):
