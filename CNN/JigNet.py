@@ -150,7 +150,7 @@ def train(tileSize=64, numPuzzles=23, num_permutations=25, batch_size=8):
         image_array, moving_array, dvf_array, split_ratio=0.15)
 
     # Output all data from a training session into a dated folder
-    outputPath = "./logdir"
+    outputPath = "./logs"
     # callbacks
     checkpointer = ModelCheckpoint(outputPath + '/weights_improvement.hdf5',
                                    monitor='val_acc',
@@ -163,7 +163,7 @@ def train(tileSize=64, numPuzzles=23, num_permutations=25, batch_size=8):
     # BUILD Model
     model = createSharedAlexnet3D()
 
-    opt = optimizers.Adam(lr=0.01)
+    opt = optimizers.Adam(lr=0.001, beta_1=0.9, beta_2=0.999)
     print(model.summary())
     plot_model(model, to_file='model.png')
     model.compile(optimizer=opt,
