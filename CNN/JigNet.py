@@ -156,14 +156,14 @@ def train(tileSize=64, numPuzzles=23, num_permutations=25, batch_size=8):
                                    monitor='val_acc',
                                    verbose=1,
                                    save_best_only=True, period=1)
-    reduce_lr_plateau = ReduceLROnPlateau(monitor='val_acc', patience=5, verbose=1)
+    reduce_lr_plateau = ReduceLROnPlateau(monitor='val_acc', patience=3, verbose=1)
     # early_stop = EarlyStopping(monitor='val_acc', patience=5, verbose=1)
     tensorboard = TrainValTensorBoard(write_graph=False)
     callbacks = [checkpointer, reduce_lr_plateau, tensorboard]
     # BUILD Model
     model = createSharedAlexnet3D()
 
-    opt = optimizers.Adam(lr=0.1)
+    opt = optimizers.Adam(lr=0.01)
     print(model.summary())
     plot_model(model, to_file='model.png')
     model.compile(optimizer=opt,
