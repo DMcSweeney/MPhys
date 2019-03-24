@@ -155,15 +155,15 @@ def train(tileSize=64, numPuzzles=23, num_permutations=25, batch_size=8):
     checkpointer = ModelCheckpoint(outputPath + '/weights_improvement.hdf5',
                                    monitor='val_acc',
                                    verbose=1,
-                                   save_best_only=True)
-    reduce_lr_plateau = ReduceLROnPlateau(monitor='val_acc', patience=3, verbose=1)
-    early_stop = EarlyStopping(monitor='val_acc', patience=5, verbose=1)
+                                   save_best_only=True, period=1)
+    reduce_lr_plateau = ReduceLROnPlateau(monitor='val_acc', patience=5, verbose=1)
+    # early_stop = EarlyStopping(monitor='val_acc', patience=5, verbose=1)
     tensorboard = TrainValTensorBoard(write_graph=False)
-    callbacks = [checkpointer, reduce_lr_plateau, early_stop, tensorboard]
+    callbacks = [checkpointer, reduce_lr_plateau, tensorboard]
     # BUILD Model
     model = createSharedAlexnet3D()
 
-    opt = optimizers.Adam(lr=0.1, beta_1=0.9, beta_2=0.999)
+    opt = optimizers.Adam(lr=0.1)
     print(model.summary())
     plot_model(model, to_file='model.png')
     model.compile(optimizer=opt,
@@ -176,6 +176,7 @@ def train(tileSize=64, numPuzzles=23, num_permutations=25, batch_size=8):
                         validation_data=gen.generator(
         validation_dataset, list_avail_keys, hamming_set),
         validation_steps=validation_dataset.shape[0] // batch_size, callbacks=callbacks)
+    model.save('model.h5')
 
 
 """
