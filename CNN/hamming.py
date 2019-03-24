@@ -74,6 +74,7 @@ def HIS_gen_max_hamming_set(N, moving_cells):
 
 
 def gen_max_hamming_set(N, moving_cells):
+    # My hamming function
     num_moving = len(moving_cells)
     NUM_PERM = 1000000
     # Create set containing 1M permutations

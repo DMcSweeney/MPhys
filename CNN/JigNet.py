@@ -13,7 +13,7 @@ import helpers as helper
 from customTensorBoard import TrainValTensorBoard
 import dataGenerator as gen
 import JigsawHelpers as help
-
+from keras import backend as K
 #  from keras.utils import plot_model
 
 
@@ -80,7 +80,7 @@ def createSharedAlexnet3D(tileSize=25, numPuzzles=23, hammingSetSize=25):
     fc7d = fc7(concatd)
     fc8d = fc8(fc7d)
 
-    model = Model(inputs=input_layers, output=fc8d)
+    model = Model(inputs=input_layers, output=K.clip_by_value(fc8d, 10e-8, 1.-10e-8))
 
     return model
 
