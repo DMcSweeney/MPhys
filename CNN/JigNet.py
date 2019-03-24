@@ -127,7 +127,7 @@ def trivialNet(numPuzzles=23, tileSize=32, hammingSetSize=25):
     return model
 
 
-def train(tileSize=64, numPuzzles=23, num_permutations=25, batch_size=8):
+def train(tileSize=64, numPuzzles=23, num_permutations=25, batch_size=32):
     # On server with PET and PCT in
     image_dir = "/hepgpu3-data1/dmcsween/DataTwoWay128/fixed"
 
@@ -170,11 +170,11 @@ def train(tileSize=64, numPuzzles=23, num_permutations=25, batch_size=8):
                   loss='categorical_crossentropy',
                   metrics=['accuracy'])
 
-    model.fit_generator(generator=gen.generator(train_dataset, list_avail_keys, hamming_set),
+    model.fit_generator(generator=gen.generator(train_dataset, list_avail_keys, hamming_set, batch_size=batch_size),
                         epochs=100, verbose=1,
                         steps_per_epoch=train_dataset.shape[0] // batch_size,
                         validation_data=gen.generator(
-        validation_dataset, list_avail_keys, hamming_set),
+        validation_dataset, list_avail_keys, hamming_set, batch_size=batch_size),
         validation_steps=validation_dataset.shape[0] // batch_size, callbacks=callbacks)
     model.save('model.h5')
 

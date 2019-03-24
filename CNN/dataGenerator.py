@@ -13,7 +13,7 @@ moving_dir = "/hepgpu3-data1/dmcsween/DataTwoWay128/moving"
 dvf_dir = "/hepgpu3-data1/dmcsween/DataTwoWay128/DVF"
 
 
-def generator(image_array, avail_keys, hamming_set, crop_size=25, batch_size=8, num_permutations=50):
+def generator(image_array, avail_keys, hamming_set, crop_size=25, batch_size=8, num_permutations=25):
     # Divide array into cubes
     idx_array = np.zeros((batch_size, hamming_set.shape[0]), dtype=np.uint8)
     array_list = np.zeros((batch_size, len(avail_keys), crop_size, crop_size, crop_size, 1))
