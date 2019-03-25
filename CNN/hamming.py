@@ -8,19 +8,6 @@ import time
 from numba import jit
 
 
-@jit
-def hamming_distance(array1, array2):
-    """Calculate hamming distance between 2 arrays
-    i.e how different they are."""
-    if (array1.shape != array2.shape):
-        raise ValueError("Input arrays must have same shape!")
-    distance = 0
-    for i in range(array1.shape[0]):
-        if (array1[i] != array2[i]):
-            distance += 1
-    return distance
-
-
 def HIS_gen_max_hamming_set(N, moving_cells):
     """
     Generate permutation set with max hamming distance
@@ -73,6 +60,22 @@ def HIS_gen_max_hamming_set(N, moving_cells):
     return max_hamming_set
 
 
+# ------Hamming tests
+
+
+@jit
+def hamming_distance(array1, array2):
+    """Calculate hamming distance between 2 arrays
+    i.e how different they are."""
+    if (array1.shape != array2.shape):
+        raise ValueError("Input arrays must have same shape!")
+    distance = 0
+    for i in range(array1.shape[0]):
+        if (array1[i] != array2[i]):
+            distance += 1
+    return distance
+
+
 def gen_max_hamming_set(N, moving_cells):
     # My hamming function
     num_moving = len(moving_cells)
@@ -88,7 +91,9 @@ def gen_max_hamming_set(N, moving_cells):
         a = time.time()
         max_dist_set[i] = permutation_set[idx]
         a1 = time.time()
-        for j in range(i+1):
+        # for j in range(i+1):
+        for j in range(i):
+            # test in range(i)
             for k in range(NUM_PERM):
                 hamming_dist[j, k] = hamming_distance(max_dist_set[j], permutation_set[k])
         b1 = time.time()
@@ -96,4 +101,16 @@ def gen_max_hamming_set(N, moving_cells):
         idx = np.argmax(np.sum(hamming_dist, axis=0))
         b = time.time()
         print("Took {} seconds to do one loop".format(b-a))
-    return max_dist_set
+    return max_dist_set, hamming_dist
+
+
+def main(argv=None):
+    N = 10 ^ 5
+    avail_keys = [n for n in range(23)]
+    print(avail_keys)
+    max_dist_set, dist_array = gen_max_hamming_set(N, avail_keys)
+    np.savetxt("hamming_distances.csv", dist_array, delimiter=",")
+
+
+if __name__ == '__main__':
+    main()
