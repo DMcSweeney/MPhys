@@ -105,7 +105,7 @@ def gen_max_hamming_set(N, moving_cells):
 
 
 def main(argv=None):
-    N = 1000000
+    N = 100000
     avail_keys = [n for n in range(23)]
     print(avail_keys)
     max_dist_set, dist_array = gen_max_hamming_set(N, avail_keys)
