@@ -6,6 +6,7 @@ import numpy as np
 import random
 import time
 from numba import jit
+import pandas as pd
 
 
 def HIS_gen_max_hamming_set(N, moving_cells):
@@ -105,11 +106,20 @@ def gen_max_hamming_set(N, moving_cells):
 
 
 def main(argv=None):
-    N = 100000
+    N = 1000
     avail_keys = [n for n in range(23)]
     print(avail_keys)
     max_dist_set, dist_array = gen_max_hamming_set(N, avail_keys)
     np.savetxt("hamming_distances.csv", dist_array, delimiter=",")
+    """
+    # Display data
+    pd.options.display.html.table_schema = True
+    pd.options.display.max_rows = None
+
+    hamming_file = './hamming_distances.csv'
+    df1 = pd.read_csv(hamming_filename)
+    df1.max(axis=0)
+    """
 
 
 if __name__ == '__main__':
