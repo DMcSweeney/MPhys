@@ -188,7 +188,7 @@ def trivialNet(numPuzzles=23, tileSize=32, hammingSetSize=25):
     return model
 
 
-def train(tileSize=64, numPuzzles=23, num_permutations=25, batch_size=4):
+def train(tileSize=64, numPuzzles=23, num_permutations=25, batch_size=32):
     # On server with PET and PCT in
     image_dir = "/hepgpu3-data1/dmcsween/DataTwoWay128/fixed"
     print("Load Data")
