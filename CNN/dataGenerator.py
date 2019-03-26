@@ -47,7 +47,7 @@ def generator(image_array, avail_keys, hamming_set, crop_size=25, batch_size=8, 
             #dummy_dict = helper.dummy_dict(cropped_dict)
             out_dict = help.shuffle_jigsaw(cropped_dict, hamming_set.loc[random_idx, :].values)
             for n, val in enumerate(out_dict.values()):
-                array_list[i, n, ...] = val
+                array_list[i, n, ...] = helper.normalise(val)
             idx_array[i, random_idx] = 1
         # return array_list, idx_array, out_dict, fix_dict
         yield ({'alexnet_input_{}'.format(n): array_list[:, n, ...] for n in range(len(avail_keys))}, {'ClassificationOutput': idx_array})
@@ -65,14 +65,11 @@ def main(N=10):
     print(hamming_set)
     print("Generator")
     list_arrays, index_array, shuffle_dict, fix_dict = generator(
-        fixed_array, avail_keys, hamming_set, batch_size=1, N=10)
+        fixed_array, avail_keys, hamming_set, batch_size=2, N=10)
 
     # cropped_fixed = help.random_div(fix_dict)
     print("Solve puzzle number:", index_array)
     # puzzle_array = help.solve_jigsaw(shuffle_dict, cropped_fixed, fixed_array)
-    dummy_list = []
-    # for val in shuffle_dict.values():
-    #    dummy_list.append(np.mean(val))
     check_dummy = [np.mean(list_arrays[:, i, ...]) for i in range(len(avail_keys))]
     print(check_dummy)
     # helper.write_images(puzzle_array, fixed_affine,
