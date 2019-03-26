@@ -80,7 +80,7 @@ def hamming_distance(array1, array2):
 def gen_max_hamming_set(N, moving_cells):
     # My hamming function
     num_moving = len(moving_cells)
-    NUM_PERM = 1000000
+    NUM_PERM = 1000
     # Create set containing 1M permutations
     permutation_set = np.zeros((NUM_PERM, num_moving), dtype=np.uint8)
     for i in range(NUM_PERM):
@@ -105,11 +105,34 @@ def gen_max_hamming_set(N, moving_cells):
     return max_dist_set, hamming_dist
 
 
+def TOM_gen_max_hamming_set(N, moving_cells):
+    permutation = []
+    iterations = 1000000
+    for i in range(N):
+        permutation.append(moving_cells)
+
+    moving_cells_array = np.asarray(moving_cells)
+    permutation_array = np.asarray(permutation)
+    hamming_dist = []
+    for j in range(iterations):
+        for k in range(N):
+            current_permutation = np.random.permutation(moving_cells)
+            current_permutation_array = np.asarray(current_permutation)
+
+            if  hamming_distance(current_permutation_array, moving_cells_array) > hamming_distance(permutation_array[k], moving_cells_array):
+                    permutation_array[k] = current_permutation
+                    hamming_dist.append(hamming_distance(current_permutation_array, moving_cells_array))
+
+    print(permutation_array)
+    print(hamming_dist)
+    return permutation_array, hamming_dist
+
+
 def main(argv=None):
-    N = 10
+    N = 1000
     avail_keys = [n for n in range(23)]
     print(avail_keys)
-    max_dist_set, dist_array = gen_max_hamming_set(N, avail_keys)
+    max_dist_set, dist_array = TOM_gen_max_hamming_set(N, avail_keys)
     np.savetxt("hamming_set.txt", max_dist_set, delimiter=",", fmt='%1.2i')
 
     """
