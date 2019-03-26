@@ -188,10 +188,10 @@ def trivialNet(numPuzzles=23, tileSize=32, hammingSetSize=25):
     return model
 
 
-def train(tileSize=64, numPuzzles=23, num_permutations=25, batch_size=32):
+def train(tileSize=64, numPuzzles=23, num_permutations=25, batch_size=1):
     # On server with PET and PCT in
     image_dir = "/hepgpu3-data1/dmcsween/DataTwoWay128/fixed"
-
+    print("Load Data")
     image_data, __image, __label = load.data_reader(image_dir, image_dir, image_dir)
 
     image_array, image_affine = image_data.get_data()
@@ -200,8 +200,9 @@ def train(tileSize=64, numPuzzles=23, num_permutations=25, batch_size=32):
 
     list_avail_keys = help.get_moveable_keys(image_array)
     # Get hamming set
+    print("Load hamming Set")
     hamming_set = pd.read_csv("hamming_set.txt", sep=",", header=None)
-
+    print(hamming_set)
     # Ignore moving and dvf
     validation_dataset, validation_moving, validation_dvf, train_dataset, train_moving, train_dvf = helper.split_data(
         image_array, moving_array, dvf_array, split_ratio=0.15)
