@@ -47,6 +47,7 @@ def random_div(input_dict, crop_size=25):
 def shuffle_jigsaw(input_dict, hamming_set, number_cells_per_dim=4, dims=3):
     # Randomly assign key to value
     list_keys = [key for key in input_dict.keys()]
+    print(len(list_keys))
     shuffle_keys = [list_keys[hamming_set[i]] for i in range(len(list_keys))]
     shuffle_dict = {key: input_dict[key] for key in shuffle_keys}
     return shuffle_dict
