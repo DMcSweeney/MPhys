@@ -224,6 +224,7 @@ def train(tileSize=64, numPuzzles=23, num_permutations=25, batch_size=1):
         print(layer.name, layer.output_shape)
     opt = optimizers.Adam(lr=0.1, beta_1=0.9, beta_2=0.999)
     plot_model(model, to_file='model.png')
+    print(model.summary())
     model.compile(optimizer=opt,
                   loss='categorical_crossentropy',
                   metrics=['accuracy'])
