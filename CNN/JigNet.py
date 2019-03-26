@@ -13,6 +13,7 @@ import helpers as helper
 from customTensorBoard import TrainValTensorBoard
 import dataGenerator as gen
 import JigsawHelpers as help
+import pandas as pd
 from keras import backend as K
 #  from keras.utils import plot_model
 
@@ -199,11 +200,7 @@ def train(tileSize=64, numPuzzles=23, num_permutations=25, batch_size=32):
 
     list_avail_keys = help.get_moveable_keys(image_array)
     # Get hamming set
-    start_time = time.time()
-    hamming_set = hamming.gen_max_hamming_set(num_permutations, list_avail_keys)
-    end_time = time.time()
-    print("Took {} to generate {} permutations". format(
-        end_time - start_time, num_permutations))
+    hamming_set = pd.read_csv("hamming_set.txt", sep=",", header=None)
 
     # Ignore moving and dvf
     validation_dataset, validation_moving, validation_dvf, train_dataset, train_moving, train_dvf = helper.split_data(
@@ -221,7 +218,7 @@ def train(tileSize=64, numPuzzles=23, num_permutations=25, batch_size=32):
     tensorboard = TrainValTensorBoard(write_graph=False)
     callbacks = [checkpointer, reduce_lr_plateau, tensorboard]
     # BUILD Model
-    model = createShortSharedAlexnet3D()
+    model = createSharedAlexnet3D()
     for layer in model.layers:
         print(layer.name, layer.output_shape)
     opt = optimizers.Adam(lr=0.1, beta_1=0.9, beta_2=0.999)
