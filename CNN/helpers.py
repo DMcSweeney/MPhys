@@ -66,11 +66,15 @@ def noise(input, batch_size):
     noise_field = np.random.normal(loc=0, scale=std_noise, size=input.shape)
     return input + noise_field
 
-def dummy(input,piece_number):
-    #replace inputs with dummy data with a known mean value
-    ones = np.ones(input.shape())
-    dummy = piece_number * ones
-    return dummy
+
+def dummy_dict(input_dict):
+    # replace inputs with dummy data with a known mean value
+    dummy_dict = {}
+    for n, items in enumerate(input_dict.items()):
+        key, val = items
+        dummy_dict[key] = np.full(shape=val.shape, fill_value=n)
+    return dummy_dict
+
 
 def shuffle_inplace(fixed, moving, dvf):
     np.random.seed(1234)

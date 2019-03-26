@@ -93,7 +93,7 @@ def gen_max_hamming_set(N, moving_cells):
         max_dist_set[i] = permutation_set[idx]
         a1 = time.time()
         # for j in range(i+1):
-        for j in range(i):
+        for j in range(i+1):
             # test in range(i)
             for k in range(NUM_PERM):
                 hamming_dist[j, k] = hamming_distance(max_dist_set[j], permutation_set[k])
@@ -107,8 +107,6 @@ def gen_max_hamming_set(N, moving_cells):
 
 def main(argv=None):
     N = 10
-    avail_keys = [n for n in range(23)]
-    print(avail_keys)
     max_dist_set, dist_array = gen_max_hamming_set(N, avail_keys)
     np.savetxt("hamming_set.txt", max_dist_set, delimiter=",", fmt='%1.2i')
 
