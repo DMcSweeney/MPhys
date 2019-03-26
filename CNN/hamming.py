@@ -5,8 +5,8 @@ import itertools
 import numpy as np
 import random
 import time
-from numba import jit
-import pandas as pd
+#from numba import jit
+#import pandas as pd
 
 
 def HIS_gen_max_hamming_set(N, moving_cells):
@@ -64,7 +64,7 @@ def HIS_gen_max_hamming_set(N, moving_cells):
 # ------Hamming tests
 
 
-@jit
+# @jit
 def hamming_distance(array1, array2):
     """Calculate hamming distance between 2 arrays
     i.e how different they are."""
@@ -106,18 +106,15 @@ def gen_max_hamming_set(N, moving_cells):
 
 
 def main(argv=None):
-    N = 1000
+    N = 10
     avail_keys = [n for n in range(23)]
     print(avail_keys)
     max_dist_set, dist_array = gen_max_hamming_set(N, avail_keys)
-    np.savetxt("hamming_distances.csv", dist_array, delimiter=",")
-    """
-    # Display data
-    pd.options.display.html.table_schema = True
-    pd.options.display.max_rows = None
+    np.savetxt("hamming_set.txt", max_dist_set, delimiter=",", fmt='%1.2i')
 
-    hamming_file = './hamming_distances.csv'
-    df1 = pd.read_csv(hamming_filename)
+    """
+    hamming_file = './hamming_distances.'
+    df1 = pd.read_csv(hamming_file)
     df1.max(axis=0)
     """
 

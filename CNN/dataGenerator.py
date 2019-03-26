@@ -4,13 +4,18 @@ Script containing generator for JigNet
 import numpy as np
 import JigsawHelpers as help
 import helpers as helper
-import hamming
-import time
 import random
-
+import pandas as pd
+"""
+# On server
 fixed_dir = "/hepgpu3-data1/dmcsween/DataTwoWay128/fixed"
 moving_dir = "/hepgpu3-data1/dmcsween/DataTwoWay128/moving"
 dvf_dir = "/hepgpu3-data1/dmcsween/DataTwoWay128/DVF"
+"""
+# Laptop
+fixed_dir = "/mnt/e/MPhys/Data128/PlanningCT"
+moving_dir = "/mnt/e/MPhys/Data128/PET_Rigid"
+dvf_dir = "/mnt/e/MPhys/Data128/DVF"
 
 
 def generator(image_array, avail_keys, hamming_set, crop_size=25, batch_size=8, num_permutations=25):
@@ -34,7 +39,8 @@ def generator(image_array, avail_keys, hamming_set, crop_size=25, batch_size=8, 
             for n, val in enumerate(out_dict.values()):
                 array_list[i, n, ...] = helper.normalise(val)
             idx_array[i, random_idx] = 1
-        yield ({'alexnet_input_{}'.format(n): array_list[:, n, ...] for n in range(array_list.shape[1])}, {'ClassificationOutput': idx_array})
+        return array_list, idx_array, out_dict, fix_dict
+        # yield ({'alexnet_input_{}'.format(n): array_list[:, n, ...] for n in range(array_list.shape[1])}, {'ClassificationOutput': idx_array})
 
 
 def main(num_permutations=25):
@@ -42,22 +48,20 @@ def main(num_permutations=25):
     fixed_array, fixed_affine = help.get_data(fixed_dir, moving_dir, dvf_dir)
     print("Get moveable keys")
     avail_keys = help.get_moveable_keys(fixed_array)
-    # Hamming distance
-    start_time = time.time()
-    hamming_set = hamming.gen_max_hamming_set(num_permutations, avail_keys)
-    end_time = time.time()
-    print("Took {} to generate {} permutations". format(
-        end_time - start_time, num_permutations))
+
+    hamming_set = pd.read_csv("hamming_set.txt", sep=",", header=None)
     print("Hamming Set Shape:", hamming_set.shape)
     print(hamming_set)
 
     print("Generator")
-    list_arrays, index, shuffle_dict, fix_dict = generator(fixed_array, avail_keys, hamming_set)
-    print("Solve puzzle", index)
-    puzzle_array = help.solve_jigsaw(shuffle_dict, fix_dict, fixed_array)
+    list_arrays, index_array, shuffle_dict, fix_dict = generator(
+        fixed_array, avail_keys, hamming_set, batch_size=1, num_permutations=10)
+    cropped_fixed = help.random_div(fix_dict)
+    print("Solve puzzle number:", index_array)
+    puzzle_array = help.solve_jigsaw(shuffle_dict, cropped_fixed, fixed_array)
 
     helper.write_images(puzzle_array, fixed_affine,
-                        file_path="./jigsaw_out/", file_prefix='rand_fix')
+                        file_path="./jigsaw_out/", file_prefix='no_padding')
 
 
 if __name__ == '__main__':
