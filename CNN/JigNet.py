@@ -269,7 +269,7 @@ def infer(batch_size=2):
     model = load_model('model.h5')
     model.compile(optimizer='Adam', loss='mean_squared_error', metrics=["accuracy"])
     output = model.predict_generator(gen.generator(
-        validation_dataset, list_avail_keys, hamming_set, hamming_idx=5, batch_size=batch_size, N=10), verbose=1)
+        validation_dataset, list_avail_keys, hamming_set, hamming_idx=5, batch_size=batch_size, N=10), steps=1, verbose=1)
     print(output)
 
 
