@@ -215,13 +215,13 @@ def train(tileSize=64, numPuzzles=23, num_permutations=25, batch_size=32):
                                    monitor='val_acc',
                                    verbose=1,
                                    save_best_only=True, period=1)
-    reduce_lr_plateau = ReduceLROnPlateau(monitor='val_acc', patience=3, verbose=1)
+    # reduce_lr_plateau = ReduceLROnPlateau(monitor='val_acc', patience=3, verbose=1)
     # early_stop = EarlyStopping(monitor='val_acc', patience=5, verbose=1)
     tensorboard = TrainValTensorBoard(write_graph=False)
-    callbacks = [checkpointer, reduce_lr_plateau, tensorboard]
+    callbacks = [checkpointer, tensorboard]
     # BUILD Model
     n_samples = image_array.shape[0]
-    for train, test in kfold.split(np.zeros(n_samples), np.zeros(n_samples)):
+    for train, val in kfold.split(np.zeros(n_samples), np.zeros(n_samples)):
         model = createSharedAlexnet3D(hammingSetSize=10)
         """
         for layer in model.layers:
@@ -236,10 +236,10 @@ def train(tileSize=64, numPuzzles=23, num_permutations=25, batch_size=32):
 
         model.fit_generator(generator=gen.generator(image_array[train], list_avail_keys, hamming_set, batch_size=batch_size, N=10),
                             epochs=100, verbose=1,
-                            steps_per_epoch=image_array[train].shape[0] // batch_size,
+                            steps_per_epoch=image_array.shape[0] // batch_size,
                             validation_data=gen.generator(
-            image_array[test], list_avail_keys, hamming_set, batch_size=batch_size),
-            validation_steps=image_array[test].shape[0] // batch_size, callbacks=callbacks)
+            image_array[val], list_avail_keys, hamming_set, batch_size=batch_size),
+            validation_steps=image_array.shape[0] // batch_size, callbacks=callbacks)
 
     """
     scores = model.evaluate_generator(
