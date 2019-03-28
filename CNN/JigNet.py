@@ -236,13 +236,13 @@ def train(tileSize=64, numPuzzles=23, num_permutations=25, batch_size=32):
                       metrics=['accuracy'])
 
         model.fit_generator(generator=gen.generator(image_array[train], list_avail_keys, hamming_set, batch_size=batch_size, N=10),
-                            epochs=100, verbose=2,
+                            epochs=25, verbose=2,
                             steps_per_epoch=len(train) // batch_size, callbacks=callbacks)
-        # scores = model.evaluate_generator(gen.generator(image_array[val], list_avail_keys, hamming_set, batch_size=batch_size, N=10),
-        #                                  steps=image_array.shape[0] // batch_size)
-        # print("%s: %.2f%%" % (model.metrics_names[1], scores[1]*100))
-        # cvscores.append(scores[1] * 100)
-
+        scores = model.evaluate_generator(gen.generator(image_array[val], list_avail_keys, hamming_set, batch_size=batch_size, N=10),
+                                          steps=len(val) // batch_size)
+        print("%s: %.2f%%" % (model.metrics_names[1], scores[1]*100))
+        cvscores.append(scores[1] * 100)
+    print("%.2f%% (+/- %.2f%%)" % (np.mean(cvscores), np.std(cvscores)))
     model.save('model.h5')
 
 
