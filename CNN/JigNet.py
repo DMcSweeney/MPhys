@@ -236,9 +236,8 @@ def train(tileSize=64, numPuzzles=23, num_permutations=25, batch_size=32):
                       metrics=['accuracy'])
 
         model.fit_generator(generator=gen.generator(image_array[train], list_avail_keys, hamming_set, batch_size=batch_size, N=10),
-                            epochs=10, verbose=2,
-                            steps_per_epoch=len(train) // batch_size,
-                            validation_data=image_array[val], validation_steps=len(val) // batch_size, callbacks=callbacks)
+                            epochs=100, verbose=2,
+                            steps_per_epoch=len(train) // batch_size, callbacks=callbacks)
         # scores = model.evaluate_generator(gen.generator(image_array[val], list_avail_keys, hamming_set, batch_size=batch_size, N=10),
         #                                  steps=image_array.shape[0] // batch_size)
         # print("%s: %.2f%%" % (model.metrics_names[1], scores[1]*100))
