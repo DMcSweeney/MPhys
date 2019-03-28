@@ -222,6 +222,7 @@ def train(tileSize=64, numPuzzles=23, num_permutations=25, batch_size=32):
     # BUILD Model
     n_samples = image_array.shape[0]
     for train, val in kfold.split(np.zeros(n_samples), np.zeros(n_samples)):
+        print(train, val)
         model = createSharedAlexnet3D(hammingSetSize=10)
         """
         for layer in model.layers:
@@ -235,7 +236,7 @@ def train(tileSize=64, numPuzzles=23, num_permutations=25, batch_size=32):
                       metrics=['accuracy'])
 
         model.fit_generator(generator=gen.generator(image_array[train], list_avail_keys, hamming_set, batch_size=batch_size, N=10),
-                            epochs=100, verbose=0,
+                            epochs=100, verbose=1,
                             steps_per_epoch=image_array.shape[0] // batch_size,
                             callbacks=callbacks)
         scores = model.evaluate_generator(gen.generator(image_array[val], list_avail_keys, hamming_set, batch_size=batch_size, N=10),
