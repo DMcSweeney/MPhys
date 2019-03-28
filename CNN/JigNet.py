@@ -1,20 +1,15 @@
-from keras.layers import (Dense, Dropout, Concatenate, Input, Activation, Flatten,
+from keras.layers import (Dense, Concatenate, Input, Activation, Flatten,
                           Conv3D, MaxPooling3D, GlobalAveragePooling3D, BatchNormalization, add)
 from keras.models import Model
 from keras.callbacks import ModelCheckpoint, ReduceLROnPlateau, EarlyStopping, Callback
 from keras import optimizers
 from keras.utils import plot_model
-from time import strftime, localtime
 import dataLoader as load
-import os
-import time
-import hamming
-import helpers as helper
 from customTensorBoard import TrainValTensorBoard
 import dataGenerator as gen
 import JigsawHelpers as help
 import pandas as pd
-from keras import backend as K
+from sklearn.model_selection import StratifiedKFold
 #  from keras.utils import plot_model
 
 
@@ -189,6 +184,9 @@ def trivialNet(numPuzzles=23, tileSize=32, hammingSetSize=25):
 
 
 def train(tileSize=64, numPuzzles=23, num_permutations=25, batch_size=32):
+    # Seed for reproducibility
+    seed = 7
+    np.random.seed(seed)
     # On server with PET and PCT in
     image_dir = "/hepgpu3-data1/dmcsween/DataTwoWay128/fixed"
     print("Load Data")
@@ -204,9 +202,11 @@ def train(tileSize=64, numPuzzles=23, num_permutations=25, batch_size=32):
     hamming_set = pd.read_csv("hamming_set.txt", sep=",", header=None)
     print(hamming_set)
     # Ignore moving and dvf
-    validation_dataset, validation_moving, validation_dvf, train_dataset, train_moving, train_dvf = helper.split_data(
-        image_array, moving_array, dvf_array, split_ratio=0.15)
-
+    # validation_dataset, validation_moving, validation_dvf, train_dataset, train_moving, train_dvf = helper.split_data(
+    #    image_array, moving_array, dvf_array, split_ratio=0.15)
+    kfold = StratifiedKFold(n_splits=10, shuffle=True, random_state=seed)
+    # Cross val scores
+    cvscores = []
     # Output all data from a training session into a dated folder
     outputPath = "./logs"
     # callbacks
@@ -219,30 +219,32 @@ def train(tileSize=64, numPuzzles=23, num_permutations=25, batch_size=32):
     tensorboard = TrainValTensorBoard(write_graph=False)
     callbacks = [checkpointer, reduce_lr_plateau, tensorboard]
     # BUILD Model
-    model = createSharedAlexnet3D(hammingSetSize=10)
-    for layer in model.layers:
-        print(layer.name, layer.output_shape)
-    opt = optimizers.Adam(lr=0.01)
-    plot_model(model, to_file='model.png')
-    print(model.summary())
-    model.compile(optimizer=opt,
-                  loss='categorical_crossentropy',
-                  metrics=['accuracy'])
+    for train, test in kfold.split(image_array, moving_array):
+        model = createSharedAlexnet3D(hammingSetSize=10)
+        """
+        for layer in model.layers:
+            print(layer.name, layer.output_shape)
+        plot_model(model, to_file='model.png')
+        print(model.summary())
+        """
+        opt = optimizers.Adam(lr=0.1)
+        model.compile(optimizer=opt,
+                      loss='categorical_crossentropy',
+                      metrics=['accuracy'])
 
-    model.fit_generator(generator=gen.generator(train_dataset, list_avail_keys, hamming_set, batch_size=batch_size, N=10),
-                        epochs=100, verbose=1,
-                        steps_per_epoch=train_dataset.shape[0] // batch_size,
-                        validation_data=gen.generator(
-        validation_dataset, list_avail_keys, hamming_set, batch_size=batch_size),
-        validation_steps=validation_dataset.shape[0] // batch_size, callbacks=callbacks)
-    model.save('model.h5')
+        model.fit_generator(generator=gen.generator(image_array[train], list_avail_keys, hamming_set, batch_size=batch_size, N=10),
+                            epochs=100, verbose=1,
+                            steps_per_epoch=image_array[train].shape[0] // batch_size,
+                            validation_data=gen.generator(
+            image_array[test], list_avail_keys, hamming_set, batch_size=batch_size),
+            validation_steps=image_array[test].shape[0] // batch_size, callbacks=callbacks)
 
-
-"""
+    """
     scores = model.evaluate_generator(
-        dataGenerator.generate(test_dataset),
+        gen.generator(test_dataset),
         steps=test_dataset.shape[0] //batch_size)
-"""
+    """
+    model.save('model.h5')
 
 
 def main(argv=None):
