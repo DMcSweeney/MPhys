@@ -220,7 +220,8 @@ def train(tileSize=64, numPuzzles=23, num_permutations=25, batch_size=32):
     tensorboard = TrainValTensorBoard(write_graph=False)
     callbacks = [checkpointer, reduce_lr_plateau, tensorboard]
     # BUILD Model
-    for train, test in kfold.split(image_array, moving_array):
+    n_samples = image_array.shape[0]
+    for train, test in kfold.split(np.zeros(n_samples), np.zeros(n_samples)):
         model = createSharedAlexnet3D(hammingSetSize=10)
         """
         for layer in model.layers:
