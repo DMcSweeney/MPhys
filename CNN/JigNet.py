@@ -9,6 +9,7 @@ from customTensorBoard import TrainValTensorBoard
 import dataGenerator as gen
 import JigsawHelpers as help
 import pandas as pd
+import numpy as np
 from sklearn.model_selection import StratifiedKFold
 #  from keras.utils import plot_model
 
