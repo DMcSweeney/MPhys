@@ -53,7 +53,7 @@ def createSharedAlexnet3D(tileSize=25, numPuzzles=23, hammingSetSize=25):
 
     fc6 = Dense(4096, activation='relu', name="FullyConnected_1")
     fc7 = Dense(4096, activation='relu', name="FullyConnected_2")
-    fc8 = Dense(hammingSetSize, activation='sigmoid', name="ClassificationOutput")
+    fc8 = Dense(hammingSetSize, activation='softmax', name="ClassificationOutput")
 
     cnvd1 = [conv1(a) for a in input_layers]
     bnd1 = [bn1(a) for a in cnvd1]
@@ -275,8 +275,8 @@ def infer(batch_size=2):
 
 
 def main(argv=None):
-    train()
-    # infer()
+    # train()
+    infer()
 
 
 if __name__ == '__main__':
