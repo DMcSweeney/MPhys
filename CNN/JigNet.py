@@ -232,10 +232,10 @@ def train(tileSize=64, numPuzzles=23, num_permutations=25, batch_size=2):
     model.fit_generator(generator=gen.predict_generator(train_dataset, list_avail_keys, hamming_set, hamming_idx=0, batch_size=batch_size, N=10),
                         epochs=100, verbose=1,
                         steps_per_epoch=train_dataset.shape[0] // batch_size,
-                        validation_data=gen.generator(
-        validation_dataset, list_avail_keys, hamming_set, batch_size=batch_size),
+                        validation_data=gen.predict_generator(
+        validation_dataset, list_avail_keys, hamming_set, hamming_idx=0, batch_size=batch_size),
         validation_steps=validation_dataset.shape[0] // batch_size, callbacks=callbacks)
-    model.save('model_2.h5')
+    model.save('model_3.h5')
 
 
 """
@@ -266,7 +266,7 @@ def infer(batch_size=2):
 
     print('Load models')
 
-    model = load_model('model_2.h5')
+    model = load_model('model_3.h5')
     opt = optimizers.Adam(lr=0.01)
     model.compile(optimizer=opt, loss='categorical_crossentropy', metrics=["accuracy"])
     output = model.predict_generator(generator=gen.predict_generator(
