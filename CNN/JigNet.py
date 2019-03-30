@@ -235,7 +235,7 @@ def train(tileSize=64, numPuzzles=23, num_permutations=25, batch_size=2):
                         validation_data=gen.generator(
         validation_dataset, list_avail_keys, hamming_set, batch_size=batch_size),
         validation_steps=validation_dataset.shape[0] // batch_size, callbacks=callbacks)
-    model.save('model.h5')
+    model.save('model_1.h5')
 
 
 """
@@ -266,7 +266,7 @@ def infer(batch_size=2):
 
     print('Load models')
 
-    model = load_model('model.h5')
+    model = load_model('model_1.h5')
     opt = optimizers.Adam(lr=0.01)
     model.compile(optimizer=opt, loss='categorical_crossentropy', metrics=["accuracy"])
     output = model.predict_generator(generator=gen.predict_generator(
@@ -275,7 +275,7 @@ def infer(batch_size=2):
 
 
 def main(argv=None):
-    # train()
+    train()
     infer()
 
 
