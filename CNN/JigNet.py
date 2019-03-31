@@ -266,7 +266,7 @@ def infer(batch_size=2):
 
     print('Load models')
 
-    model = load_model('model_3.h5')
+    model = load_model('model_4.h5')
     opt = optimizers.Adam(lr=0.01)
     model.compile(optimizer=opt, loss='categorical_crossentropy', metrics=["accuracy"])
     output = model.predict_generator(generator=gen.predict_generator(
@@ -275,8 +275,8 @@ def infer(batch_size=2):
 
 
 def main(argv=None):
-    train()
-    # infer()
+    # train()
+    infer()
 
 
 if __name__ == '__main__':
