@@ -53,7 +53,9 @@ def generator(image_array, avail_keys, hamming_set, hamming_idx=None, crop_size=
                 array_list[i, n, ...] = val
             idx_array[i, random_idx] = 1
         # return array_list, idx_array, out_dict, fix_dict
-        yield [{'alexnet_input_{}'.format(n): array_list[:, n, ...] for n in range(len(avail_keys))}, {'ClassificationOutput': idx_array}]
+        inputs = [array_list[:, n, ...] for n in range(len(avail_keys))]
+        yield inputs, idx_array
+        # yield [{'alexnet_input_{}'.format(n): array_list[:, n, ...] for n in range(len(avail_keys))}, {'ClassificationOutput': idx_array}]
 
 
 def predict_generator(image_array, avail_keys, hamming_set, hamming_idx=None, crop_size=25, batch_size=8, N=25):

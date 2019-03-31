@@ -230,7 +230,7 @@ def train(tileSize=64, numPuzzles=23, num_permutations=25, batch_size=2):
                   metrics=['accuracy'])
 
     model.fit_generator(generator=gen.generator(train_dataset, list_avail_keys, hamming_set, batch_size=batch_size, N=10),
-                        epochs=10000, verbose=1,
+                        epochs=100, verbose=1,
                         steps_per_epoch=train_dataset.shape[0] // batch_size,
                         validation_data=gen.generator(
         validation_dataset, list_avail_keys, hamming_set, batch_size=batch_size),
