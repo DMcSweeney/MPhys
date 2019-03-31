@@ -1,6 +1,7 @@
 """
 Script containing generator for JigNet
 """
+from keras.utils import Sequence
 import numpy as np
 import JigsawHelpers as help
 import helpers as helper
@@ -46,7 +47,6 @@ def generator(image_array, avail_keys, hamming_set, hamming_idx=None, crop_size=
             cropped_dict = help.random_div(shuffle_dict)
             # Shuffle according to hamming
             # Randomly assign labels to cells
-            # print("Permutation:", hamming_set[random_idx])
             # dummy_dict = helper.dummy_dict(cropped_dict)
             out_dict = help.shuffle_jigsaw(cropped_dict, hamming_set.loc[random_idx, :].values)
             for n, val in enumerate(out_dict.values()):
@@ -89,6 +89,18 @@ def predict_generator(image_array, avail_keys, hamming_set, hamming_idx=None, cr
         inputs = [array_list[:, n, ...] for n in range(len(avail_keys))]
         print("Len In:", len(inputs))
         yield inputs, idx_array
+
+
+class mygenerator(Sequence):
+    def __init__(self, image_set, batch_size):
+        self.x = image_set
+        self.batch_size = batch_size
+
+    def __len__(self):
+        return int(np.ceil(len(self.x) / float(self.batch_size)))
+
+    def __getitem__(self, idx):
+        batch_x = self.x[idx * self.batch_size:(idx + 1) * self.batch_size]
 
 
 def main(N=10, batch_size=2):

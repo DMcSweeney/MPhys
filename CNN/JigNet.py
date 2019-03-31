@@ -266,17 +266,17 @@ def infer(batch_size=2):
 
     print('Load models')
 
-    model = load_model('model_4.h5')
+    model = load_model('model.h5')
     opt = optimizers.Adam(lr=0.01)
     model.compile(optimizer=opt, loss='categorical_crossentropy', metrics=["accuracy"])
     output = model.predict_generator(generator=gen.predict_generator(
-        validation_dataset, list_avail_keys, hamming_set, hamming_idx=0, batch_size=batch_size, N=10), steps=1, workers=2, verbose=1)
+        validation_dataset, list_avail_keys, hamming_set, hamming_idx=0, batch_size=batch_size, N=10), steps=3, workers=2, verbose=1)
     print(output)
 
 
 def main(argv=None):
-    train()
-    # infer()
+    # train()
+    infer()
 
 
 if __name__ == '__main__':
