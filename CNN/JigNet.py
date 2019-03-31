@@ -275,8 +275,8 @@ def infer(batch_size=2):
 
 
 def main(argv=None):
-    # train()
-    infer()
+    train()
+    # infer()
 
 
 if __name__ == '__main__':
