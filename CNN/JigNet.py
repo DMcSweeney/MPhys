@@ -111,8 +111,8 @@ def createShortSharedAlexnet3D(tileSize=25, numPuzzles=23, hammingSetSize=25):
     conv5 = Conv3D(256, (3, 3, 3), padding='same', name="Convolutional_5")
     bn5 = BatchNormalization(name="BatchNorm_5")
 
-    fc6 = Dense(4096, activation='relu', name="FullyConnected_1")
-    fc7 = Dense(4096, activation='relu', name="FullyConnected_2")
+    fc6 = Dense(1024, activation='relu', name="FullyConnected_1")
+    fc7 = Dense(1024, activation='relu', name="FullyConnected_2")
     fc8 = Dense(hammingSetSize, activation='softmax', name="ClassificationOutput")
 
     cnvd1 = [conv1(a) for a in input_layers]
@@ -235,7 +235,7 @@ def train(tileSize=64, numPuzzles=23, num_permutations=25, batch_size=2):
                         validation_data=gen.generator(
         validation_dataset, list_avail_keys, hamming_set, batch_size=batch_size),
         validation_steps=validation_dataset.shape[0] // batch_size, callbacks=callbacks)
-    model.save('model_5.h5')
+    model.save('model_6.h5')
 
 
 """
