@@ -222,7 +222,7 @@ def train(tileSize=64, numPuzzles=23, num_permutations=25, batch_size=2):
     model = createSharedAlexnet3D(hammingSetSize=10)
     for layer in model.layers:
         print(layer.name, layer.output_shape)
-    opt = optimizers.Adam(lr=0.01)
+    opt = optimizers.SGD(lr=0.01)
     plot_model(model, to_file='model.png')
     print(model.summary())
     model.compile(optimizer=opt,
@@ -235,7 +235,7 @@ def train(tileSize=64, numPuzzles=23, num_permutations=25, batch_size=2):
                         validation_data=gen.generator(
         validation_dataset, list_avail_keys, hamming_set, batch_size=batch_size),
         validation_steps=validation_dataset.shape[0] // batch_size, callbacks=callbacks)
-    model.save('model_4.h5')
+    model.save('model_5.h5')
 
 
 """
@@ -275,8 +275,8 @@ def infer(batch_size=2):
 
 
 def main(argv=None):
-    # train()
-    infer()
+    train()
+    # infer()
 
 
 if __name__ == '__main__':
