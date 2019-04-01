@@ -70,7 +70,7 @@ def predict_generator(image_array, avail_keys, hamming_set, hamming_idx=None, cr
             if hamming_idx is None:
                 random_idx = random.randrange(hamming_set.shape[0])
             else:
-                random_idx = hamming_idx
+                random_idx = int(hamming_idx[i])
             # Divide image into cubes
             cells = help.divide_input(image_array[np.newaxis, rand_idx])
             # Figure out which should move
