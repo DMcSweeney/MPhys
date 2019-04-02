@@ -150,7 +150,7 @@ def train(tileSize=64, numPuzzles=23, num_permutations=10, batch_size=32):
     # Output all data from a training session into a dated folder
     outputPath = "./logs"
     # callbacks
-    checkpoint = ModelCheckpoint(outputPath + 'best_model.h5', monitor='val_acc',
+    checkpoint = ModelCheckpoint(outputPath + '/best_model.h5', monitor='val_acc',
                                  verbose=1, save_best_only=True, period=1)
     reduce_lr_plateau = ReduceLROnPlateau(monitor='val_acc', patience=3, verbose=1)
     # early_stop = EarlyStopping(monitor='val_acc', patience=5, verbose=1)
