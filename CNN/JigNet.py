@@ -136,9 +136,12 @@ def train(tileSize=64, numPuzzles=23, num_permutations=10, batch_size=32):
     hamming_set = pd.read_csv("hamming_set.txt", sep=",", header=None)
     print(hamming_set)
 
+    fixed_array, moving_array, dvf_array = helper.shuffle_inplace(
+        image_array, moving_array, dvf_array)
+
     # Ignore moving and dvf
     validation_dataset, validation_moving, validation_dvf, train_dataset, train_moving, train_dvf = helper.split_data(
-        image_array, moving_array, dvf_array, split_ratio=0.15)
+        fixed_array, moving_array, dvf_array, split_ratio=0.15)
 
     # Output all data from a training session into a dated folder
     outputPath = "./logs"
