@@ -29,7 +29,7 @@ def infer(batch_size=2):
     print("Valid Shape:", validation_dataset.shape)
     normalised_dataset = helper.normalise(validation_dataset)
     print('Load models')
-    idx_list = [2, 7]
+    idx_list = [0, 9]
     K.clear_session()
     model = load_model('./logs/best_model.h5')
     myPredictGen = gen.predict_generator(
