@@ -66,7 +66,6 @@ def generator(image_array, avail_keys, hamming_set, hamming_idx=None, crop_size=
 def predict_generator(image_array, avail_keys, hamming_set, hamming_idx=None, crop_size=25, batch_size=8, N=25):
     # Divide array into cubes
     while True:
-        idx_array = np.zeros((batch_size, hamming_set.shape[0]), dtype=np.uint8)
         array_list = np.zeros((batch_size, len(avail_keys), crop_size, crop_size, crop_size, 1))
         for i in range(batch_size):
             # rand_idx = random image
@@ -90,10 +89,9 @@ def predict_generator(image_array, avail_keys, hamming_set, hamming_idx=None, cr
             out_dict = help.shuffle_jigsaw(cropped_dict, hamming_set.loc[random_idx, :].values)
             for n, val in enumerate(out_dict.values()):
                 array_list[i, n, ...] = val
-            idx_array[i, random_idx] = 1
         # return array_list, idx_array, out_dict, fix_dict
         inputs = [array_list[:, n, ...] for n in range(len(avail_keys))]
-        print("Len In:", len(inputs))
+        print("In shape:", inputs[0].shape)
         yield inputs
 
 
