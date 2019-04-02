@@ -31,10 +31,11 @@ def infer(batch_size=2):
     idx_list = [4, 5]
     K.clear_session()
     model = load_model('model_8.h5')
+    myPredictGen = gen.predict_generator(
+        validation_dataset, list_avail_keys, hamming_set, hamming_idx=idx_list, batch_size=batch_size, N=10)
     opt = optimizers.SGD(lr=0.01, momentum=0.9)
     model.compile(optimizer=opt, loss='categorical_crossentropy', metrics=["accuracy"])
-    output = model.predict_generator(generator=gen.predict_generator(
-        validation_dataset, list_avail_keys, hamming_set, hamming_idx=idx_list, batch_size=batch_size, N=10), steps=3, verbose=1)
+    output = model.predict_generator(generator=myPredictGen, steps=3, verbose=1)
     print(output)
 
 
