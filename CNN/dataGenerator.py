@@ -1,7 +1,7 @@
 """
 Script containing generator for JigNet
 """
-from keras.utils import Sequence
+#from keras.utils import Sequence
 import numpy as np
 import JigsawHelpers as help
 import helpers as helper
@@ -18,8 +18,8 @@ dvf_dir = "/hepgpu3-data1/dmcsween/DataTwoWay128/DVF"
 fixed_dir = "/mnt/e/MPhys/Data128/PlanningCT"
 moving_dir = "/mnt/e/MPhys/Data128/PET_Rigid"
 dvf_dir = "/mnt/e/MPhys/Data128/DVF"
-"""
-"""
+
+
 fixed_dir = "D:\\Mphys\\Nifty\\PET"
 moving_dir = "D:\\Mphys\\Nifty\\PCT"
 dvf_dir = "D:\\Mphys\\Nifty\\DVF"
@@ -95,6 +95,7 @@ def predict_generator(image_array, avail_keys, hamming_set, hamming_idx=None, cr
         yield inputs, idx_array
 
 
+"""
 class mygenerator(Sequence):
     def __init__(self, image_set, batch_size):
         self.x = image_set
@@ -105,6 +106,7 @@ class mygenerator(Sequence):
 
     def __getitem__(self, idx):
         batch_x = self.x[idx * self.batch_size:(idx + 1) * self.batch_size]
+"""
 
 
 def main(N=10, batch_size=2):
