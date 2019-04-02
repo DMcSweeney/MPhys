@@ -164,7 +164,7 @@ def train(tileSize=64, numPuzzles=23, num_permutations=10, batch_size=2):
 
     model.fit_generator(generator=gen.generator(train_dataset, list_avail_keys, hamming_set, batch_size=batch_size, N=num_permutations),
                         epochs=20, verbose=1,
-                        steps_per_epoch=train.dataset.shape[0] // batch_size,
+                        steps_per_epoch=train_dataset.shape[0] // batch_size,
                         validation_data=gen.generator(
         validation_dataset, list_avail_keys, hamming_set, batch_size=batch_size),
         validation_steps=validation_dataset.shape[0] // batch_size, callbacks=callbacks)
