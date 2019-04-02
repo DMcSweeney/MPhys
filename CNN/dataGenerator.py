@@ -8,7 +8,7 @@ import helpers as helper
 import random
 import hamming
 import pandas as pd
-"""
+
 # On server
 fixed_dir = "/hepgpu3-data1/dmcsween/DataTwoWay128/fixed"
 moving_dir = "/hepgpu3-data1/dmcsween/DataTwoWay128/moving"
@@ -19,7 +19,7 @@ fixed_dir = "/mnt/e/MPhys/Data128/PlanningCT"
 moving_dir = "/mnt/e/MPhys/Data128/PET_Rigid"
 dvf_dir = "/mnt/e/MPhys/Data128/DVF"
 """
-
+"""
 fixed_dir = "D:\\Mphys\\Nifty\\PET"
 moving_dir = "D:\\Mphys\\Nifty\\PCT"
 dvf_dir = "D:\\Mphys\\Nifty\\DVF"
