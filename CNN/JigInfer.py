@@ -1,5 +1,6 @@
 from keras import optimizers
 from keras.models import load_model
+from keras import backend as K
 import dataLoader as load
 import dataGenerator as gen
 import JigsawHelpers as help
@@ -28,6 +29,7 @@ def infer(batch_size=2):
 
     print('Load models')
     idx_list = [0, 1]
+    K.clear_session()
     model = load_model('model.h5')
     opt = optimizers.SGD(lr=0.01, momentum=0.9)
     model.compile(optimizer=opt, loss='categorical_crossentropy', metrics=["accuracy"])
