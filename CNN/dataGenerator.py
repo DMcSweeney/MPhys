@@ -28,17 +28,21 @@ dvf_dir = "D:\\Mphys\\Nifty\\DVF"
 
 def generator(image_array, avail_keys, hamming_set, hamming_idx=None, crop_size=25, batch_size=8, N=25):
     # Divide array into cubes
+    rand_idx_list = []
+    random_idx_list = []
     while True:
         idx_array = np.zeros((batch_size, hamming_set.shape[0]), dtype=np.uint8)
         array_list = np.zeros((batch_size, len(avail_keys), crop_size, crop_size, crop_size, 1))
         for i in range(batch_size):
             # rand_idx = random image
             rand_idx = random.randrange(image_array.shape[0])
+            rand_idx_list.append(rand_idx)
             # random_idx = random permutation
             if hamming_idx is None:
                 random_idx = random.randrange(hamming_set.shape[0])
             else:
                 random_idx = int(hamming_idx[i])
+            random_idx_list.append(random_idx)
             # Divide image into cubes
             cells = help.divide_input(image_array[np.newaxis, rand_idx])
             # Figure out which should move
@@ -52,10 +56,10 @@ def generator(image_array, avail_keys, hamming_set, hamming_idx=None, crop_size=
             for n, val in enumerate(out_dict.values()):
                 array_list[i, n, ...] = val
             idx_array[i, random_idx] = 1
-        # return array_list, idx_array, out_dict, fix_dict
+
         inputs = [array_list[:, n, ...] for n in range(len(avail_keys))]
-        yield inputs, idx_array
-        # yield [{'alexnet_input_{}'.format(n): array_list[:, n, ...] for n in range(len(avail_keys))}, {'ClassificationOutput': idx_array}]
+        # yield inputs, idx_array
+        return inputs, idx_array, random_idx_list, rand_idx_list
 
 
 def predict_generator(image_array, avail_keys, hamming_set, hamming_idx=None, crop_size=25, batch_size=8, N=25):
@@ -116,10 +120,11 @@ def main(N=10, batch_size=2):
     print("Generator")
     # list_arrays, index_array, shuffle_dict, fix_dict = generator(
     #    fixed_array, avail_keys, hamming_set, batch_size=2, N=10)
-    mygenerator = generator(
-        fixed_array, avail_keys, hamming_set, batch_size=2, N=10)
-    for i in mygenerator:
-        print(i)
+    inputs, idx_array, random_idx_list, rand_idx_list = generator(
+        fixed_array, avail_keys, hamming_set, batch_size=32, N=10)
+    np.savetxt("image_idx.txt", rand_idx_list, delimiter=",", fmt='%1.2i')
+    np.savetxt("perm_idx.txt", random_idx_list, delimiter=",", fmt='%1.2i')
+
     """
     # cropped_fixed = help.random_div(fix_dict)
     print("Solve puzzle number:", index_array)
