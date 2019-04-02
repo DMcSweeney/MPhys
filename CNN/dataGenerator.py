@@ -42,6 +42,7 @@ def generator(image_array, avail_keys, hamming_set, hamming_idx=None, crop_size=
                 random_idx = random.randrange(hamming_set.shape[0])
             else:
                 random_idx = int(hamming_idx[i])
+
             random_idx_list.append(random_idx)
             # Divide image into cubes
             cells = help.divide_input(image_array[np.newaxis, rand_idx])
@@ -75,6 +76,7 @@ def predict_generator(image_array, avail_keys, hamming_set, hamming_idx=None, cr
                 random_idx = random.randrange(hamming_set.shape[0])
             else:
                 random_idx = int(hamming_idx[i])
+            print(random_idx)
             # Divide image into cubes
             cells = help.divide_input(image_array[np.newaxis, rand_idx])
             # Figure out which should move
