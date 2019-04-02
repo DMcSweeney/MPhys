@@ -31,7 +31,7 @@ def infer(batch_size=2):
     print('Load models')
     idx_list = [4, 5]
     K.clear_session()
-    model = load_model('model_9.h5')
+    model = load_model('./logs/best_model.h5')
     myPredictGen = gen.predict_generator(
         normalised_dataset, list_avail_keys, hamming_set, hamming_idx=idx_list, batch_size=batch_size, N=10)
     opt = optimizers.SGD(lr=0.01, momentum=0.9)
