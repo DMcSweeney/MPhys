@@ -28,7 +28,7 @@ def infer(batch_size=2):
         image_array, moving_array, dvf_array, split_ratio=0.15)
 
     print('Load models')
-    idx_list = [0, 1]
+    idx_list = [4, 5]
     K.clear_session()
     model = load_model('model_8.h5')
     opt = optimizers.SGD(lr=0.01, momentum=0.9)
