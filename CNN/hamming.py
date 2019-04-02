@@ -6,7 +6,7 @@ import numpy as np
 import random
 import time
 #from numba import jit
-#import pandas as pd
+import pandas as pd
 
 
 def HIS_gen_max_hamming_set(N, moving_cells):
@@ -119,9 +119,9 @@ def TOM_gen_max_hamming_set(N, moving_cells):
             current_permutation = np.random.permutation(moving_cells)
             current_permutation_array = np.asarray(current_permutation)
 
-            if  hamming_distance(current_permutation_array, moving_cells_array) > hamming_distance(permutation_array[k], moving_cells_array):
-                    permutation_array[k] = current_permutation
-                    hamming_dist.append(hamming_distance(current_permutation_array, moving_cells_array))
+            if hamming_distance(current_permutation_array, moving_cells_array) > hamming_distance(permutation_array[k], moving_cells_array):
+                permutation_array[k] = current_permutation
+                hamming_dist.append(hamming_distance(current_permutation_array, moving_cells_array))
 
     print(permutation_array)
     print(hamming_dist)
@@ -129,17 +129,19 @@ def TOM_gen_max_hamming_set(N, moving_cells):
 
 
 def main(argv=None):
+    """
     N = 1000
     avail_keys = [n for n in range(23)]
     print(avail_keys)
     max_dist_set, dist_array = TOM_gen_max_hamming_set(N, avail_keys)
     np.savetxt("hamming_set.txt", max_dist_set, delimiter=",", fmt='%1.2i')
+    """
 
-    """
-    hamming_file = './hamming_distances.'
-    df1 = pd.read_csv(hamming_file)
-    df1.max(axis=0)
-    """
+    hamming_file = './hamming_set.txt'
+    df1 = pd.read_csv(hamming_file, sep=",", header=None)
+    print(df1)
+    df = df1.loc[0, :].values
+    print("Sliced", df)
 
 
 if __name__ == '__main__':
