@@ -30,7 +30,7 @@ def infer(batch_size=2):
     print('Load models')
     idx_list = [0, 1]
     K.clear_session()
-    model = load_model('model.h5')
+    model = load_model('model_8.h5')
     opt = optimizers.SGD(lr=0.01, momentum=0.9)
     model.compile(optimizer=opt, loss='categorical_crossentropy', metrics=["accuracy"])
     output = model.predict_generator(generator=gen.predict_generator(
