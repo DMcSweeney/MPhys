@@ -2,6 +2,7 @@ from keras import optimizers
 from keras.models import load_model
 import dataLoader as load
 import dataGenerator as gen
+import JigsawHelpers as help
 import pandas as pd
 
 
