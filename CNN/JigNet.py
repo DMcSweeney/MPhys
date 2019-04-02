@@ -97,11 +97,13 @@ def createAlexnet3D(input_shape=(25, 25, 25, 1)):
     x = MaxPooling3D(pool_size=(3, 3, 3), strides=(2, 2, 2))(x)
     x = Conv3D(384, (3, 3, 3), activation='relu', padding='same')(x)
     x = BatchNormalization()(x)
-    x = MaxPooling3D(pool_size=(3, 3, 3), strides=(2, 2, 2))(x)
-    x = Conv3D(384, (3, 3, 3), strides=(1, 1, 1), padding='same')(x)
-    x = BatchNormalization()(x)
-    x = Conv3D(256, (3, 3, 3), padding='same')(x)
-    x = BatchNormalization()(x)
+
+    # x = MaxPooling3D(pool_size=(3, 3, 3), strides=(2, 2, 2))(x)
+    # x = Conv3D(384, (3, 3, 3), strides=(1, 1, 1), padding='same')(x)
+    # x = BatchNormalization()(x)
+    # x = Conv3D(256, (3, 3, 3), padding='same')(x)
+    # x = BatchNormalization()(x)
+
     x = Flatten()(x)
     outputLayer = Dense(1024, activation='relu')(x)
     an3D = Model(inputs=[inputLayer], outputs=outputLayer)
@@ -115,8 +117,7 @@ def createSharedAlexnet3D_onemodel(input_shape=(25, 25, 25, 1), nInputs=23, ncla
     an3D = createAlexnet3D(input_shape)
     fc6 = Concatenate()([an3D(x) for x in input_layers])
     fc7 = Dense(1024, activation='relu')(fc6)
-    dp1 = Dropout(0.5)(fc7)
-    fc8 = Dense(nclass, activation='softmax', name="ClassificationOutput")(dp1)
+    fc8 = Dense(nclass, activation='softmax', name="ClassificationOutput")(fc7)
     model = Model(inputs=input_layers, output=fc8)
     return model
 
@@ -151,14 +152,12 @@ def train(tileSize=64, numPuzzles=23, num_permutations=10, batch_size=32):
     # Output all data from a training session into a dated folder
     outputPath = "./logs"
     # callbacks
-    checkpointer = ModelCheckpoint(outputPath + '/weights_improvement.hdf5',
-                                   monitor='val_acc',
-                                   verbose=1,
-                                   save_best_only=True, period=1)
+    checkpoint = ModelCheckpoint(outputPath + 'best_model.h5', monitor='val_acc',
+                                 verbose=1, save_best_only=True, period=1)
     reduce_lr_plateau = ReduceLROnPlateau(monitor='val_acc', patience=3, verbose=1)
     # early_stop = EarlyStopping(monitor='val_acc', patience=5, verbose=1)
     tensorboard = TrainValTensorBoard(write_graph=False)
-    callbacks = [checkpointer, reduce_lr_plateau, tensorboard]
+    callbacks = [checkpoint, reduce_lr_plateau, tensorboard]
     # BUILD Model
     model = createSharedAlexnet3D_onemodel()
     for layer in model.layers:
