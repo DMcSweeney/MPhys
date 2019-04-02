@@ -159,7 +159,7 @@ def train(tileSize=64, numPuzzles=23, num_permutations=10, batch_size=4):
     plot_model(model, to_file='model.png')
     print(model.summary())
     model.compile(optimizer=opt,
-                  loss='binary_crossentropy',
+                  loss='categorical_crossentropy',
                   metrics=['accuracy'])
 
     model.fit_generator(generator=gen.generator(train_dataset, list_avail_keys, hamming_set, batch_size=batch_size, N=num_permutations),
