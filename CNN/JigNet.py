@@ -103,59 +103,59 @@ def createAlexnet3D(input_shape=(32, 64, 64, 1)):
     x = Conv3D(256, (3, 3, 3), padding='same')(x)
     x = BatchNormalization()(x)
     x = Flatten()(x)
-    outputLayer = Dense(1024, activation='relu')(x
-    an3D=Model(inputs=[inputLayer], outputs=outputLayer)
+    outputLayer = Dense(1024, activation='relu')(x)
+    an3D = Model(inputs=[inputLayer], outputs=outputLayer)
     return an3D
-
 
 
 def createSharedAlexnet3D_onemodel(input_shape=(25, 25, 25, 1), nInputs=23, nclass=10):
 
-    input_layers=[Input(shape=input_shape, name="alexnet_input_{}".format(n))
-                        for n in range(nInputs)]
-    an3D=createAlexnet3D(input_shape)
-    fc6=Concatenate()([an3D(x) for x in input_layers])
-    fc7=Dense(1024, activation='relu')(fc6)
-    fc8=Dense(nclass, activation='softmax', name="ClassificationOutput")(fc7)
-    model=Model(inputs=input_layers, output=fc8)
+    input_layers = [Input(shape=input_shape, name="alexnet_input_{}".format(n))
+                    for n in range(nInputs)]
+    an3D = createAlexnet3D(input_shape)
+    fc6 = Concatenate()([an3D(x) for x in input_layers])
+    fc7 = Dense(1024, activation='relu')(fc6)
+    fc8 = Dense(nclass, activation='softmax', name="ClassificationOutput")(fc7)
+    model = Model(inputs=input_layers, output=fc8)
     return model
+
 
 def train(tileSize=64, numPuzzles=23, num_permutations=10, batch_size=2):
     # On server with PET and PCT in
-    image_dir="/hepgpu3-data1/dmcsween/DataTwoWay128/fixed"
+    image_dir = "/hepgpu3-data1/dmcsween/DataTwoWay128/fixed"
     print("Load Data")
-    image_data, __image, __label=load.data_reader(image_dir, image_dir, image_dir)
+    image_data, __image, __label = load.data_reader(image_dir, image_dir, image_dir)
 
-    image_array, image_affine=image_data.get_data()
-    moving_array, moving_affine=__image.get_data()
-    dvf_array, dvf_affine=__label.get_data()
+    image_array, image_affine = image_data.get_data()
+    moving_array, moving_affine = __image.get_data()
+    dvf_array, dvf_affine = __label.get_data()
 
-    list_avail_keys=help.get_moveable_keys(image_array)
+    list_avail_keys = help.get_moveable_keys(image_array)
     # Get hamming set
     print("Load hamming Set")
-    hamming_set=pd.read_csv("hamming_set.txt", sep=",", header=None)
+    hamming_set = pd.read_csv("hamming_set.txt", sep=",", header=None)
     print(hamming_set)
 
     # Ignore moving and dvf
-    validation_dataset, validation_moving, validation_dvf, train_dataset, train_moving, train_dvf=helper.split_data(
+    validation_dataset, validation_moving, validation_dvf, train_dataset, train_moving, train_dvf = helper.split_data(
         image_array, moving_array, dvf_array, split_ratio=0.15)
 
     # Output all data from a training session into a dated folder
-    outputPath="./logs"
+    outputPath = "./logs"
     # callbacks
-    checkpointer=ModelCheckpoint(outputPath + '/weights_improvement.hdf5',
+    checkpointer = ModelCheckpoint(outputPath + '/weights_improvement.hdf5',
                                    monitor='val_acc',
                                    verbose=1,
                                    save_best_only=True, period=1)
-    reduce_lr_plateau=ReduceLROnPlateau(monitor='val_acc', patience=3, verbose=1)
+    reduce_lr_plateau = ReduceLROnPlateau(monitor='val_acc', patience=3, verbose=1)
     # early_stop = EarlyStopping(monitor='val_acc', patience=5, verbose=1)
-    tensorboard=TrainValTensorBoard(write_graph=False)
-    callbacks=[checkpointer, reduce_lr_plateau, tensorboard]
+    tensorboard = TrainValTensorBoard(write_graph=False)
+    callbacks = [checkpointer, reduce_lr_plateau, tensorboard]
     # BUILD Model
-    model=createSharedAlexnet3D_onemodel()
+    model = createSharedAlexnet3D_onemodel()
     for layer in model.layers:
         print(layer.name, layer.output_shape)
-    opt=optimizers.SGD(lr=0.01)
+    opt = optimizers.SGD(lr=0.01)
     plot_model(model, to_file='model.png')
     print(model.summary())
     model.compile(optimizer=opt,
@@ -180,29 +180,29 @@ def train(tileSize=64, numPuzzles=23, num_permutations=10, batch_size=2):
 
 def infer(batch_size=2):
     # On server with PET and PCT in
-    image_dir="/hepgpu3-data1/dmcsween/DataTwoWay128/fixed"
+    image_dir = "/hepgpu3-data1/dmcsween/DataTwoWay128/fixed"
     print("Load Data")
-    image_data, __image, __label=load.data_reader(image_dir, image_dir, image_dir)
+    image_data, __image, __label = load.data_reader(image_dir, image_dir, image_dir)
 
-    image_array, image_affine=image_data.get_data()
-    moving_array, moving_affine=__image.get_data()
-    dvf_array, dvf_affine=__label.get_data()
+    image_array, image_affine = image_data.get_data()
+    moving_array, moving_affine = __image.get_data()
+    dvf_array, dvf_affine = __label.get_data()
 
-    list_avail_keys=help.get_moveable_keys(image_array)
+    list_avail_keys = help.get_moveable_keys(image_array)
     # Get hamming set
     print("Load hamming Set")
-    hamming_set=pd.read_csv("hamming_set.txt", sep=",", header=None)
+    hamming_set = pd.read_csv("hamming_set.txt", sep=",", header=None)
     print(hamming_set)
     # Ignore moving and dvf
-    validation_dataset, validation_moving, validation_dvf, train_dataset, train_moving, train_dvf=helper.split_data(
+    validation_dataset, validation_moving, validation_dvf, train_dataset, train_moving, train_dvf = helper.split_data(
         image_array, moving_array, dvf_array, split_ratio=0.15)
 
     print('Load models')
-    idx_list=[0, 1]
-    model=load_model('model.h5')
-    opt=optimizers.Adam(lr=0.01)
+    idx_list = [0, 1]
+    model = load_model('model.h5')
+    opt = optimizers.Adam(lr=0.01)
     model.compile(optimizer=opt, loss='categorical_crossentropy', metrics=["accuracy"])
-    output=model.predict_generator(generator=gen.predict_generator(
+    output = model.predict_generator(generator=gen.predict_generator(
         validation_dataset, list_avail_keys, hamming_set, hamming_idx=idx_list, batch_size=batch_size, N=10), steps=3, verbose=1)
     print(output)
 
