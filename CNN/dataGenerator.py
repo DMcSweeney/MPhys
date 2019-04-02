@@ -94,7 +94,7 @@ def predict_generator(image_array, avail_keys, hamming_set, hamming_idx=None, cr
         # return array_list, idx_array, out_dict, fix_dict
         inputs = [array_list[:, n, ...] for n in range(len(avail_keys))]
         print("Len In:", len(inputs))
-        yield inputs, idx_array
+        yield inputs
 
 
 """
