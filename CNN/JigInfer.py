@@ -26,13 +26,14 @@ def infer(batch_size=2):
     # Ignore moving and dvf
     validation_dataset, validation_moving, validation_dvf, train_dataset, train_moving, train_dvf = helper.split_data(
         image_array, moving_array, dvf_array, split_ratio=0.15)
-
+    print("Valid Shape:", validation_dataset.shape)
+    normalised_dataset = helper.normalise(validation_dataset)
     print('Load models')
     idx_list = [4, 5]
     K.clear_session()
     model = load_model('model_8.h5')
     myPredictGen = gen.predict_generator(
-        validation_dataset, list_avail_keys, hamming_set, hamming_idx=idx_list, batch_size=batch_size, N=10)
+        normalised_dataset, list_avail_keys, hamming_set, hamming_idx=idx_list, batch_size=batch_size, N=10)
     opt = optimizers.SGD(lr=0.01, momentum=0.9)
     model.compile(optimizer=opt, loss='categorical_crossentropy', metrics=["accuracy"])
     output = model.predict_generator(generator=myPredictGen, steps=3, verbose=1)

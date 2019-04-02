@@ -63,19 +63,21 @@ def generator(image_array, avail_keys, hamming_set, hamming_idx=None, crop_size=
         return inputs, idx_array, random_idx_list, rand_idx_list
 
 
-def predict_generator(image_array, avail_keys, hamming_set, hamming_idx=None, crop_size=25, batch_size=8, N=25):
+def predict_generator(image_array, avail_keys, hamming_set, hamming_idx=None, image_idx=None, crop_size=25, batch_size=8, N=25):
     # Divide array into cubes
     while True:
         array_list = np.zeros((batch_size, len(avail_keys), crop_size, crop_size, crop_size, 1))
         for i in range(batch_size):
             # rand_idx = random image
-            rand_idx = random.randrange(image_array.shape[0])
+            if image_idx is None:
+                rand_idx = random.randrange(image_array.shape[0])
+            else:
+                rand_idx = int(image_idx[i])
             # random_idx = random permutation
             if hamming_idx is None:
                 random_idx = random.randrange(hamming_set.shape[0])
             else:
                 random_idx = int(hamming_idx[i])
-            print(random_idx)
             # Divide image into cubes
             cells = help.divide_input(image_array[np.newaxis, rand_idx])
             # Figure out which should move
