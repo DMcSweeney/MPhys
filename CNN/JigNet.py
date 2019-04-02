@@ -86,7 +86,7 @@ def createSharedAlexnet3D(tileSize=25, numPuzzles=23, hammingSetSize=10):
     return model
 
 
-def createAlexnet3D(input_shape=(32, 64, 64, 1)):
+def createAlexnet3D(input_shape=(25, 25, 25, 1)):
 
     inputLayer = Input(shape=(input_shape))
     x = Conv3D(96, (11, 11, 11), strides=(2, 2, 2), activation='relu',
@@ -103,7 +103,7 @@ def createAlexnet3D(input_shape=(32, 64, 64, 1)):
     x = Conv3D(256, (3, 3, 3), padding='same')(x)
     x = BatchNormalization()(x)
     x = Flatten()(x)
-    outputLayer = Dense(4096, activation='relu')(x)
+    outputLayer = Dense(1024, activation='relu')(x)
     an3D = Model(inputs=[inputLayer], outputs=outputLayer)
     return an3D
 
@@ -114,7 +114,7 @@ def createSharedAlexnet3D_onemodel(input_shape=(25, 25, 25, 1), nInputs=23, ncla
                     for n in range(nInputs)]
     an3D = createAlexnet3D(input_shape)
     fc6 = Concatenate()([an3D(x) for x in input_layers])
-    fc7 = Dense(4096, activation='relu')(fc6)
+    fc7 = Dense(1024, activation='relu')(fc6)
     fc8 = Dense(nclass, activation='softmax', name="ClassificationOutput")(fc7)
     model = Model(inputs=input_layers, output=fc8)
     return model
@@ -152,7 +152,7 @@ def train(tileSize=64, numPuzzles=23, num_permutations=10, batch_size=32):
     tensorboard = TrainValTensorBoard(write_graph=False)
     callbacks = [checkpointer, reduce_lr_plateau, tensorboard]
     # BUILD Model
-    model = createSharedAlexnet3D()
+    model = createSharedAlexnet3D_onemodel()
     for layer in model.layers:
         print(layer.name, layer.output_shape)
     opt = optimizers.SGD(lr=0.01, momentum=0.9)

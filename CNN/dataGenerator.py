@@ -50,7 +50,7 @@ def generator(image_array, avail_keys, hamming_set, hamming_idx=None, crop_size=
             # dummy_dict = helper.dummy_dict(cropped_dict)
             out_dict = help.shuffle_jigsaw(cropped_dict, hamming_set.loc[random_idx, :].values)
             for n, val in enumerate(out_dict.values()):
-                array_list[i, n, ...] = helper.normalise(val)
+                array_list[i, n, ...] = val
             idx_array[i, random_idx] = 1
         # return array_list, idx_array, out_dict, fix_dict
         inputs = [array_list[:, n, ...] for n in range(len(avail_keys))]
