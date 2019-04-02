@@ -124,6 +124,9 @@ def main(N=10, batch_size=2):
     #    fixed_array, avail_keys, hamming_set, batch_size=2, N=10)
     inputs, idx_array, random_idx_list, rand_idx_list = generator(
         fixed_array, avail_keys, hamming_set, batch_size=32, N=10)
+    print("\n\nImage:", rand_idx_list)
+    print("\n\nPerm:", random_idx_list)
+
     np.savetxt("image_idx.txt", rand_idx_list, delimiter=",", fmt='%1.2i')
     np.savetxt("perm_idx.txt", random_idx_list, delimiter=",", fmt='%1.2i')
 
