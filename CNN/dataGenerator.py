@@ -68,6 +68,7 @@ def predict_generator(image_array, avail_keys, hamming_set, hamming_idx=None, im
     while True:
         array_list = np.zeros((batch_size, len(avail_keys), crop_size, crop_size, crop_size, 1))
         for i in range(batch_size):
+            print(i)
             # rand_idx = random image
             if image_idx is None:
                 rand_idx = random.randrange(image_array.shape[0])
