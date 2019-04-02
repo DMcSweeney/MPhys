@@ -28,22 +28,22 @@ dvf_dir = "D:\\Mphys\\Nifty\\DVF"
 
 def generator(image_array, avail_keys, hamming_set, hamming_idx=None, crop_size=25, batch_size=8, N=25):
     # Divide array into cubes
-    rand_idx_list = []
-    random_idx_list = []
+    # rand_idx_list = []
+    # random_idx_list = []
     while True:
         idx_array = np.zeros((batch_size, hamming_set.shape[0]), dtype=np.uint8)
         array_list = np.zeros((batch_size, len(avail_keys), crop_size, crop_size, crop_size, 1))
         for i in range(batch_size):
             # rand_idx = random image
             rand_idx = random.randrange(image_array.shape[0])
-            rand_idx_list.append(rand_idx)
+            # rand_idx_list.append(rand_idx)
             # random_idx = random permutation
             if hamming_idx is None:
                 random_idx = random.randrange(hamming_set.shape[0])
             else:
                 random_idx = int(hamming_idx[i])
 
-            random_idx_list.append(random_idx)
+            # random_idx_list.append(random_idx)
             # Divide image into cubes
             cells = help.divide_input(image_array[np.newaxis, rand_idx])
             # Figure out which should move
@@ -59,8 +59,8 @@ def generator(image_array, avail_keys, hamming_set, hamming_idx=None, crop_size=
             idx_array[i, random_idx] = 1
 
         inputs = [array_list[:, n, ...] for n in range(len(avail_keys))]
-        # yield inputs, idx_array
-        return inputs, idx_array, random_idx_list, rand_idx_list
+        yield inputs, idx_array
+        # return inputs, idx_array, random_idx_list, rand_idx_list
 
 
 def predict_generator(image_array, avail_keys, hamming_set, hamming_idx=None, image_idx=None, crop_size=25, batch_size=8, N=25):
