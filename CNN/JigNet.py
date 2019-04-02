@@ -97,13 +97,11 @@ def createAlexnet3D(input_shape=(25, 25, 25, 1)):
     x = MaxPooling3D(pool_size=(3, 3, 3), strides=(2, 2, 2))(x)
     x = Conv3D(384, (3, 3, 3), activation='relu', padding='same')(x)
     x = BatchNormalization()(x)
-
-    # x = MaxPooling3D(pool_size=(3, 3, 3), strides=(2, 2, 2))(x)
-    # x = Conv3D(384, (3, 3, 3), strides=(1, 1, 1), padding='same')(x)
-    # x = BatchNormalization()(x)
-    # x = Conv3D(256, (3, 3, 3), padding='same')(x)
-    # x = BatchNormalization()(x)
-
+    x = MaxPooling3D(pool_size=(3, 3, 3), strides=(2, 2, 2))(x)
+    x = Conv3D(384, (3, 3, 3), strides=(1, 1, 1), padding='same')(x)
+    x = BatchNormalization()(x)
+    x = Conv3D(256, (3, 3, 3), padding='same')(x)
+    x = BatchNormalization()(x)
     x = Flatten()(x)
     outputLayer = Dense(1024, activation='relu')(x)
     an3D = Model(inputs=[inputLayer], outputs=outputLayer)
@@ -162,7 +160,7 @@ def train(tileSize=64, numPuzzles=23, num_permutations=10, batch_size=32):
     model = createSharedAlexnet3D_onemodel()
     for layer in model.layers:
         print(layer.name, layer.output_shape)
-    opt = optimizers.SGD(lr=0.01, momentum=0.0)
+    opt = optimizers.SGD(lr=0.1, momentum=0.0)
     plot_model(model, to_file='model.png')
     print(model.summary())
     model.compile(optimizer=opt,
