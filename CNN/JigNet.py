@@ -167,10 +167,10 @@ def train(tileSize=64, numPuzzles=23, num_permutations=10, batch_size=32):
 
     model.fit_generator(generator=gen.generator(train_dataset, list_avail_keys, hamming_set, batch_size=batch_size, N=num_permutations),
                         epochs=20, verbose=1,
-                        steps_per_epoch=100,
+                        steps_per_epoch=10,
                         validation_data=gen.generator(
         validation_dataset, list_avail_keys, hamming_set, batch_size=batch_size),
-        validation_steps=100, callbacks=callbacks)
+        validation_steps=10, callbacks=callbacks)
     model.save('model_8.h5')
 
 
