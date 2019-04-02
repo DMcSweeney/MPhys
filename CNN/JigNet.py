@@ -26,7 +26,7 @@ class LossHistory(Callback):
         self.losses.append(logs.get('loss'))
 
 
-def createSharedAlexnet3D(tileSize=25, numPuzzles=23, hammingSetSize=25):
+def createSharedAlexnet3D(tileSize=25, numPuzzles=23, hammingSetSize=10):
 
     input_layers = [Input(shape=(tileSize, tileSize, tileSize, 1),
                           name="alexnet_input_{}".format(n)) for n in range(numPuzzles)]
@@ -152,7 +152,7 @@ def train(tileSize=64, numPuzzles=23, num_permutations=10, batch_size=2):
     tensorboard = TrainValTensorBoard(write_graph=False)
     callbacks = [checkpointer, reduce_lr_plateau, tensorboard]
     # BUILD Model
-    model = createSharedAlexnet3D_onemodel()
+    model = createSharedAlexnet3D()
     for layer in model.layers:
         print(layer.name, layer.output_shape)
     opt = optimizers.SGD(lr=0.01, momentum=0.9)
