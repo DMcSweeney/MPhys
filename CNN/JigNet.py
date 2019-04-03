@@ -120,7 +120,7 @@ def createSharedAlexnet3D_onemodel(input_shape=(25, 25, 25, 1), nInputs=23, ncla
     return model
 
 
-def train(tileSize=64, numPuzzles=23, num_permutations=10, batch_size=32):
+def train(tileSize=64, numPuzzles=23, num_permutations=1000, batch_size=32):
     # On server with PET and PCT in
     image_dir = "/hepgpu3-data1/dmcsween/DataTwoWay128/fixed"
     print("Load Data")
@@ -133,7 +133,8 @@ def train(tileSize=64, numPuzzles=23, num_permutations=10, batch_size=32):
     list_avail_keys = help.get_moveable_keys(image_array)
     # Get hamming set
     print("Load hamming Set")
-    hamming_set = pd.read_csv("hamming_set.txt", sep=",", header=None)
+    hamming_set = pd.read_csv(
+        "/hepgpu3-data1/heyst/MPhys/CNN/hamming_set.txt", sep=",", header=None)
     print(hamming_set)
 
     fixed_array, moving_array, dvf_array = helper.shuffle_inplace(
@@ -172,7 +173,7 @@ def train(tileSize=64, numPuzzles=23, num_permutations=10, batch_size=32):
                         validation_data=gen.generator(
         normalised_val, list_avail_keys, hamming_set, batch_size=batch_size, N=num_permutations),
         validation_steps=10, callbacks=callbacks)
-    model.save('model_9.h5')
+    model.save('model_10.h5')
 
 
 """
