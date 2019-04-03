@@ -107,7 +107,7 @@ def gen_max_hamming_set(N, moving_cells):
 
 def TOM_gen_max_hamming_set(N, moving_cells):
     permutation = []
-    iterations = 100
+    iterations = 1000000
     for i in range(N):
         permutation.append(moving_cells)
 
@@ -130,7 +130,7 @@ def TOM_gen_max_hamming_set(N, moving_cells):
 
 def main(argv=None):
 
-    N = 10
+    N = 1000
     avail_keys = [n for n in range(23)]
     print(avail_keys)
     max_dist_set, dist_array = TOM_gen_max_hamming_set(N, avail_keys)
