@@ -129,12 +129,14 @@ def TOM_gen_max_hamming_set(N, moving_cells):
 
 
 def main(argv=None):
-    """
+
     N = 1000
     avail_keys = [n for n in range(23)]
     print(avail_keys)
     max_dist_set, dist_array = TOM_gen_max_hamming_set(N, avail_keys)
     np.savetxt("hamming_set.txt", max_dist_set, delimiter=",", fmt='%1.2i')
+    np.savetxt("hamming_min_mean_1000.txt", dist_array,delimiter=",", fmt='%1.2i'  )
+
     """
 
     hamming_file = './hamming_set.txt'
@@ -143,6 +145,6 @@ def main(argv=None):
     df = df1.loc[0, :].values
     print("Sliced", df)
 
-
+    """
 if __name__ == '__main__':
     main()
