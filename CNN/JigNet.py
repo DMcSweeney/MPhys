@@ -108,7 +108,7 @@ def createAlexnet3D(input_shape=(25, 25, 25, 1)):
     return an3D
 
 
-def createSharedAlexnet3D_onemodel(input_shape=(25, 25, 25, 1), nInputs=23, nclass=1000):
+def createSharedAlexnet3D_onemodel(input_shape=(25, 25, 25, 1), nInputs=23, nclass=10):
 
     input_layers = [Input(shape=input_shape, name="alexnet_input_{}".format(n))
                     for n in range(nInputs)]
@@ -122,7 +122,7 @@ def createSharedAlexnet3D_onemodel(input_shape=(25, 25, 25, 1), nInputs=23, ncla
     return model
 
 
-def train(tileSize=64, numPuzzles=23, num_permutations=1000, batch_size=32):
+def train(tileSize=64, numPuzzles=23, num_permutations=10, batch_size=32):
     # On server with PET and PCT in
     image_dir = "/hepgpu3-data1/dmcsween/DataTwoWay128/fixed"
     print("Load Data")
