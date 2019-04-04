@@ -108,7 +108,7 @@ def createAlexnet3D(input_shape=(25, 25, 25, 1)):
     return an3D
 
 
-def createSharedAlexnet3D_onemodel(input_shape=(32, 32, 32, 1), nInputs=24, nclass=10):
+def createSharedAlexnet3D_onemodel(input_shape=(25, 25, 25, 1), nInputs=24, nclass=10):
 
     input_layers = [Input(shape=input_shape, name="alexnet_input_{}".format(n))
                     for n in range(nInputs)]
