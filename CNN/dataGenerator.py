@@ -26,7 +26,7 @@ dvf_dir = "D:\\Mphys\\Nifty\\DVF"
 """
 
 
-def generator(image_array, avail_keys, hamming_set, hamming_idx=None, crop_size=25, batch_size=8, N=25):
+def generator(image_array, avail_keys, hamming_set, hamming_idx=None, crop_size=32, batch_size=8, N=25):
     # Divide array into cubes
     # rand_idx_list = []
     # random_idx_list = []
@@ -49,11 +49,11 @@ def generator(image_array, avail_keys, hamming_set, hamming_idx=None, crop_size=
             # Figure out which should move
             shuffle_dict, fix_dict = help.avail_keys_shuffle(cells, avail_keys)
             # Random crop within cubes
-            cropped_dict = help.random_div(shuffle_dict)
+            #cropped_dict = help.random_div(shuffle_dict)
             # Shuffle according to hamming
             # Randomly assign labels to cells
             # dummy_dict = helper.dummy_dict(cropped_dict)
-            out_dict = help.shuffle_jigsaw(cropped_dict, hamming_set.loc[random_idx, :].values)
+            out_dict = help.shuffle_jigsaw(shuffle_dict, hamming_set.loc[random_idx, :].values)
             for n, val in enumerate(out_dict.values()):
                 array_list[i, n, ...] = val
             idx_array[i, random_idx] = 1
