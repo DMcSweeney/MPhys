@@ -177,13 +177,6 @@ def train(tileSize=64, numPuzzles=24, num_permutations=10, batch_size=16):
     model.save('model_one_img.h5')
 
 
-"""
-    scores = model.evaluate_generator(
-        dataGenerator.generate(test_dataset),
-        steps=test_dataset.shape[0] //batch_size)
-"""
-
-
 def main(argv=None):
     train()
 

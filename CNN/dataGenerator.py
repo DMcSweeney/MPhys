@@ -28,8 +28,6 @@ dvf_dir = "D:\\Mphys\\Nifty\\DVF"
 
 def generator(image_array, avail_keys, hamming_set, img_idx=None, hamming_idx=None, crop_size=32, batch_size=8, N=25):
     # Divide array into cubes
-    # rand_idx_list = []
-    # random_idx_list = []
     while True:
         idx_array = np.zeros((batch_size, hamming_set.shape[0]), dtype=np.uint8)
         array_list = np.zeros((batch_size, len(avail_keys), crop_size, crop_size, crop_size, 1))
@@ -54,6 +52,7 @@ def generator(image_array, avail_keys, hamming_set, img_idx=None, hamming_idx=No
             # Randomly assign labels to cells
             # dummy_dict = helper.dummy_dict(cropped_dict)
             out_dict = help.shuffle_jigsaw(cropped_dict, hamming_set.loc[random_idx, :].values)
+
             for n, val in enumerate(out_dict.values()):
                 array_list[i, n, ...] = val
             idx_array[i, random_idx] = 1
