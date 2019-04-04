@@ -135,7 +135,7 @@ def train(tileSize=64, numPuzzles=24, num_permutations=10, batch_size=16):
     # Get hamming set
     print("Load hamming Set")
     hamming_set = pd.read_csv(
-        "hamming_set.txt", sep=",", header=None)
+        "hamming_set_PCT.txt", sep=",", header=None)
     # print(hamming_set)
 
     fixed_array, moving_array, dvf_array = helper.shuffle_inplace(
