@@ -131,6 +131,7 @@ def train(tileSize=64, numPuzzles=23, num_permutations=10, batch_size=16):
     dvf_array, dvf_affine = __label.get_data()
 
     list_avail_keys = help.get_moveable_keys(image_array)
+    print("Len keys:", len(list_avail_keys))
     # Get hamming set
     print("Load hamming Set")
     hamming_set = pd.read_csv(
