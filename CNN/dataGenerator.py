@@ -26,7 +26,7 @@ dvf_dir = "D:\\Mphys\\Nifty\\DVF"
 """
 
 
-def generator(image_array, avail_keys, hamming_set, img_idx=None, hamming_idx=None, crop_size=32, batch_size=8, N=25):
+def generator(image_array, avail_keys, hamming_set, img_idx=None, hamming_idx=None, crop_size=25, batch_size=8, N=25):
     # Divide array into cubes
     while True:
         idx_array = np.zeros((batch_size, hamming_set.shape[0]), dtype=np.uint8)
