@@ -108,7 +108,7 @@ def createAlexnet3D(input_shape=(25, 25, 25, 1)):
     return an3D
 
 
-def createSharedAlexnet3D_onemodel(input_shape=(25, 25, 25, 1), nInputs=23, nclass=10):
+def createSharedAlexnet3D_onemodel(input_shape=(25, 25, 25, 1), nInputs=24, nclass=10):
 
     input_layers = [Input(shape=input_shape, name="alexnet_input_{}".format(n))
                     for n in range(nInputs)]
@@ -120,9 +120,9 @@ def createSharedAlexnet3D_onemodel(input_shape=(25, 25, 25, 1), nInputs=23, ncla
     return model
 
 
-def train(tileSize=64, numPuzzles=23, num_permutations=10, batch_size=32):
+def train(tileSize=64, numPuzzles=24, num_permutations=10, batch_size=16):
     # On server with PET and PCT in
-    image_dir = "/hepgpu3-data1/dmcsween/DataTwoWay128/fixed"
+    image_dir = "/hepgpu3-data1/dmcsween/Data128/ResampleData/PlanningCT"
     print("Load Data")
     image_data, __image, __label = load.data_reader(image_dir, image_dir, image_dir)
 
@@ -131,10 +131,12 @@ def train(tileSize=64, numPuzzles=23, num_permutations=10, batch_size=32):
     dvf_array, dvf_affine = __label.get_data()
 
     list_avail_keys = help.get_moveable_keys(image_array)
+    print("Len keys:", len(list_avail_keys))
     # Get hamming set
     print("Load hamming Set")
-    hamming_set = pd.read_csv("hamming_set.txt", sep=",", header=None)
-    print(hamming_set)
+    hamming_set = pd.read_csv(
+        "hamming_set_PCT.txt", sep=",", header=None)
+    # print(hamming_set)
 
     fixed_array, moving_array, dvf_array = helper.shuffle_inplace(
         image_array, moving_array, dvf_array)
@@ -144,7 +146,7 @@ def train(tileSize=64, numPuzzles=23, num_permutations=10, batch_size=32):
         fixed_array, moving_array, dvf_array, split_ratio=0.15)
 
     normalised_train = helper.normalise(train_dataset)
-    normalised_val = helper.normalise(validation_dataset)
+    # normalised_val = helper.normalise(validation_dataset)
 
     # Output all data from a training session into a dated folder
     outputPath = "./logs"
@@ -166,20 +168,13 @@ def train(tileSize=64, numPuzzles=23, num_permutations=10, batch_size=32):
                   loss='categorical_crossentropy',
                   metrics=['accuracy'])
 
-    model.fit_generator(generator=gen.generator(normalised_train, list_avail_keys, hamming_set, batch_size=batch_size, N=num_permutations),
-                        epochs=20, verbose=1,
+    model.fit_generator(generator=gen.generator(normalised_train, list_avail_keys, hamming_set, img_idx=0, batch_size=batch_size, N=num_permutations),
+                        epochs=50, verbose=1,
                         steps_per_epoch=10,
                         validation_data=gen.generator(
-        normalised_val, list_avail_keys, hamming_set, batch_size=batch_size, N=num_permutations),
+        normalised_train, list_avail_keys, hamming_set, img_idx=0, batch_size=batch_size, N=num_permutations),
         validation_steps=10, callbacks=callbacks)
-    model.save('model_9.h5')
-
-
-"""
-    scores = model.evaluate_generator(
-        dataGenerator.generate(test_dataset),
-        steps=test_dataset.shape[0] //batch_size)
-"""
+    model.save('model_one_img.h5')
 
 
 def main(argv=None):
