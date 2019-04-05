@@ -123,19 +123,17 @@ def TOM_gen_max_hamming_set(N, moving_cells):
                 permutation_array[k] = current_permutation
                 hamming_dist.append(hamming_distance(current_permutation_array, moving_cells_array))
 
-    print(permutation_array)
-    print(hamming_dist)
     return permutation_array, hamming_dist
 
 
 def main(argv=None):
 
-    N = 1000
+    N = 10000
     avail_keys = [n for n in range(23)]
     print(avail_keys)
     max_dist_set, dist_array = TOM_gen_max_hamming_set(N, avail_keys)
-    np.savetxt("hamming_set.txt", max_dist_set, delimiter=",", fmt='%1.2i')
-    np.savetxt("hamming_min_mean_1000.txt", dist_array,delimiter=",", fmt='%1.2i'  )
+    np.savetxt("hamming_set_10000.txt", max_dist_set, delimiter=",", fmt='%1.2i')
+    np.savetxt("hamming_min_mean_10000.txt", dist_array,delimiter=",", fmt='%1.2i'  )
 
     """
 
