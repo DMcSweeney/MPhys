@@ -146,7 +146,7 @@ def train(tileSize=64, numPuzzles=24, num_permutations=10, batch_size=16):
         fixed_array, moving_array, dvf_array, split_ratio=0.15)
 
     normalised_train = helper.normalise(train_dataset)
-    # normalised_val = helper.normalise(validation_dataset)
+    normalised_val = helper.normalise(validation_dataset)
 
     # Output all data from a training session into a dated folder
     outputPath = "./logs"
@@ -168,11 +168,11 @@ def train(tileSize=64, numPuzzles=24, num_permutations=10, batch_size=16):
                   loss='categorical_crossentropy',
                   metrics=['accuracy'])
 
-    model.fit_generator(generator=gen.generator(normalised_train, list_avail_keys, hamming_set, img_idx=0, batch_size=batch_size, N=num_permutations),
+    model.fit_generator(generator=gen.generator(normalised_train, list_avail_keys, hamming_set, batch_size=batch_size, N=num_permutations),
                         epochs=50, verbose=1,
                         steps_per_epoch=10,
                         validation_data=gen.generator(
-        normalised_train, list_avail_keys, hamming_set, img_idx=0, batch_size=batch_size, N=num_permutations),
+        normalised_val, list_avail_keys, hamming_set, batch_size=batch_size, N=num_permutations),
         validation_steps=10, callbacks=callbacks)
     model.save('model_one_img.h5')
 
