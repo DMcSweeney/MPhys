@@ -42,7 +42,7 @@ def generator(image_array, avail_keys, hamming_set, img_idx=None, hamming_idx=No
             if hamming_idx is None:
                 random_idx = random.randrange(hamming_set.shape[0])
             else:
-                random_idx = hamming_idx
+                random_idx = int(random.choice(hamming_idx))
             # Divide image into cubes
             cells = help.divide_input(image_array[np.newaxis, rand_idx])
             # Figure out which should move
