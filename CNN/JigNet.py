@@ -173,7 +173,7 @@ def train(tileSize=64, numPuzzles=24, num_permutations=10, batch_size=32):
                         steps_per_epoch=10,
                         validation_data=gen.generator(
         normalised_val, list_avail_keys, hamming_set, img_idx=0, batch_size=batch_size, N=num_permutations),
-        validation_steps=10, callbacks=callbacks)
+        validation_steps=10, callbacks=callbacks, shuffle=False)
     model.save('model_one_img.h5')
 
 
