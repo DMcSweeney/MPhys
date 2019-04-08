@@ -14,6 +14,7 @@ from customTensorBoard import TrainValTensorBoard
 import dataGenerator as gen
 import JigsawHelpers as help
 import pandas as pd
+import numpy as np
 from keras import backend as K
 #  from keras.utils import plot_model
 
@@ -148,7 +149,7 @@ def train(tileSize=64, numPuzzles=24, num_permutations=10, batch_size=32):
 
     normalised_train = helper.norm(train_dataset)
     normalised_val = helper.normalise(validation_dataset)
-
+    img = normalised_train[np.newaxis, 0]
     # Output all data from a training session into a dated folder
     outputPath = "./logs"
     hamming_list = [0, 1, 2, 3, 4]
@@ -170,11 +171,11 @@ def train(tileSize=64, numPuzzles=24, num_permutations=10, batch_size=32):
                   loss='categorical_crossentropy',
                   metrics=['accuracy'])
 
-    model.fit_generator(generator=gen.generator(normalised_train, list_avail_keys, hamming_set, img_idx=0, hamming_idx=hamming_list, batch_size=batch_size, N=num_permutations),
+    model.fit_generator(generator=gen.generator(img, list_avail_keys, hamming_set, img_idx=0, hamming_idx=hamming_list, batch_size=batch_size, N=num_permutations),
                         epochs=50, verbose=1,
                         steps_per_epoch=10,
                         validation_data=gen.generator(
-        normalised_train, list_avail_keys, hamming_set, img_idx=0, hamming_idx=hamming_list, batch_size=batch_size, N=num_permutations),
+        img, list_avail_keys, hamming_set, img_idx=0, hamming_idx=hamming_list, batch_size=batch_size, N=num_permutations),
         validation_steps=10, callbacks=callbacks, shuffle=False)
     model.save('model_one_img.h5')
 
