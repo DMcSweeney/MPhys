@@ -143,7 +143,7 @@ def train(tileSize=64, numPuzzles=24, num_permutations=10, batch_size=32):
 
     # Ignore moving and dvf
     validation_dataset, validation_moving, validation_dvf, train_dataset, train_moving, train_dvf = helper.split_data(
-        fixed_array, moving_array, dvf_array, split_ratio=0.05)
+        fixed_array, moving_array, dvf_array, split_ratio=0.15)
 
     normalised_train = helper.normalise(train_dataset)
     normalised_val = helper.normalise(validation_dataset)
@@ -161,7 +161,7 @@ def train(tileSize=64, numPuzzles=24, num_permutations=10, batch_size=32):
     model = createSharedAlexnet3D_onemodel()
     for layer in model.layers:
         print(layer.name, layer.output_shape)
-    opt = optimizers.Adam()
+    opt = optimizers.Adadelta()
     plot_model(model, to_file='model.png')
     print(model.summary())
     model.compile(optimizer=opt,
