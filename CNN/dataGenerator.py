@@ -8,6 +8,7 @@ import helpers as helper
 import random
 import hamming
 import pandas as pd
+from keras import utils
 
 # On server
 fixed_dir = "/hepgpu3-data1/dmcsween/DataTwoWay128/fixed"
@@ -56,7 +57,7 @@ def generator(image_array, avail_keys, hamming_set, img_idx=None, hamming_idx=No
 
             for n, val in enumerate(out_dict.values()):
                 array_list[i, n, ...] = val
-            idx_array[i, random_idx] = 1
+            idx_array[i, ...] = utils.np_utils.to_categorical(random_idx)
 
         inputs = [array_list[:, n, ...] for n in range(len(avail_keys))]
         yield inputs, idx_array
