@@ -51,6 +51,11 @@ def normalise(input):
     return np.clip(normal_input, a_min=0, a_max=1)
 
 
+def norm(input, min=-1000, max=2000):
+    clipped = np.clip(input, a_min=min, a_max=max)
+    return clipped/(max-min)
+
+
 def flip(input):
     # Flip image along x axis
     return np.flip(input, axis=1)
