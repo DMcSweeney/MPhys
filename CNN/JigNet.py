@@ -143,7 +143,7 @@ def train(tileSize=64, numPuzzles=24, num_permutations=10, batch_size=32):
 
     # Ignore moving and dvf
     validation_dataset, validation_moving, validation_dvf, train_dataset, train_moving, train_dvf = helper.split_data(
-        fixed_array, moving_array, dvf_array, split_ratio=0.15)
+        fixed_array, moving_array, dvf_array, split_ratio=0.05)
 
     normalised_train = helper.normalise(train_dataset)
     normalised_val = helper.normalise(validation_dataset)
@@ -172,7 +172,7 @@ def train(tileSize=64, numPuzzles=24, num_permutations=10, batch_size=32):
                         epochs=50, verbose=1,
                         steps_per_epoch=10,
                         validation_data=gen.generator(
-        normalised_val, list_avail_keys, hamming_set, img_idx=0, batch_size=batch_size, N=num_permutations),
+        normalised_train, list_avail_keys, hamming_set, img_idx=0, batch_size=batch_size, N=num_permutations),
         validation_steps=10, callbacks=callbacks, shuffle=False)
     model.save('model_one_img.h5')
 
