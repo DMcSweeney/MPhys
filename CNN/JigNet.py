@@ -2,6 +2,7 @@ from keras.layers import (Dense, Dropout, Concatenate, Input, Activation, Flatte
                           Conv3D, MaxPooling3D, GlobalAveragePooling3D, BatchNormalization, add)
 from keras.models import Model, load_model
 from keras.callbacks import ModelCheckpoint, ReduceLROnPlateau, EarlyStopping, Callback
+from keras.initializers import RandomNormal, he_normal
 from keras import optimizers
 from keras.utils import plot_model
 from time import strftime, localtime
@@ -88,20 +89,23 @@ def createSharedAlexnet3D(tileSize=25, numPuzzles=23, hammingSetSize=10):
 
 
 def createAlexnet3D(input_shape=(25, 25, 25, 1)):
-
+    kernel_initializer = 'he_normal'
     inputLayer = Input(shape=(input_shape))
     x = Conv3D(96, (11, 11, 11), strides=(2, 2, 2), activation='relu',
-               padding='valid')(inputLayer)  # Note, strides are different!
+               padding='valid', kernel_initializer=kernel_initializer)(inputLayer)  # Note, strides are different!
     x = BatchNormalization()(x)
-    x = Conv3D(256, (5, 5, 5), strides=(1, 1, 1), activation='relu', padding='same')(x)
-    x = BatchNormalization()(x)
-    x = MaxPooling3D(pool_size=(3, 3, 3), strides=(2, 2, 2))(x)
-    x = Conv3D(384, (3, 3, 3), activation='relu', padding='same')(x)
+    x = Conv3D(256, (5, 5, 5), strides=(1, 1, 1), activation='relu',
+               padding='same', kernel_initializer=kernel_initializer)(x)
     x = BatchNormalization()(x)
     x = MaxPooling3D(pool_size=(3, 3, 3), strides=(2, 2, 2))(x)
-    x = Conv3D(384, (3, 3, 3), strides=(1, 1, 1), padding='same')(x)
+    x = Conv3D(384, (3, 3, 3), activation='relu', padding='same',
+               kernel_initializer=kernel_initializer)(x)
     x = BatchNormalization()(x)
-    x = Conv3D(256, (3, 3, 3), padding='same')(x)
+    x = MaxPooling3D(pool_size=(3, 3, 3), strides=(2, 2, 2))(x)
+    x = Conv3D(384, (3, 3, 3), strides=(1, 1, 1), padding='same',
+               kernel_initializer=kernel_initializer)(x)
+    x = BatchNormalization()(x)
+    x = Conv3D(256, (3, 3, 3), padding='same', kernel_initializer=kernel_initializer)(x)
     x = BatchNormalization()(x)
     x = Flatten()(x)
     outputLayer = Dense(1024, activation='relu')(x)
