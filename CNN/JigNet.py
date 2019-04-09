@@ -124,7 +124,7 @@ def createNet(input_shape=(28, 28, 28, 1)):
     x = Conv3D(64, (3, 3, 3), activation=activation, padding='same')(x)
     x = BatchNormalization()(x)
     x = MaxPooling3D()(x)
-    x = Conv3D(128, (5, 5, 5), activation=activation, padding='same')(x)
+    x = Conv3D(128, (3, 3, 3), activation=activation, padding='same')(x)
     x = BatchNormalization()(x)
     x = Flatten()(x)
     outputLayer = Dense(1024, activation=activation)(x)
@@ -145,7 +145,7 @@ def createSharedAlexnet3D_onemodel(input_shape=(28, 28, 28, 1), nInputs=24, ncla
     return model
 
 
-def train(tileSize=64, numPuzzles=24, num_permutations=10, batch_size=32):
+def train(tileSize=64, numPuzzles=24, num_permutations=10, batch_size=16):
     # On server with PET and PCT in
     image_dir = "/hepgpu3-data1/dmcsween/Data128/ResampleData/PlanningCT"
 
