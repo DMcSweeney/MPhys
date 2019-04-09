@@ -145,7 +145,7 @@ def createSharedAlexnet3D_onemodel(input_shape=(28, 28, 28, 1), nInputs=24, ncla
     return model
 
 
-def train(tileSize=64, numPuzzles=24, num_permutations=10, batch_size=16):
+def train(tileSize=64, numPuzzles=24, num_permutations=10, batch_size=32):
     # On server with PET and PCT in
     image_dir = "/hepgpu3-data1/dmcsween/Data128/ResampleData/PlanningCT"
 
@@ -174,6 +174,7 @@ def train(tileSize=64, numPuzzles=24, num_permutations=10, batch_size=16):
     normalised_train = helper.norm(train_dataset)
     normalised_val = helper.normalise(validation_dataset)
     img = normalised_train[np.newaxis, 0]
+    print("input image shape:", img.shape)
     # Output all data from a training session into a dated folder
     outputPath = "./logs"
     hamming_list = [0, 1, 2, 3, 4]
@@ -188,7 +189,8 @@ def train(tileSize=64, numPuzzles=24, num_permutations=10, batch_size=16):
     model = createSharedAlexnet3D_onemodel()
     # for layer in model.layers:
     #     print(layer.name, layer.output_shape)
-    opt = optimizers.SGD(lr=0.01)
+    #opt = optimizers.SGD(lr=0.01)
+    opt = optimizers.Adam()
     plot_model(model, to_file='model.png')
     print(model.summary())
     model.compile(optimizer=opt,
