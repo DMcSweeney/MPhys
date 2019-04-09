@@ -121,10 +121,10 @@ def createNet(input_shape=(28, 28, 28, 1)):
     x = Conv3D(24, (5, 5, 5), activation=activation, padding='same')(inputLayer)
     x = BatchNormalization()(x)
     x = MaxPooling3D()
-    x = Conv3D(48, (3, 3, 3), activation=activation, padding='same')(inputLayer)
+    x = Conv3D(48, (5, 5, 5), activation=activation, padding='same')(inputLayer)
     x = BatchNormalization()(x)
     x = MaxPooling3D()
-    x = Conv3D(64, (3, 3, 3), activation=activation, padding='same')(inputLayer)
+    x = Conv3D(64, (5, 5, 5), activation=activation, padding='same')(inputLayer)
     x = BatchNormalization()(x)
     x = Flatten()(x)
     outputLayer = Dense(256, activation=activation)(x)
@@ -186,11 +186,11 @@ def train(tileSize=64, numPuzzles=24, num_permutations=10, batch_size=32):
     callbacks = [checkpoint, reduce_lr_plateau, tensorboard]
     # BUILD Model
     model = createSharedAlexnet3D_onemodel()
-    for layer in model.layers:
-        print(layer.name, layer.output_shape)
+    # for layer in model.layers:
+    #     print(layer.name, layer.output_shape)
     opt = optimizers.SGD(lr=0.01)
     plot_model(model, to_file='model.png')
-    # print(model.summary())
+    print(model.summary())
     model.compile(optimizer=opt,
                   loss='categorical_crossentropy',
                   metrics=['accuracy'])
