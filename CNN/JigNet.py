@@ -118,13 +118,13 @@ def createAlexnet3D(input_shape=(25, 25, 25, 1)):
 def createNet(input_shape=(28, 28, 28, 1)):
     activation = 'relu'
     inputLayer = Input(shape=(input_shape))
-    x = Conv3D(32, (5, 5, 5), activation=activation, padding='same')(inputLayer)
+    x = Conv3D(128, (5, 5, 5), activation=activation, padding='same')(inputLayer)
     x = BatchNormalization()(x)
     x = MaxPooling3D()(x)
-    x = Conv3D(64, (3, 3, 3), activation=activation, padding='same')(x)
+    x = Conv3D(256, (3, 3, 3), activation=activation, padding='same')(x)
     x = BatchNormalization()(x)
     x = MaxPooling3D()(x)
-    x = Conv3D(128, (3, 3, 3), activation=activation, padding='same')(x)
+    x = Conv3D(512, (3, 3, 3), activation=activation, padding='same')(x)
     x = BatchNormalization()(x)
     x = Flatten()(x)
     outputLayer = Dense(1024, activation=activation)(x)
