@@ -127,7 +127,7 @@ def createNet(input_shape=(28, 28, 28, 1)):
     # x = Conv3D(128, (3, 3, 3), activation=activation, padding='same')(x)
     # x = BatchNormalization()(x)
     x = Flatten()(x)
-    outputLayer = Dense(1024, activation=activation)(x)
+    outputLayer = Dense(256, activation=activation)(x)
     an3D = Model(inputs=[inputLayer], outputs=outputLayer)
     return an3D
 
