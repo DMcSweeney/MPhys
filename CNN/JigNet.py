@@ -118,16 +118,16 @@ def createAlexnet3D(input_shape=(25, 25, 25, 1)):
 def createNet(input_shape=(28, 28, 28, 1)):
     activation = 'relu'
     inputLayer = Input(shape=(input_shape))
-    x = Conv3D(24, (5, 5, 5), activation=activation, padding='same')(inputLayer)
+    x = Conv3D(32, (5, 5, 5), activation=activation, padding='same')(inputLayer)
     x = BatchNormalization()(x)
     x = MaxPooling3D()
-    x = Conv3D(48, (5, 5, 5), activation=activation, padding='same')(inputLayer)
+    x = Conv3D(64, (3, 3, 3), activation=activation, padding='same')(inputLayer)
     x = BatchNormalization()(x)
     x = MaxPooling3D()
-    x = Conv3D(64, (5, 5, 5), activation=activation, padding='same')(inputLayer)
+    x = Conv3D(128, (5, 5, 5), activation=activation, padding='same')(inputLayer)
     x = BatchNormalization()(x)
     x = Flatten()(x)
-    outputLayer = Dense(256, activation=activation)(x)
+    outputLayer = Dense(1024, activation=activation)(x)
     an3D = Model(inputs=[inputLayer], outputs=outputLayer)
     return an3D
 
@@ -139,7 +139,7 @@ def createSharedAlexnet3D_onemodel(input_shape=(28, 28, 28, 1), nInputs=24, ncla
     #an3D = createAlexnet3D(input_shape)
     an3D = createNet(input_shape)
     fc6 = Concatenate()([an3D(x) for x in input_layers])
-    fc7 = Dense(256, activation=activation)(fc6)
+    fc7 = Dense(1024, activation=activation)(fc6)
     fc8 = Dense(nclass, activation='softmax', name="ClassificationOutput")(fc7)
     model = Model(inputs=input_layers, output=fc8)
     return model
