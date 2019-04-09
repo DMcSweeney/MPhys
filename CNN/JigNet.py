@@ -190,7 +190,7 @@ def train(tileSize=64, numPuzzles=24, num_permutations=10, batch_size=32):
         print(layer.name, layer.output_shape)
     opt = optimizers.SGD(lr=0.01)
     plot_model(model, to_file='model.png')
-    print(model.summary())
+    # print(model.summary())
     model.compile(optimizer=opt,
                   loss='categorical_crossentropy',
                   metrics=['accuracy'])
