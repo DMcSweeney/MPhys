@@ -178,6 +178,7 @@ def train(tileSize=64, numPuzzles=24, num_permutations=10, batch_size=16):
     # Output all data from a training session into a dated folder
     outputPath = "./logs"
     #hamming_list = [0, 1, 2, 3, 4]
+    img_idx = [0, 1, 2, 3, 4]
     # callbacks
     checkpoint = ModelCheckpoint(outputPath + '/best_model.h5', monitor='val_acc',
                                  verbose=1, save_best_only=True, period=1)
@@ -196,11 +197,11 @@ def train(tileSize=64, numPuzzles=24, num_permutations=10, batch_size=16):
                   loss='categorical_crossentropy',
                   metrics=['accuracy'])
 
-    model.fit_generator(generator=gen.generator(img, list_avail_keys, hamming_set, img_idx=0, batch_size=batch_size, N=num_permutations),
+    model.fit_generator(generator=gen.generator(normalised_train, list_avail_keys, hamming_set, img_idx=img_idx, batch_size=batch_size, N=num_permutations),
                         epochs=50, verbose=1,
                         steps_per_epoch=100,
                         validation_data=gen.generator(
-        img, list_avail_keys, hamming_set, img_idx=0, batch_size=batch_size, N=num_permutations),
+        normalised_train, list_avail_keys, hamming_set, img_idx=img_idx, batch_size=batch_size, N=num_permutations),
         validation_steps=100, callbacks=callbacks, shuffle=False)
     model.save('model_one_img.h5')
 

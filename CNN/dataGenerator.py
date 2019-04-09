@@ -37,7 +37,7 @@ def generator(image_array, avail_keys, hamming_set, img_idx=None, hamming_idx=No
             if img_idx is None:
                 rand_idx = random.randrange(image_array.shape[0])
             else:
-                rand_idx = img_idx
+                rand_idx = int(random.choice(img_idx))
 
             # random_idx = random permutation
             if hamming_idx is None:
