@@ -33,7 +33,7 @@ def divide_input(input_array, number_cells_per_dim=4, dims=3):
     return cells
 
 
-def random_div(input_dict, crop_size=25):
+def random_div(input_dict, crop_size=28):
     cells = {}
     for key, val in input_dict.items():
         x_rand = random.randint(0, int(val.shape[1]-crop_size))
