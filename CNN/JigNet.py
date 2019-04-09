@@ -145,7 +145,7 @@ def createSharedAlexnet3D_onemodel(input_shape=(28, 28, 28, 1), nInputs=24, ncla
     return model
 
 
-def train(tileSize=64, numPuzzles=24, num_permutations=10, batch_size=32):
+def train(tileSize=64, numPuzzles=24, num_permutations=10, batch_size=16):
     # On server with PET and PCT in
     image_dir = "/hepgpu3-data1/dmcsween/Data128/ResampleData/PlanningCT"
 
