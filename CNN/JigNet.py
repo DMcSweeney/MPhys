@@ -199,10 +199,10 @@ def train(tileSize=64, numPuzzles=24, num_permutations=10, batch_size=16):
 
     model.fit_generator(generator=gen.generator(normalised_train, list_avail_keys, hamming_set, batch_size=batch_size, N=num_permutations),
                         epochs=50, verbose=1,
-                        steps_per_epoch=100,
+                        steps_per_epoch=normalised_train.shape[0]//batch_size,
                         validation_data=gen.generator(
         normalised_val, list_avail_keys, hamming_set, batch_size=batch_size, N=num_permutations),
-        validation_steps=100, callbacks=callbacks, shuffle=False)
+        validation_steps=normalised_val.shape[0]//batch_size, callbacks=callbacks, shuffle=False)
     model.save('model_one_img.h5')
 
 
