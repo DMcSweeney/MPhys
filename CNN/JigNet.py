@@ -147,8 +147,8 @@ def createSharedAlexnet3D_onemodel(input_shape=(28, 28, 28, 1), nInputs=24, ncla
 
 def train(tileSize=64, numPuzzles=24, num_permutations=10, batch_size=16):
     # On server with PET and PCT in
-    image_dir = "/hepgpu3-data1/dmcsween/Data128/ResampleData/PlanningCT"
-
+    #image_dir = "/hepgpu3-data1/dmcsween/Data128/ResampleData/PlanningCT"
+    image_dir = "/hepgpu3-data1/dmcsween/DataTwoWay128/fixed"
     print("Load Data")
     image_data, __image, __label = load.data_reader(image_dir, image_dir, image_dir)
 
@@ -157,6 +157,8 @@ def train(tileSize=64, numPuzzles=24, num_permutations=10, batch_size=16):
     dvf_array, dvf_affine = __label.get_data()
 
     list_avail_keys = help.get_moveable_keys(image_array)
+    np.savetxt("avail_keys_both.txt", list_avail_keys, delimiter=",", fmt='%1.2i')
+    list_avail_keys = pd.read_csv("avail_keys_both.txt", sep=",", header=None)
     print("Len keys:", len(list_avail_keys))
     # Get hamming set
     print("Load hamming Set")
