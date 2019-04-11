@@ -132,7 +132,7 @@ def createNet(input_shape=(28, 28, 28, 1)):
     return an3D
 
 
-def createSharedAlexnet3D_onemodel(input_shape=(28, 28, 28, 1), nInputs=23, nclass=10):
+def createSharedAlexnet3D_onemodel(input_shape=(28, 28, 28, 1), nInputs=24, nclass=10):
     activation = 'relu'
     input_layers = [Input(shape=input_shape, name="alexnet_input_{}".format(n))
                     for n in range(nInputs)]
@@ -145,7 +145,7 @@ def createSharedAlexnet3D_onemodel(input_shape=(28, 28, 28, 1), nInputs=23, ncla
     return model
 
 
-def train(tileSize=64, numPuzzles=23, num_permutations=10, batch_size=16):
+def train(tileSize=64, numPuzzles=24, num_permutations=10, batch_size=16):
     # On server with PET and PCT in
     image_dir = "/hepgpu3-data1/dmcsween/Data128/ResampleData/PlanningCT"
 
@@ -156,9 +156,10 @@ def train(tileSize=64, numPuzzles=23, num_permutations=10, batch_size=16):
     moving_array, moving_affine = __image.get_data()
     dvf_array, dvf_affine = __label.get_data()
 
-    #list_avail_keys = help.get_moveable_keys(image_array)
-    #np.savetxt("avail_keys_both.txt", list_avail_keys, delimiter=",", fmt='%1.2i')
-
+    list_avail_keys = help.get_moveable_keys(image_array)
+    hamming_set = pd.read_csv(
+        "hamming_set_PCT.txt", sep=",", header=None)
+    """
     list_avail_keys = pd.read_csv("avail_keys_both.txt", sep=",", header=None)
     print("Len keys:", len(list_avail_keys))
     # Get hamming set
@@ -169,6 +170,7 @@ def train(tileSize=64, numPuzzles=23, num_permutations=10, batch_size=16):
     hamming_set = hamming_set.loc[:9]
     print("Ham Len", len(hamming_set))
     print(hamming_set)
+    """
     fixed_array, moving_array, dvf_array = helper.shuffle_inplace(
         image_array, moving_array, dvf_array)
 
