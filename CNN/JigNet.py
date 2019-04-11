@@ -160,8 +160,10 @@ def train(tileSize=64, numPuzzles=23, num_permutations=10, batch_size=16):
     hamming_set = pd.read_csv(
         "hamming_set_PCT.txt", sep=",", header=None)
     """
-    list_avail_keys = pd.read_csv("avail_keys_both.txt", sep=",", header=None)
-    print("Len keys:", len(list_avail_keys))
+    avail_keys = pd.read_csv("avail_keys_both.txt", sep=",", header=None)
+    print("Len keys:", len(avail_keys))
+    list_avail_keys = [(avail_keys.loc[i, 0], avail_keys.loc[i, 1], avail_keys.loc[i, 2])
+                       for i in range(len(avail_keys))]
     print(list_avail_keys)
     # Get hamming set
     print("Load hamming Set")
