@@ -139,7 +139,7 @@ def createSharedAlexnet3D_onemodel(input_shape=(28, 28, 28, 1), nInputs=23, ncla
     #an3D = createAlexnet3D(input_shape)
     an3D = createNet(input_shape)
     fc6 = Concatenate()([an3D(x) for x in input_layers])
-    fc7 = Dense(4096, activation=activation)(fc6)
+    fc7 = Dense(8192, activation=activation)(fc6)
     fc8 = Dense(nclass, activation='softmax', name="ClassificationOutput")(fc7)
     model = Model(inputs=input_layers, output=fc8)
     return model
@@ -202,11 +202,11 @@ def train(tileSize=64, numPuzzles=23, num_permutations=10, batch_size=16):
 
     model.fit_generator(generator=gen.generator(normalised_train, list_avail_keys, hamming_set, batch_size=batch_size, N=num_permutations),
                         epochs=1000, verbose=1,
-                        steps_per_epoch=50,
+                        steps_per_epoch=normalised_train.shape[0]//batch_size,
                         validation_data=gen.generator(
         normalised_val, list_avail_keys, hamming_set, batch_size=batch_size, N=num_permutations),
-        validation_steps=50, callbacks=callbacks, shuffle=False)
-    model.save('model_one_img.h5')
+        validation_steps=normalised_val.shape[0]//batch_size, callbacks=callbacks, shuffle=False)
+    model.save('model_best.h5')
 
 
 def main(argv=None):
