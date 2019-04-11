@@ -127,25 +127,25 @@ def createNet(input_shape=(28, 28, 28, 1)):
     x = Conv3D(128, (3, 3, 3), activation=activation, padding='same')(x)
     #x = BatchNormalization()(x)
     x = Flatten()(x)
-    outputLayer = Dense(4096, activation=activation)(x)
+    outputLayer = Dense(1024, activation=activation)(x)
     an3D = Model(inputs=[inputLayer], outputs=outputLayer)
     return an3D
 
 
-def createSharedAlexnet3D_onemodel(input_shape=(28, 28, 28, 1), nInputs=23, nclass=100):
+def createSharedAlexnet3D_onemodel(input_shape=(28, 28, 28, 1), nInputs=23, nclass=10):
     activation = 'relu'
     input_layers = [Input(shape=input_shape, name="alexnet_input_{}".format(n))
                     for n in range(nInputs)]
     an3D = createAlexnet3D(input_shape)
     #an3D = createNet(input_shape)
     fc6 = Concatenate()([an3D(x) for x in input_layers])
-    fc7 = Dense(8192, activation=activation)(fc6)
+    fc7 = Dense(4096, activation=activation)(fc6)
     fc8 = Dense(nclass, activation='softmax', name="ClassificationOutput")(fc7)
     model = Model(inputs=input_layers, output=fc8)
     return model
 
 
-def train(tileSize=64, numPuzzles=23, num_permutations=100, batch_size=16):
+def train(tileSize=64, numPuzzles=23, num_permutations=10, batch_size=16):
     # On server with PET and PCT in
     image_dir = "/hepgpu3-data1/dmcsween/Data128/ResampleData/PlanningCT"
 
@@ -166,7 +166,7 @@ def train(tileSize=64, numPuzzles=23, num_permutations=100, batch_size=16):
     hamming_set = pd.read_csv(
         "/hepgpu3-data1/heyst/MPhys/CNN/hamming_set.txt", sep=",", header=None)
 
-    hamming_set = hamming_set.loc[:99]
+    hamming_set = hamming_set.loc[:9]
     print("Ham Len", len(hamming_set))
     print(hamming_set)
     fixed_array, moving_array, dvf_array = helper.shuffle_inplace(
