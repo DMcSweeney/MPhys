@@ -119,7 +119,7 @@ def createNet(input_shape=(28, 28, 28, 1)):
     activation = 'relu'
     inputLayer = Input(shape=(input_shape))
     x = Conv3D(32, (5, 5, 5), activation=activation, padding='same')(inputLayer)
-    x = BatchNormalization()(x)
+    #x = BatchNormalization()(x)
     x = MaxPooling3D()(x)
     x = Conv3D(64, (3, 3, 3), activation=activation, padding='same')(x)
     #x = BatchNormalization()(x)
