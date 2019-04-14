@@ -168,9 +168,9 @@ def train(tileSize=64, numPuzzles=23, num_permutations=10, batch_size=16):
     # Get hamming set
     print("Load hamming Set")
     hamming_set = pd.read_csv(
-        "hamming_set.txt", sep=",", header=None)
+        "/hepgpu3-data1/heyst/MPhys/CNN/hamming_set.txt", sep=",", header=None)
 
-    #hamming_set = hamming_set.loc[:9]
+    hamming_set = hamming_set.loc[:9]
     print("Ham Len", len(hamming_set))
     print(hamming_set)
 
