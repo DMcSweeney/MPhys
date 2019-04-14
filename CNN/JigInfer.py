@@ -54,7 +54,7 @@ def infer(batch_size=2):
     # print(output)
     for i, img in enumerate(output):
         print(img)
-        print("Predicted index:{}. Should be: {}".format(np.argmax(img), idx_list[i])
+        print("Predicted index:{}. Should be: {}".format(np.argmax(img), idx_list[i]))
 
 
 def main(argv=None):
