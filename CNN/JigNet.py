@@ -207,10 +207,10 @@ def train(tileSize=64, numPuzzles=23, num_permutations=50, batch_size=16):
 
     model.fit_generator(generator=gen.generator(normalised_train, list_avail_keys, hamming_set, batch_size=batch_size, N=num_permutations),
                         epochs=100, verbose=1,
-                        steps_per_epoch=50,
+                        steps_per_epoch=5,
                         validation_data=gen.generator(
         normalised_val, list_avail_keys, hamming_set, batch_size=batch_size, N=num_permutations),
-        validation_steps=50, callbacks=callbacks, shuffle=False)
+        validation_steps=5, callbacks=callbacks, shuffle=False)
     model.save('model_best.h5')
 
 
