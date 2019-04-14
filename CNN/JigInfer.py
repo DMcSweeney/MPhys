@@ -18,12 +18,24 @@ def infer(batch_size=2):
     image_array, image_affine = image_data.get_data()
     moving_array, moving_affine = __image.get_data()
     dvf_array, dvf_affine = __label.get_data()
-
+    """
     list_avail_keys = help.get_moveable_keys(image_array)
     # Get hamming set
     print("Load hamming Set")
     hamming_set = pd.read_csv("hamming_set.txt", sep=",", header=None)
     print(hamming_set)
+    """
+    avail_keys = pd.read_csv("avail_keys_both.txt", sep=",", header=None)
+    print("Len keys:", len(avail_keys))
+    list_avail_keys = [(avail_keys.loc[i, 0], avail_keys.loc[i, 1], avail_keys.loc[i, 2])
+                       for i in range(len(avail_keys))]
+    print(list_avail_keys)
+    # Get hamming set
+    print("Load hamming Set")
+    hamming_set = pd.read_csv(
+        "/hepgpu3-data1/heyst/MPhys/CNN/hamming_set.txt", sep=",", header=None)
+
+    hamming_set = hamming_set.loc[:49]
     # Ignore moving and dvf
     validation_dataset, validation_moving, validation_dvf, train_dataset, train_moving, train_dvf = helper.split_data(
         image_array, moving_array, dvf_array, split_ratio=0.15)
