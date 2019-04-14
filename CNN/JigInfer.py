@@ -10,7 +10,8 @@ import pandas as pd
 
 def infer(batch_size=2):
     # On server with PET and PCT in
-    image_dir = "/hepgpu3-data1/dmcsween/DataTwoWay128/fixed"
+    #image_dir = "/hepgpu3-data1/dmcsween/DataTwoWay128/fixed"
+    image_dir = "/hepgpu3-data1/dmcsween/Data128/ResampleData/PlanningCT"
     print("Load Data")
     image_data, __image, __label = load.data_reader(image_dir, image_dir, image_dir)
 
