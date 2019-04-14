@@ -6,6 +6,7 @@ import dataGenerator as gen
 import JigsawHelpers as help
 import helpers as helper
 import pandas as pd
+import numpy as np
 
 
 def infer(batch_size=2):
@@ -51,6 +52,8 @@ def infer(batch_size=2):
     model.compile(optimizer=opt, loss='categorical_crossentropy', metrics=["accuracy"])
     output = model.predict_generator(generator=myPredictGen, steps=1, verbose=1)
     print(output)
+    for img in output:
+        print(np.argmax(img))
 
 
 def main(argv=None):
