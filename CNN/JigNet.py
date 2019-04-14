@@ -122,7 +122,7 @@ def createNet(input_shape=(28, 28, 28, 1)):
     x = BatchNormalization()(x)
     x = MaxPooling3D()(x)
     x = Conv3D(64, (3, 3, 3), activation=activation, padding='same')(x)
-    x = BatchNormalization()(x)
+    #x = BatchNormalization()(x)
     x = MaxPooling3D()(x)
     x = Conv3D(128, (3, 3, 3), activation=activation, padding='same')(x)
     #x = BatchNormalization()(x)
