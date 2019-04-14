@@ -132,7 +132,7 @@ def createNet(input_shape=(28, 28, 28, 1)):
     return an3D
 
 
-def createSharedAlexnet3D_onemodel(input_shape=(28, 28, 28, 1), nInputs=23, nclass=10):
+def createSharedAlexnet3D_onemodel(input_shape=(28, 28, 28, 1), nInputs=23, nclass=100):
     activation = 'relu'
     input_layers = [Input(shape=input_shape, name="alexnet_input_{}".format(n))
                     for n in range(nInputs)]
@@ -145,7 +145,7 @@ def createSharedAlexnet3D_onemodel(input_shape=(28, 28, 28, 1), nInputs=23, ncla
     return model
 
 
-def train(tileSize=64, numPuzzles=23, num_permutations=10, batch_size=16):
+def train(tileSize=64, numPuzzles=23, num_permutations=100, batch_size=16):
     # On server with PET and PCT in
     image_dir = "/hepgpu3-data1/dmcsween/Data128/ResampleData/PlanningCT"
 
@@ -170,7 +170,7 @@ def train(tileSize=64, numPuzzles=23, num_permutations=10, batch_size=16):
     hamming_set = pd.read_csv(
         "/hepgpu3-data1/heyst/MPhys/CNN/hamming_set.txt", sep=",", header=None)
 
-    hamming_set = hamming_set.loc[:9]
+    hamming_set = hamming_set.loc[:99]
     print("Ham Len", len(hamming_set))
     print(hamming_set)
 
@@ -206,7 +206,7 @@ def train(tileSize=64, numPuzzles=23, num_permutations=10, batch_size=16):
                   metrics=['accuracy'])
 
     model.fit_generator(generator=gen.generator(normalised_train, list_avail_keys, hamming_set, batch_size=batch_size, N=num_permutations),
-                        epochs=20, verbose=1,
+                        epochs=100, verbose=1,
                         steps_per_epoch=normalised_train.shape[0]//batch_size,
                         validation_data=gen.generator(
         normalised_val, list_avail_keys, hamming_set, batch_size=batch_size, N=num_permutations),
