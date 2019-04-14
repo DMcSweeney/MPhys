@@ -178,8 +178,10 @@ def train(tileSize=64, numPuzzles=23, num_permutations=50, batch_size=16):
         image_array, moving_array, dvf_array)
 
     # Ignore moving and dvf
+    test_dataset, validation_moving, validation_dvf, trainVal_dataset, train_moving, train_dvf = helper.split_data(
+        fixed_array, moving_array, dvf_array, split_ratio=0.05)
     validation_dataset, validation_moving, validation_dvf, train_dataset, train_moving, train_dvf = helper.split_data(
-        fixed_array, moving_array, dvf_array, split_ratio=0.15)
+        trainVal_dataset, moving_array, dvf_array, split_ratio=0.15)
 
     normalised_train = helper.norm(train_dataset)
     normalised_val = helper.norm(validation_dataset)

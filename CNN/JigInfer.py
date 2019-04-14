@@ -38,10 +38,10 @@ def infer(batch_size=2):
 
     hamming_set = hamming_set.loc[:49]
     # Ignore moving and dvf
-    validation_dataset, validation_moving, validation_dvf, train_dataset, train_moving, train_dvf = helper.split_data(
-        image_array, moving_array, dvf_array, split_ratio=0.15)
-    print("Valid Shape:", validation_dataset.shape)
-    normalised_dataset = helper.normalise(validation_dataset)
+    test_dataset, validation_moving, validation_dvf, trainVal_dataset, train_moving, train_dvf = helper.split_data(
+        image_array, moving_array, dvf_array, split_ratio=0.05)
+    print("Valid Shape:", test_dataset.shape)
+    normalised_dataset = helper.normalise(test_dataset)
     print('Load models')
     idx_list = [10, 12]
     K.clear_session()
