@@ -51,8 +51,9 @@ def infer(batch_size=2):
     opt = optimizers.SGD(lr=0.01, momentum=0.9)
     model.compile(optimizer=opt, loss='categorical_crossentropy', metrics=["accuracy"])
     output = model.predict_generator(generator=myPredictGen, steps=1, verbose=1)
-    print(output)
+    # print(output)
     for img in output:
+        print(img)
         print(np.argmax(img))
 
 
