@@ -183,8 +183,8 @@ def train(tileSize=64, numPuzzles=23, num_permutations=50, batch_size=16):
     validation_dataset, validation_moving, validation_dvf, train_dataset, train_moving, train_dvf = helper.split_data(
         trainVal_dataset, moving_array, dvf_array, split_ratio=0.15)
 
-    normalised_train = helper.norm(train_dataset)
-    normalised_val = helper.norm(validation_dataset)
+    normalised_train = helper.normalise(train_dataset)
+    normalised_val = helper.normalise(validation_dataset)
     # Output all data from a training session into a dated folder
     outputPath = "./logs"
     # hamming_list = [0, 1, 2, 3, 4]
