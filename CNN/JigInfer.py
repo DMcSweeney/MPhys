@@ -27,10 +27,8 @@ def infer(batch_size=2):
     print(hamming_set)
     """
     avail_keys = pd.read_csv("avail_keys_both.txt", sep=",", header=None)
-    print("Len keys:", len(avail_keys))
     list_avail_keys = [(avail_keys.loc[i, 0], avail_keys.loc[i, 1], avail_keys.loc[i, 2])
                        for i in range(len(avail_keys))]
-    print(list_avail_keys)
     # Get hamming set
     print("Load hamming Set")
     hamming_set = pd.read_csv(
@@ -41,7 +39,7 @@ def infer(batch_size=2):
     test_dataset, validation_moving, validation_dvf, trainVal_dataset, train_moving, train_dvf = helper.split_data(
         image_array, moving_array, dvf_array, split_ratio=0.05)
     print("Valid Shape:", test_dataset.shape)
-    normalised_dataset = helper.normalise(test_dataset)
+    normalised_dataset = helper.norm(test_dataset)
     print('Load models')
     idx_list = [10, 12]
     K.clear_session()
