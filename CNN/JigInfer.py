@@ -34,7 +34,7 @@ def infer(batch_size=2):
     hamming_set = pd.read_csv(
         "/hepgpu3-data1/heyst/MPhys/CNN/hamming_set.txt", sep=",", header=None)
 
-    hamming_set = hamming_set.loc[:49]
+    hamming_set = hamming_set.loc[:99]
     # Ignore moving and dvf
     test_dataset, validation_moving, validation_dvf, trainVal_dataset, train_moving, train_dvf = helper.split_data(
         image_array, moving_array, dvf_array, split_ratio=0.05)
