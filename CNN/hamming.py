@@ -77,14 +77,20 @@ def hamming_distance(array1, array2):
     return distance
 
 
-def gen_max_hamming_set(N, moving_cells):
+def gen_max_hamming_set(N, moving_cells, hamming_file):
     # My hamming function
     num_moving = len(moving_cells)
-    NUM_PERM = 1000
+    NUM_PERM = 10000
+    # This is the set of 10000 perms generated through Tom's method
+    permutation_set = pd.read_csv(hamming_file, sep=",", header=None)
+    # Convert to np array so no need to change rest of code
+    permutation_set = permutation_set.values
+    """
     # Create set containing 1M permutations
     permutation_set = np.zeros((NUM_PERM, num_moving), dtype=np.uint8)
     for i in range(NUM_PERM):
-        permutation_set[i] = np.random.permutation(num_moving)
+        permutation_set[i] = larger_set.loc[i]
+    """
     max_dist_set = np.zeros((N, num_moving), dtype=np.uint8)
     hamming_dist = np.zeros((N, NUM_PERM), dtype=np.uint8)
     idx = random.randint(0, NUM_PERM)
@@ -127,13 +133,17 @@ def TOM_gen_max_hamming_set(N, moving_cells):
 
 
 def main(argv=None):
-    N = 10000
+    N = 1000
     avail_keys = [n for n in range(23)]
     print(avail_keys)
-    max_dist_set, dist_array = TOM_gen_max_hamming_set(N, avail_keys)
+    max_dist_set, dist_array = gen_max_hamming_set(
+        N, avail_keys, "/hepgpu3-data1/heyst/MPhys/CNN/hamming_set_10000.txt")
+    """
     np.savetxt("hamming_set_10000.txt", max_dist_set, delimiter=",", fmt='%1.2i')
     np.savetxt("hamming_min_mean_10000.txt", dist_array, delimiter=",", fmt='%1.2i')
-
+    """
+    np.savetxt("mixed_hamming_set.txt", max_dist_set, delimiter=",", fmt='%1.2i')
+    np.savetxt("mixed_hamming_min_mean.txt", dist_array, delimiter=",", fmt='%1.2i')
     """
 
     hamming_file = './hamming_set.txt'
