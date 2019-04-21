@@ -1,23 +1,14 @@
-from keras.layers import (Dense, Dropout, Concatenate, Input, Activation, Flatten,
-                          Conv3D, MaxPooling3D, GlobalAveragePooling3D, BatchNormalization, add)
-from keras.models import Model, load_model
-from keras.callbacks import ModelCheckpoint, ReduceLROnPlateau, EarlyStopping, Callback
-from keras.initializers import RandomNormal, he_normal
+from keras.layers import (Dense, Concatenate, Input, Flatten,
+                          Conv3D, MaxPooling3D, BatchNormalization)
+from keras.models import Model
+from keras.callbacks import ModelCheckpoint, ReduceLROnPlateau, Callback
 from keras import optimizers
 from keras.utils import plot_model
-from time import strftime, localtime
-import dataLoader as load
-import os
-import time
-import hamming
 import helpers as helper
+import dataLoader as load
 from customTensorBoard import TrainValTensorBoard
 import dataGenerator as gen
-import JigsawHelpers as help
 import pandas as pd
-import numpy as np
-from keras import backend as K
-#  from keras.utils import plot_model
 
 
 class LossHistory(Callback):
@@ -147,7 +138,8 @@ def createSharedAlexnet3D_onemodel(input_shape=(28, 28, 28, 1), nInputs=23, ncla
 
 def train(tileSize=64, numPuzzles=23, num_permutations=250, batch_size=16):
     # On server with PET and PCT in
-    image_dir = "/hepgpu3-data1/dmcsween/Data128/ResampleData/PlanningCT"
+    #image_dir = "/hepgpu3-data1/dmcsween/Data128/ResampleData/PlanningCT"
+    image_dir = "/hepgpu3-data1/dmcsween/Data128/ResampleData/PET_Rigid"
 
     print("Load Data")
     image_data, __image, __label = load.data_reader(image_dir, image_dir, image_dir)
