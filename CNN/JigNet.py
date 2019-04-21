@@ -168,7 +168,7 @@ def train(tileSize=64, numPuzzles=23, num_permutations=100, batch_size=16):
     # Get hamming set
     print("Load hamming Set")
     hamming_set = pd.read_csv(
-        "/hepgpu3-data1/heyst/MPhys/CNN/hamming_set.txt", sep=",", header=None)
+        "mixed_hamming_set.txt", sep=",", header=None)
 
     hamming_set = hamming_set.loc[:99]
     print("Ham Len", len(hamming_set))
@@ -186,7 +186,7 @@ def train(tileSize=64, numPuzzles=23, num_permutations=100, batch_size=16):
     normalised_train = helper.normalise(train_dataset)
     normalised_val = helper.normalise(validation_dataset)
     # Output all data from a training session into a dated folder
-    outputPath = "./logs"
+    outputPath = "./mixed_hamming_logs"
     # hamming_list = [0, 1, 2, 3, 4]
     # img_idx = [0, 1, 2, 3, 4]
     # callbacks
@@ -213,7 +213,7 @@ def train(tileSize=64, numPuzzles=23, num_permutations=100, batch_size=16):
                         validation_data=gen.generator(
         normalised_val, list_avail_keys, hamming_set, batch_size=batch_size, N=num_permutations),
         validation_steps=5, callbacks=callbacks, shuffle=False)
-    model.save('model_best.h5')
+    model.save(outputPath + '/final_model.h5')
 
 
 def main(argv=None):
