@@ -200,7 +200,8 @@ def train(tileSize=64, numPuzzles=23, num_permutations=1000, batch_size=16):
     model = createSharedAlexnet3D_onemodel()
     # for layer in model.layers:
     #     print(layer.name, layer.output_shape)
-    opt = optimizers.SGD(lr=0.1)
+    #opt = optimizers.SGD(lr=0.1)
+    opt = optimizers.Adam()
     plot_model(model, to_file='model.png')
     print(model.summary())
     model.compile(optimizer=opt,
