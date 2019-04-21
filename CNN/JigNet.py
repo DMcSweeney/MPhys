@@ -132,20 +132,20 @@ def createNet(input_shape=(28, 28, 28, 1)):
     return an3D
 
 
-def createSharedAlexnet3D_onemodel(input_shape=(28, 28, 28, 1), nInputs=23, nclass=250):
+def createSharedAlexnet3D_onemodel(input_shape=(28, 28, 28, 1), nInputs=23, nclass=500):
     activation = 'relu'
     input_layers = [Input(shape=input_shape, name="alexnet_input_{}".format(n))
                     for n in range(nInputs)]
     #an3D = createAlexnet3D(input_shape)
     an3D = createNet(input_shape)
     fc6 = Concatenate()([an3D(x) for x in input_layers])
-    fc7 = Dense(8192, activation=activation)(fc6)
+    fc7 = Dense(16384, activation=activation)(fc6)
     fc8 = Dense(nclass, activation='softmax', name="ClassificationOutput")(fc7)
     model = Model(inputs=input_layers, output=fc8)
     return model
 
 
-def train(tileSize=64, numPuzzles=23, num_permutations=250, batch_size=16):
+def train(tileSize=64, numPuzzles=23, num_permutations=500, batch_size=16):
     # On server with PET and PCT in
     image_dir = "/hepgpu3-data1/dmcsween/Data128/ResampleData/PlanningCT"
 
@@ -170,7 +170,7 @@ def train(tileSize=64, numPuzzles=23, num_permutations=250, batch_size=16):
     hamming_set = pd.read_csv(
         "mixed_hamming_set.txt", sep=",", header=None)
 
-    hamming_set = hamming_set.loc[:249]
+    hamming_set = hamming_set.loc[:499]
     print("Ham Len", len(hamming_set))
     # print(hamming_set)
 
