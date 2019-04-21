@@ -139,7 +139,7 @@ def createSharedAlexnet3D_onemodel(input_shape=(28, 28, 28, 1), nInputs=23, ncla
     #an3D = createAlexnet3D(input_shape)
     an3D = createNet(input_shape)
     fc6 = Concatenate()([an3D(x) for x in input_layers])
-    fc7 = Dense(4096, activation=activation)(fc6)
+    fc7 = Dense(16384, activation=activation)(fc6)
     fc8 = Dense(nclass, activation='softmax', name="ClassificationOutput")(fc7)
     model = Model(inputs=input_layers, output=fc8)
     return model
