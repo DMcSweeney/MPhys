@@ -14,14 +14,19 @@ import math
 
 
 # If on server
+"""
 fixed_dir = "/hepgpu3-data1/dmcsween/DataTwoWay128/fixed"
 moving_dir = "/hepgpu3-data1/dmcsween/DataTwoWay128/moving"
 dvf_dir = "/hepgpu3-data1/dmcsween/DataTwoWay128/DVF"
 
 # Parameters to tweak
 batch_size = 4
-activation = 'relu'
+
 momentum = 0.75
+"""
+fixed_dir = "/hepgpu3-data1/dmcsween/Data128/ResampleData/PlanningCT"
+moving_dir = "/hepgpu3-data1/dmcsween/Data128/ResampleData/PET_Rigid"
+dvf_dir = "/hepgpu3-data1/dmcsween/Data128/ResampleData/DVF"
 
 
 class LossHistory(Callback):
@@ -48,7 +53,8 @@ def TransferNet(input_shape, weights_path):
     return downPath
 
 
-def buildNet(input_shape, fixed_weights=, moving_weights=):
+def buildNet(input_shape, fixed_weights='./all_logs/PCT_logs100perms/final_model.h5', moving_weights='./all_logs/PET_logs100perms/final_model.h5'):
+    activation = 'relu'
     fixed_img_input = TransferNet(input_shape, fixed_weights)
     moving_img_input = TransferNet(input_shape, moving_weights)
 
@@ -97,7 +103,7 @@ def train():
     print("DVF Shape:", train_dvf.shape)
     # Callbacks
     reduce_lr = ReduceLROnPlateau(monitor='val_loss', factor=0.2,
-                                  patience=5, min_lr=0.00001)
+                                  patience=5)
     history = LossHistory()
     checkpoint = ModelCheckpoint('best_model.h5', monitor='val_loss',
                                  verbose=1, save_best_only=True, period=1)
@@ -112,7 +118,7 @@ def train():
     # print(model.summary())
     plot_model(model, to_file='model.png')
     opt = optimizers.SGD(lr=0.01)
-    model.compile(optimizer=, loss='mean_squared_error')
+    model.compile(optimizer=opt, loss='mean_squared_error')
     model.fit_generator(generator=helper.generator(inputs=[train_fixed, train_moving], label=train_dvf, batch_size=batch_size),
                         steps_per_epoch=math.ceil(train_fixed.shape[0]/batch_size),
                         epochs=75, verbose=1,
@@ -125,6 +131,8 @@ def train():
     #    inputs=[validation_fixed, validation_moving], label=validation_dvf, batch_size=batch_size), steps=1, verbose=1)
     model.save('model.h5')
 
+
+def infer():
     """Testing to see where issue with DVF is """
     dvf = model.predict(helper.generator([test_fixed, test_moving], label=test_dvf, predict=True, batch_size=1), steps=math.ceil(
         test_fixed.shape[0]/batch_size), verbose=1)
