@@ -37,7 +37,7 @@ def correlation_layer(convIn_left, convIn_right, shape, max_displacement=20, str
     # Implementation of correlation layer from Flownet
     widthIn, depthIn, heightIn = shape
     layer_list = []
-    dotLayer = dotLayer()
+    #dotLayer = dotLayer()
     for x_disp in range(-max_displacement, max_displacement+stride, stride):
         for y_disp in range(-max_displacement, max_displacement+stride, stride):
             for z_disp in range(-max_displacement, max_displacement+stride, stride):
