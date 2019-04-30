@@ -50,34 +50,35 @@ def TransferNet(input_shape, weights_path):
     Conv3 = Conv3D(128, (3, 3, 3), activation=activation, padding='same', name='Conv3')(x)
     downPath = Model(input=input_layer, outputs=Conv3)
     downPath.load_weights(weights_path, by_name=True)
-    return downPath, Conv1, Conv2, Conv3
+    return downPath
 
 
 def buildNet(input_shape, fixed_weights='./all_logs/PCT_logs100perms/final_model.h5', moving_weights='./all_logs/PET_logs100perms/final_model.h5'):
     activation = 'relu'
     fixed_img_input = Input(shape=input_shape)
     moving_img_input = Input(shape=input_shape)
-    fixed_path, fixed_Conv1, fixed_Conv2, fixed_Conv3 = TransferNet(input_shape, fixed_weights)
-    moving_path, moving_Conv1, moving_Conv2, moving_Conv3 = TransferNet(
-        input_shape, moving_weights)
+    fixed_path = TransferNet(input_shape, fixed_weights)
+    moving_path = TransferNet(input_shape, moving_weights)
+    """
     mergeConv1 = concatenate([fixed_Conv1, moving_Conv1])
     mergeConv2 = concatenate([fixed_Conv2, moving_Conv2])
     mergeConv3 = concatenate([fixed_Conv3, moving_Conv3])
+    """
     # Correlation layers
     # correlation_out = myLayer.correlation_layer(
     #    fixed_Conv3, moving_Conv3, shape=input_shape[:-1], max_displacement=20, stride=2)
     correlation_out = concatenate([fixed_path(fixed_img_input), moving_path(moving_img_input)])
     x = Conv3DTranspose(128, (3, 3, 3), activation=activation,
                         padding='same', name='ConvUp3')(correlation_out)
-    merge3 = concatenate([x, mergeConv3])
-    x = UpSampling3D(size=(2, 2, 2))(merge3)
+    #merge3 = concatenate([x, mergeConv3])
+    x = UpSampling3D(size=(2, 2, 2))(x)
     x = Conv3DTranspose(64, (3, 3, 3), activation=activation, padding='same', name='ConvUp2')(x)
-    merge2 = concatenate([x, mergeConv2])
-    x = UpSampling3D(size=(2, 2, 2))(merge2)
+    #merge2 = concatenate([x, mergeConv2])
+    x = UpSampling3D(size=(2, 2, 2))(x)
     x = Conv3DTranspose(32, (5, 5, 5), activation=activation, padding='same', name='ConvUp1')(x)
-    merge1 = concatenate([x, mergeConv1])
+    #merge1 = concatenate([x, mergeConv1])
     dvf = Conv3D(64, kernel_size=3, activation=activation,
-                 padding='same', name='dvf_64features')(merge1)
+                 padding='same', name='dvf_64features')(x)
     dvf = Conv3D(3, kernel_size=1, activation=None, padding='same', name='dvf')(dvf)
     model = Model(inputs=[fixed_img_input, moving_img_input], output=dvf)
     return model
