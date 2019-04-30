@@ -138,9 +138,9 @@ def createSharedAlexnet3D_onemodel(input_shape=(28, 28, 28, 1), nInputs=23, ncla
 
 def train(tileSize=64, numPuzzles=23, num_permutations=100, batch_size=16):
     # On server with PET and PCT in
-    image_dir = "/hepgpu3-data1/dmcsween/Data128/ResampleData/PlanningCT"
+    #image_dir = "/hepgpu3-data1/dmcsween/Data128/ResampleData/PlanningCT"
     #image_dir = "/hepgpu3-data1/dmcsween/Data128/ResampleData/PET_Rigid"
-
+    image_dir = "/hepgpu3-data1/dmcsween/DataTwoWay128/fixed"
     print("Load Data")
     image_data, __image, __label = load.data_reader(image_dir, image_dir, image_dir)
 
@@ -205,7 +205,7 @@ def train(tileSize=64, numPuzzles=23, num_permutations=100, batch_size=16):
                         validation_data=gen.generator(
         normalised_val, list_avail_keys, hamming_set, batch_size=batch_size, N=num_permutations),
         validation_steps=5, callbacks=callbacks, shuffle=False)
-    model.save(outputPath + '/final_model.h5')
+    model.save(outputPath + '/final_model_{}.h5'.format(i))
 
 
 def main(argv=None):
