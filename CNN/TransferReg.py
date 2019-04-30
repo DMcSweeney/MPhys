@@ -58,7 +58,7 @@ def buildNet(input_shape, fixed_weights='./all_logs/PCT_logs100perms/final_model
     fixed_img_input = Input(shape=input_shape)
     moving_img_input = Input(shape=input_shape)
     fixed_path, fixed_Conv1, fixed_Conv2, fixed_Conv3 = TransferNet(input_shape, fixed_weights)
-    moving_img_input, moving_Conv1, moving_Conv2, moving_Conv3 = TransferNet(
+    moving_path, moving_Conv1, moving_Conv2, moving_Conv3 = TransferNet(
         input_shape, moving_weights)
     mergeConv1 = concatenate([fixed_Conv1, moving_Conv1])
     mergeConv2 = concatenate([fixed_Conv2, moving_Conv2])
