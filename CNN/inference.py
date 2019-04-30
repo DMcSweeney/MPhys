@@ -19,6 +19,8 @@ batch_size = 1
 
 
 def inference():
+    inputPath = './transfer_logs/'
+    outputPath = './transfer_outputs/'
     print('Load data to Transform')
     fixed_predict, moving_predict, dvf_label = load.data_reader(fixed_dir, moving_dir, dvf_dir)
 
@@ -42,7 +44,7 @@ def inference():
     print('Load models')
     print("Fixed input", test_fixed.shape)
     print("Moving input", test_moving.shape)
-    model = load_model('best_model.h5')
+    model = load_model(inputPath + 'best_model.h5')
     model.compile(optimizer='Adam', loss='mean_squared_error', metrics=["accuracy"])
     dvf = model.predict_generator(helper.generator([test_fixed, test_moving], label=test_dvf, predict=True, batch_size=batch_size), steps=math.ceil(
         test_fixed.shape[0]/batch_size), verbose=1)
@@ -51,10 +53,10 @@ def inference():
 
     print('Save DVF')
     # Save images
-    helper.write_images(test_fixed, test_fixed_affine, file_path='./outputs/', file_prefix='fixed')
+    helper.write_images(test_fixed, test_fixed_affine, file_path=outputPath, file_prefix='fixed')
     helper.write_images(test_moving, test_moving_affine,
-                        file_path='./outputs/', file_prefix='moving')
-    helper.write_images(dvf, test_fixed_affine, file_path='./outputs/', file_prefix='dvf')
+                        file_path=outputPath, file_prefix='moving')
+    helper.write_images(dvf, test_fixed_affine, file_path=outputPath, file_prefix='dvf')
     print("Test Loss:", test_loss)
     # Save warped
     print("Test Loss Shape:", test_loss.shape)
