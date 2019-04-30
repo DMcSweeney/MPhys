@@ -95,7 +95,7 @@ def buildNet(input_shape, fixed_weights='./all_logs/PCT_logs100perms/final_model
                  padding='same', name='dvf_64features')(merge1)
     dvf = Conv3D(3, kernel_size=1, activation=None, padding='same', name='dvf')(dvf)
     model = Model(inputs=[fixed_img_input, moving_img_input], outputs=dvf)
-    model.load_weigths(both_weights, by_name=True)
+    model.load_weights(both_weights, by_name=True)
     return model
 
 
