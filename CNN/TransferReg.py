@@ -65,9 +65,9 @@ def buildNet(input_shape, fixed_weights='./all_logs/PCT_logs100perms/final_model
     mergeConv3 = concatenate([fixed_Conv3, moving_Conv3])
     """
     # Correlation layers
-    # correlation_out = myLayer.correlation_layer(
-    #    fixed_Conv3, moving_Conv3, shape=input_shape[:-1], max_displacement=20, stride=2)
-    correlation_out = concatenate([fixed_path(fixed_img_input), moving_path(moving_img_input)])
+    correlation_out = myLayer.correlation_layer(
+        fixed_path(fixed_img_input), moving_path(moving_img_input), shape=input_shape[:-1], max_displacement=20, stride=2)
+    #correlation_out = concatenate([fixed_path(fixed_img_input), moving_path(moving_img_input)])
     x = Conv3DTranspose(128, (3, 3, 3), activation=activation,
                         padding='same', name='ConvUp3')(correlation_out)
     #merge3 = concatenate([x, mergeConv3])
