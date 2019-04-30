@@ -65,9 +65,9 @@ def buildNet(input_shape, fixed_weights='./all_logs/PCT_logs100perms/final_model
     mergeConv3 = concatenate([fixed_Conv3, moving_Conv3])
     """
     # Correlation layers
-    correlation_out = myLayer.correlation_layer(
-        fixed_path(fixed_img_input), moving_path(moving_img_input), shape=input_shape[:-1], max_displacement=20, stride=2)
-    #correlation_out = concatenate([fixed_path(fixed_img_input), moving_path(moving_img_input)])
+    # correlation_out = myLayer.correlation_layer(
+    #    fixed_path(fixed_img_input), moving_path(moving_img_input), shape=input_shape[:-1], max_displacement=20, stride=2)
+    correlation_out = concatenate([fixed_path(fixed_img_input), moving_path(moving_img_input)])
     x = Conv3DTranspose(128, (3, 3, 3), activation=activation,
                         padding='same', name='ConvUp3')(correlation_out)
     #merge3 = concatenate([x, mergeConv3])
@@ -127,7 +127,7 @@ def train(batch_size=2):
         print(layer.name, layer.output_shape)
 
     # print(model.summary())
-    plot_model(model, to_file='model.png')
+    plot_model(model, to_file=outputPath + 'model.png')
     opt = optimizers.SGD(lr=0.01)
     model.compile(optimizer=opt, loss='mean_squared_error')
     model.fit_generator(generator=helper.generator(inputs=[train_fixed, train_moving], label=train_dvf, batch_size=batch_size),
