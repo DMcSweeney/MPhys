@@ -60,15 +60,14 @@ def buildNet(input_shape, fixed_weights='./all_logs/PCT_logs100perms/final_model
         input_shape, moving_weights)
     mergeConv1 = concatenate([fixed_Conv1, moving_Conv1])
     mergeConv2 = concatenate([fixed_Conv2, moving_Conv2])
-    mergeConv3 = concatenate([fixed_Conv3, moving_Conv3])
-    print("In Shape type:", type(input_shape))
+    #mergeConv3 = concatenate([fixed_Conv3, moving_Conv3])
     # Correlation layers
     correlation_out = myLayer.correlation_layer(
-        fixed_img_input, moving_img_input, shape=input_shape[:-1], max_displacement=20, stride=2)
+        fixed_Conv3, moving_Conv3, shape=input_shape[:-1], max_displacement=20, stride=2)
     x = Conv3DTranspose(128, (3, 3, 3), activation=activation,
                         padding='same', name='ConvUp3')(correlation_out)
-    merge3 = concatenate([x, mergeConv3])
-    x = UpSampling3D(size=(2, 2, 2))(merge3)
+    #merge3 = concatenate([x, mergeConv3])
+    x = UpSampling3D(size=(2, 2, 2))(x)
     x = Conv3DTranspose(64, (3, 3, 3), activation=activation, padding='same', name='ConvUp2')(x)
     merge2 = concatenate([x, mergeConv2])
     x = UpSampling3D(size=(2, 2, 2))(merge2)
