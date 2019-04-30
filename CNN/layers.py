@@ -6,7 +6,7 @@ from keras.layers import Lambda
 import keras.backend as K
 
 
-def dotLayer():
+def dotLayer(x):
     # Check axis to reduce sum along
     # Dot product operation
     return Lambda(lambda x: K.reduce_sum(K.multiply(x[0], x[1]), axis=-1, keep_dims=True), name='DotLayer')
