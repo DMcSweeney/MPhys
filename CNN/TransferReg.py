@@ -84,7 +84,7 @@ def buildNet(input_shape, fixed_weights='./all_logs/PCT_logs100perms/final_model
     return model
 
 
-def train(batch_size=16):
+def train(batch_size=2):
     # Load DATA
     fixed_image, moving_image, dvf_label = load.data_reader(fixed_dir, moving_dir, dvf_dir)
 
