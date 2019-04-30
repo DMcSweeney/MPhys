@@ -119,7 +119,7 @@ def train(batch_size=16):
     callbacks = [reduce_lr, history, checkpoint, tensorboard]
 
     # Train
-    model = buildNet(fixed_image.shape[1:])
+    model = buildNet(train_fixed.shape[1:])
     for layer in model.layers:
         print(layer.name, layer.output_shape)
 

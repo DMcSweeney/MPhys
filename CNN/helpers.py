@@ -99,8 +99,6 @@ def split_data(fixed_image, moving_image, dvf_label, split_ratio):
     train_fixed = fixed_image[validation_size:, ...]
     train_moving = moving_image[validation_size:, ...]
     train_dvf = np.squeeze(dvf_label[validation_size:, ...])
-    print("Validation shape:", validation_fixed.shape)
-    print("Training shape:", train_fixed.shape)
     return validation_fixed, validation_moving, validation_dvf, train_fixed, train_moving, train_dvf
 
 
