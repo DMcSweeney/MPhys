@@ -23,7 +23,7 @@ def correlation_layer(convIn_left, convIn_right, shape, max_displacement=20, str
 def dotLayer():
     # Check axis to reduce sum along
     # Dot product operation
-    return Lambda(lambda x: tf.reduce_sum(tf.multiply(x[0], x[1]) axis=-1, keep_dims=True), name='DotLayer')
+    return Lambda(lambda x: tf.reduce_sum(tf.multiply(x[0], x[1]), axis=-1, keep_dims=True), name='DotLayer')
 
 
 def get_padded_stride(inputLayer, x_displacement, y_displacement, z_displacement, widthIn, depthIn, heightIn):

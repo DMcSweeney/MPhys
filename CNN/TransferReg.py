@@ -50,25 +50,32 @@ def TransferNet(input_shape, weights_path):
     Conv3 = Conv3D(128, (3, 3, 3), activation=activation, padding='same', name='Conv3')(x)
     downPath = Model(input=input_layer, outputs=Conv3)
     downPath.load_weights(weights_path, by_name=True)
-    return downPath
+    return downPath, Conv1, Conv2, Conv3
 
 
 def buildNet(input_shape, fixed_weights='./all_logs/PCT_logs100perms/final_model.h5', moving_weights='./all_logs/PET_logs100perms/final_model.h5'):
     activation = 'relu'
-    fixed_img_input = TransferNet(input_shape, fixed_weights)
-    moving_img_input = TransferNet(input_shape, moving_weights)
+    fixed_img_input, fixed_Conv1, fixed_Conv2, fixed_Conv3 = TransferNet(input_shape, fixed_weights)
+    moving_img_input, moving_Conv1, moving_Conv2, moving_Conv3 = TransferNet(
+        input_shape, moving_weights)
+    mergeConv1 = concatenate([fixed_Conv1, moving_Conv1])
+    mergeConv2 = concatenate([fixed_Conv2, moving_Conv2])
+    mergeConv3 = concatenate([fixed_Conv3, moving_Conv3])
 
     # Correlation layers
     correlation_out = myLayer.correlation_layer(
         fixed_img_input, moving_img_input, shape=input_shape, max_displacement=20, stride=2)
     x = Conv3DTranspose(128, (3, 3, 3), activation=activation,
                         padding='same', name='ConvUp3')(correlation_out)
-    x = UpSampling3D(size=(2, 2, 2))(x)
+    merge3 = concatenate([x, mergeConv3])
+    x = UpSampling3D(size=(2, 2, 2))(merge3)
     x = Conv3DTranspose(64, (3, 3, 3), activation=activation, padding='same', name='ConvUp2')(x)
-    x = UpSampling3D(size=(2, 2, 2))(x)
+    merge2 = concatenate([x, mergeConv2])
+    x = UpSampling3D(size=(2, 2, 2))(merge2)
     x = Conv3DTranspose(32, (5, 5, 5), activation=activation, padding='same', name='ConvUp1')(x)
+    merge1 = concatenate([x, mergeConv1])
     dvf = Conv3D(64, kernel_size=3, activation=activation,
-                 padding='same', name='dvf_64features')(x)
+                 padding='same', name='dvf_64features')(merge1)
     dvf = Conv3D(3, kernel_size=1, activation=None, padding='same', name='dvf')(dvf)
     model = Model(inputs=[fixed_img_input, moving_img_input], output=dvf)
     return model
