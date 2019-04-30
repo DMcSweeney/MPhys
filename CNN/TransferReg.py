@@ -81,7 +81,7 @@ def buildNet(input_shape, fixed_weights='./all_logs/PCT_logs100perms/final_model
     return model
 
 
-def train():
+def train(batch_size=16):
     # Load DATA
     fixed_image, moving_image, dvf_label = load.data_reader(fixed_dir, moving_dir, dvf_dir)
 
@@ -108,13 +108,14 @@ def train():
     print("PCT Shape:", train_fixed.shape)
     print("PET Shape:", train_moving.shape)
     print("DVF Shape:", train_dvf.shape)
+    outputPath = './transfer_logs/'
     # Callbacks
     reduce_lr = ReduceLROnPlateau(monitor='val_loss', factor=0.2,
                                   patience=5)
     history = LossHistory()
-    checkpoint = ModelCheckpoint('best_model.h5', monitor='val_loss',
+    checkpoint = ModelCheckpoint(outputPath + 'best_model.h5', monitor='val_loss',
                                  verbose=1, save_best_only=True, period=1)
-    tensorboard = TrainValTensorBoard(write_graph=False)
+    tensorboard = TrainValTensorBoard(write_graph=False, log_dir=outputPath)
     callbacks = [reduce_lr, history, checkpoint, tensorboard]
 
     # Train
