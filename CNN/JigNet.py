@@ -9,7 +9,9 @@ import dataLoader as load
 from customTensorBoard import TrainValTensorBoard
 import dataGenerator as gen
 import pandas as pd
-
+from sklearn import datasets, linear_model
+from sklearn.model_selection import (train_test_split, kFold)
+from matplotlib import pyplot as plt
 
 class LossHistory(Callback):
     def on_train_begin(self, logs={}):
@@ -177,36 +179,58 @@ def train(tileSize=64, numPuzzles=23, num_permutations=100, batch_size=16):
 
     normalised_train = helper.normalise(train_dataset)
     normalised_val = helper.normalise(validation_dataset)
-    # Output all data from a training session into a dated folder
-    outputPath = "./mixed_hamming_logs"
-    # hamming_list = [0, 1, 2, 3, 4]
-    # img_idx = [0, 1, 2, 3, 4]
-    # callbacks
-    checkpoint = ModelCheckpoint(outputPath + '/best_model.h5', monitor='val_acc',
-                                 verbose=1, save_best_only=True, period=1)
-    reduce_lr_plateau = ReduceLROnPlateau(monitor='val_acc', patience=10, verbose=1)
-    # early_stop = EarlyStopping(monitor='val_acc', patience=5, verbose=1)
-    tensorboard = TrainValTensorBoard(write_graph=False, log_dir=outputPath)
-    callbacks = [checkpoint, reduce_lr_plateau, tensorboard]
-    # BUILD Model
-    model = createSharedAlexnet3D_onemodel()
-    # for layer in model.layers:
-    #     print(layer.name, layer.output_shape)
-    opt = optimizers.SGD(lr=0.01)
-    #plot_model(model, to_file='model.png')
-    print(model.summary())
-    model.compile(optimizer=opt,
-                  loss='categorical_crossentropy',
-                  metrics=['accuracy'])
 
-    model.fit_generator(generator=gen.generator(normalised_train, list_avail_keys, hamming_set, batch_size=batch_size, N=num_permutations),
-                        epochs=50, verbose=1,
-                        steps_per_epoch=5,
-                        validation_data=gen.generator(
-        normalised_val, list_avail_keys, hamming_set, batch_size=batch_size, N=num_permutations),
-        validation_steps=5, callbacks=callbacks, shuffle=False)
-    model.save(outputPath + '/final_model.h5')
+    conc_data = np.concatenate((normalised_train,normalised_val))
+    #prepare cross validation
+    kfold =kFold(n_splits=5,random_state=None, shuffle=True)
+    kf.get_n_splits(conc_data)
 
+    X = conc_data
+    y = list_avail_keys
+
+    i=1
+
+    for train_index, test_index in kf.split(X):
+        trainData = X[train_index]
+        testData = X[test_index]
+        trainLabels = y[train_index]
+        testLabels = y[test_index]
+
+        print("=========================================")
+        print("====== K Fold Validation step => %d/%d =======" % (i,k_folds))
+        print("=========================================")
+
+        # Output all data from a training session into a dated folder
+        outputPath = "./mixed_hamming_logs"
+        # hamming_list = [0, 1, 2, 3, 4]
+        # img_idx = [0, 1, 2, 3, 4]
+        # callbacks
+        checkpoint = ModelCheckpoint(outputPath + '/best_model.h5', monitor='val_acc',
+                                     verbose=1, save_best_only=True, period=1)
+        reduce_lr_plateau = ReduceLROnPlateau(monitor='val_acc', patience=10, verbose=1)
+        # early_stop = EarlyStopping(monitor='val_acc', patience=5, verbose=1)
+        tensorboard = TrainValTensorBoard(write_graph=False, log_dir=outputPath)
+        callbacks = [checkpoint, reduce_lr_plateau, tensorboard]
+        # BUILD Model
+        model = createSharedAlexnet3D_onemodel()
+        # for layer in model.layers:
+        #     print(layer.name, layer.output_shape)
+        opt = optimizers.SGD(lr=0.01)
+        #plot_model(model, to_file='model.png')
+        print(model.summary())
+        model.compile(optimizer=opt,
+                      loss='categorical_crossentropy',
+                      metrics=['accuracy'])
+
+        model.fit_generator(generator=gen.generator(normalised_train, list_avail_keys, hamming_set, batch_size=batch_size, N=num_permutations),
+                            epochs=50, verbose=1,
+                            steps_per_epoch=5,
+                            validation_data=gen.generator(
+            normalised_val, list_avail_keys, hamming_set, batch_size=batch_size, N=num_permutations),
+            validation_steps=5, callbacks=callbacks, shuffle=False)
+        model.save(outputPath + '/final_model.h5')
+
+        i+=1
 
 def main(argv=None):
     train()
