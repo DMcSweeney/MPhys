@@ -12,6 +12,7 @@ import pandas as pd
 from sklearn import datasets, linear_model
 from sklearn.model_selection import (train_test_split, kFold)
 from matplotlib import pyplot as plt
+import os, sys
 
 class LossHistory(Callback):
     def on_train_begin(self, logs={}):
@@ -186,22 +187,20 @@ def train(tileSize=64, numPuzzles=23, num_permutations=100, batch_size=16):
     kf.get_n_splits(conc_data)
 
     X = conc_data
-    y = list_avail_keys
 
     i=1
 
     for train_index, test_index in kf.split(X):
         trainData = X[train_index]
         testData = X[test_index]
-        trainLabels = y[train_index]
-        testLabels = y[test_index]
 
         print("=========================================")
         print("====== K Fold Validation step => %d/%d =======" % (i,k_folds))
         print("=========================================")
 
         # Output all data from a training session into a dated folder
-        outputPath = "./mixed_hamming_logs"
+        os.mkdir("./k-fold")
+        outputPath = "./k-fold"
         # hamming_list = [0, 1, 2, 3, 4]
         # img_idx = [0, 1, 2, 3, 4]
         # callbacks
@@ -213,7 +212,7 @@ def train(tileSize=64, numPuzzles=23, num_permutations=100, batch_size=16):
         callbacks = [checkpoint, reduce_lr_plateau, tensorboard]
         # BUILD Model
         model = createSharedAlexnet3D_onemodel()
-        # for layer in model.layers:
+        # for layer in model.layers
         #     print(layer.name, layer.output_shape)
         opt = optimizers.SGD(lr=0.01)
         #plot_model(model, to_file='model.png')
@@ -222,13 +221,13 @@ def train(tileSize=64, numPuzzles=23, num_permutations=100, batch_size=16):
                       loss='categorical_crossentropy',
                       metrics=['accuracy'])
 
-        model.fit_generator(generator=gen.generator(normalised_train, list_avail_keys, hamming_set, batch_size=batch_size, N=num_permutations),
+        model.fit_generator(generator=gen.generator(trainData, list_avail_keys, hamming_set, batch_size=batch_size, N=num_permutations),
                             epochs=50, verbose=1,
                             steps_per_epoch=5,
                             validation_data=gen.generator(
-            normalised_val, list_avail_keys, hamming_set, batch_size=batch_size, N=num_permutations),
+            testData, list_avail_keys, hamming_set, batch_size=batch_size, N=num_permutations),
             validation_steps=5, callbacks=callbacks, shuffle=False)
-        model.save(outputPath + '/final_model.h5')
+        model.save(outputPath + '/final_model{}.h5' .format(i))
 
         i+=1
 
