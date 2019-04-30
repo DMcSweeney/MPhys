@@ -55,7 +55,9 @@ def TransferNet(input_shape, weights_path):
 
 def buildNet(input_shape, fixed_weights='./all_logs/PCT_logs100perms/final_model.h5', moving_weights='./all_logs/PET_logs100perms/final_model.h5'):
     activation = 'relu'
-    fixed_img_input, fixed_Conv1, fixed_Conv2, fixed_Conv3 = TransferNet(input_shape, fixed_weights)
+    fixed_img_input = Input(shape=input_shape)
+    moving_img_input = Input(shape=input_shape)
+    fixed_path, fixed_Conv1, fixed_Conv2, fixed_Conv3 = TransferNet(input_shape, fixed_weights)
     moving_img_input, moving_Conv1, moving_Conv2, moving_Conv3 = TransferNet(
         input_shape, moving_weights)
     mergeConv1 = concatenate([fixed_Conv1, moving_Conv1])
@@ -64,7 +66,7 @@ def buildNet(input_shape, fixed_weights='./all_logs/PCT_logs100perms/final_model
     # Correlation layers
     # correlation_out = myLayer.correlation_layer(
     #    fixed_Conv3, moving_Conv3, shape=input_shape[:-1], max_displacement=20, stride=2)
-    correlation_out = concatenate([fixed_img_input, moving_img_input])
+    correlation_out = concatenate([fixed_path(fixed_img_input), moving_path(moving_img_input)])
     x = Conv3DTranspose(128, (3, 3, 3), activation=activation,
                         padding='same', name='ConvUp3')(correlation_out)
     merge3 = concatenate([x, mergeConv3])
