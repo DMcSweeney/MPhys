@@ -141,7 +141,7 @@ def train(batch_size=2):
     for layer in model.layers:
         print(layer.name, layer.output_shape)
 
-    # print(model.summary())
+    print(model.summary())
     plot_model(model, to_file=outputPath + 'model.png', show_shapes=True)
     opt = optimizers.Adam()
     model.compile(optimizer=opt, loss='mean_squared_error')
