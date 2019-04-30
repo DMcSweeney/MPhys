@@ -41,7 +41,7 @@ def get_padded_stride(inputLayer, x_displacement, y_displacement, z_displacement
     back_pad = start_y
 
     get_layer = Lambda(lambda x: tf.pad(x[:, start_x:slice_width, start_y:slice_depth, start_z:slice_height, :],
-                        paddings=[[0, 0], [left_pad, right_pad], [
-                            front_pad, back_pad], [top_pad, bottom_pad], [0, 0]],
-                        name="gather_{}_{}_{}".format(x_displacement, y_displacement, z_displacement))(inputLayer)
+                                        paddings=[[0, 0], [left_pad, right_pad], [
+                                            front_pad, back_pad], [top_pad, bottom_pad], [0, 0]],
+                                        name="gather_{}_{}_{}".format(x_displacement, y_displacement, z_displacement))(inputLayer))
     return get_layer
