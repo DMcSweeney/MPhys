@@ -48,7 +48,7 @@ def TransferNet(input_shape, weights_path):
     #x = BatchNormalization()(x)
     x = MaxPooling3D()(Conv2)
     Conv3 = Conv3D(128, (3, 3, 3), activation=activation, padding='same', name='Conv3')(x)
-    downPath = Model(input=input_layer, outputs=Conv3)
+    downPath = Model(inputs=input_layer, outputs=Conv3)
     downPath.load_weights(weights_path, by_name=True)
     return downPath
 
@@ -80,7 +80,7 @@ def buildNet(input_shape, fixed_weights='./all_logs/PCT_logs100perms/final_model
     dvf = Conv3D(64, kernel_size=3, activation=activation,
                  padding='same', name='dvf_64features')(x)
     dvf = Conv3D(3, kernel_size=1, activation=None, padding='same', name='dvf')(dvf)
-    model = Model(inputs=[fixed_img_input, moving_img_input], output=dvf)
+    model = Model(inputs=[fixed_img_input, moving_img_input], outputs=dvf)
     return model
 
 
