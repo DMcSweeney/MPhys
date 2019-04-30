@@ -127,7 +127,7 @@ def train(batch_size=2):
         print(layer.name, layer.output_shape)
 
     # print(model.summary())
-    plot_model(model, to_file=outputPath + 'model.png', show_shapes=True)
+    plot_model(model, to_file=outputPath + 'model.png', show_shapes=True, expand_nested=True)
     opt = optimizers.SGD(lr=0.01)
     model.compile(optimizer=opt, loss='mean_squared_error')
     model.fit_generator(generator=helper.generator(inputs=[train_fixed, train_moving], label=train_dvf, batch_size=batch_size),
