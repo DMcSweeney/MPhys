@@ -143,7 +143,7 @@ def train(batch_size=2):
 
     print(model.summary())
     plot_model(model, to_file=outputPath + 'model.png', show_shapes=True)
-    opt = optimizers.Adam(lr=0.01)
+    opt = optimizers.Adam()
     model.compile(optimizer=opt, loss='mean_squared_error')
     model.fit_generator(generator=helper.generator(inputs=[train_fixed, train_moving], label=train_dvf, batch_size=batch_size),
                         steps_per_epoch=math.ceil(train_fixed.shape[0]/batch_size),
