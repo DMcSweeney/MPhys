@@ -13,6 +13,7 @@ from sklearn import datasets, linear_model
 from sklearn.model_selection import (train_test_split, KFold)
 from matplotlib import pyplot as plt
 import os, sys
+import numpy as np
 
 class LossHistory(Callback):
     def on_train_begin(self, logs={}):
