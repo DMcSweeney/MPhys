@@ -64,7 +64,7 @@ def generator(image_array, avail_keys, hamming_set, img_idx=None, hamming_idx=No
         # return inputs, idx_array, random_idx_list, rand_idx_list
 
 
-def predict_generator(image_array, avail_keys, hamming_set, hamming_idx=None, image_idx=None, blank_idx=None crop_size=28, batch_size=8, N=25):
+def predict_generator(image_array, avail_keys, hamming_set, hamming_idx=None, image_idx=None, blank_idx=None, crop_size=28, batch_size=8, N=25):
     # Divide array into cubes
     while True:
         array_list = np.zeros((batch_size, len(avail_keys), crop_size, crop_size, crop_size, 1))
