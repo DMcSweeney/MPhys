@@ -3,6 +3,7 @@ from keras.layers import (Dense, Concatenate, Input, Flatten,
 from keras.models import Model
 from keras.callbacks import ModelCheckpoint, ReduceLROnPlateau, Callback
 from keras import optimizers
+from keras import backend as K
 from keras.utils import plot_model
 import helpers as helper
 import dataLoader as load
@@ -194,6 +195,7 @@ def train(tileSize=64, numPuzzles=23, num_permutations=100, batch_size=16):
     os.mkdir("./k-fold")
 
     for train_index, test_index in kf.split(X):
+        K.clear_session()
         trainData = X[train_index]
         testData = X[test_index]
 
