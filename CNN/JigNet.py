@@ -183,8 +183,9 @@ def train(tileSize=64, numPuzzles=23, num_permutations=100, batch_size=16):
 
     conc_data = np.concatenate((normalised_train,normalised_val))
     #prepare cross validation
-    kfold =kFold(n_splits=5,random_state=None, shuffle=True)
-    kf.get_n_splits(conc_data)
+    kfold =KFold(n_splits=5,random_state=None, shuffle=True)
+
+    kfold.get_n_splits(conc_data)
 
     X = conc_data
 
@@ -196,7 +197,7 @@ def train(tileSize=64, numPuzzles=23, num_permutations=100, batch_size=16):
         testData = X[test_index]
 
         print("=========================================")
-        print("====== K Fold Validation step => %d/%d =======" % (i,k_folds))
+        print("====== K Fold Validation step => %d =======" % (i))
         print("=========================================")
 
         # Output all data from a training session into a dated folder
