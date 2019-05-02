@@ -52,7 +52,7 @@ def infer(batch_size=1):
 
     accuracy = model.evaluate_generator(generator=myPredictGen, steps=1, verbose=1)
     print("Metric names:", model.metrics_name)
-    print(accuracy)
+    # print(accuracy)
     # print(output)
     """
     output = model.predict_generator(generator=myPredictGen, steps=1, verbose=1)
