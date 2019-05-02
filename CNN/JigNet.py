@@ -10,7 +10,7 @@ from customTensorBoard import TrainValTensorBoard
 import dataGenerator as gen
 import pandas as pd
 from sklearn import datasets, linear_model
-from sklearn.model_selection import (train_test_split, kFold)
+from sklearn.model_selection import (train_test_split, KFold)
 from matplotlib import pyplot as plt
 import os, sys
 
