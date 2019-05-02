@@ -43,6 +43,8 @@ def infer(batch_size=1):
     normalised_dataset = helper.normalise(test_dataset)
     print('Load models')
     idx_list = [10, 12]
+    scores = []
+
     K.clear_session()
     model = load_model(inputPath + '/best_model.h5')
     myPredictGen = gen.predict_generator(
@@ -51,9 +53,9 @@ def infer(batch_size=1):
     model.compile(optimizer=opt, loss='categorical_crossentropy', metrics=["accuracy"])
 
     accuracy = model.evaluate_generator(generator=myPredictGen, steps=1, verbose=1)
-    print("Metric names:", model.metrics_name)
-    # print(accuracy)
-    # print(output)
+    print("%s: %.2f%%" % (model.metrics_names[1], accuracy[1]*100))
+    scores.append(accuracy[1] * 100)
+
     """
     output = model.predict_generator(generator=myPredictGen, steps=1, verbose=1)
     for i, img in enumerate(output):
