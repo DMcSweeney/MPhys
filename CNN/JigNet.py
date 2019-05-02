@@ -189,6 +189,7 @@ def train(tileSize=64, numPuzzles=23, num_permutations=100, batch_size=16):
     X = conc_data
 
     i=1
+    os.mkdir("./k-fold")
 
     for train_index, test_index in kf.split(X):
         trainData = X[train_index]
@@ -199,8 +200,8 @@ def train(tileSize=64, numPuzzles=23, num_permutations=100, batch_size=16):
         print("=========================================")
 
         # Output all data from a training session into a dated folder
-        os.mkdir("./k-fold")
-        outputPath = "./k-fold"
+        os.mkdir("./k-fold/k{}" .format(i))
+        outputPath = "./k-fold/k{}" .format(i)
         # hamming_list = [0, 1, 2, 3, 4]
         # img_idx = [0, 1, 2, 3, 4]
         # callbacks
