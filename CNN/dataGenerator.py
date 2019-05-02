@@ -86,7 +86,6 @@ def predict_generator(image_array, avail_keys, hamming_set, hamming_idx=None, im
             # Blank out cubes = to blank_idx in avail_keys
             blank_key = avail_keys[blank_idx]
             shuffle_dict[blank_key] = np.zeros(shape=(1, 32, 32, 32, 1))
-            print("Mean in Blank:", np.mean(shuffle_dict[blank_key]))
             # Random crop within cubes
             cropped_dict = help.random_div(shuffle_dict)
             # Shuffle according to hamming

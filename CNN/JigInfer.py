@@ -52,7 +52,7 @@ def infer(batch_size=1):
     opt = optimizers.SGD(lr=0.01)
     model.compile(optimizer=opt, loss='categorical_crossentropy', metrics=["accuracy"])
 
-    accuracy = model.evaluate_generator(generator=myPredictGen, steps=1, verbose=1)
+    accuracy = model.evaluate_generator(generator=myPredictGen, steps=1, verbose=0)
     #print("%s: %.2f%%" % (model.metrics_names[1], accuracy[1]*100))
     print("Done")
     scores.append(accuracy[1] * 100)
