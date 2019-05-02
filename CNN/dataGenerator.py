@@ -64,7 +64,7 @@ def generator(image_array, avail_keys, hamming_set, img_idx=None, hamming_idx=No
         # return inputs, idx_array, random_idx_list, rand_idx_list
 
 
-def predict_generator(image_array, avail_keys, hamming_set, hamming_idx=None, image_idx=None, crop_size=28, batch_size=8, N=25):
+def predict_generator(image_array, avail_keys, hamming_set, hamming_idx=None, image_idx=None, blank_idx=None crop_size=28, batch_size=8, N=25):
     # Divide array into cubes
     while True:
         array_list = np.zeros((batch_size, len(avail_keys), crop_size, crop_size, crop_size, 1))
@@ -83,6 +83,10 @@ def predict_generator(image_array, avail_keys, hamming_set, hamming_idx=None, im
             cells = help.divide_input(image_array[np.newaxis, rand_idx])
             # Figure out which should move
             shuffle_dict, fix_dict = help.avail_keys_shuffle(cells, avail_keys)
+            # Blank out cubes = to blank_idx in avail_keys
+            blank_key = avail_keys[blank_idx]
+            shuffle_dict[blank_key] = np.zeros(shape=(32, 32, 32, 1))
+            print("Mean in Blank:", np.mean(shuffle_dict[blank_key]))
             # Random crop within cubes
             cropped_dict = help.random_div(shuffle_dict)
             # Shuffle according to hamming
