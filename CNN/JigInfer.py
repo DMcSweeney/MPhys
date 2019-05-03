@@ -48,7 +48,7 @@ def infer(batch_size=1):
     K.clear_session()
     model = load_model(inputPath + '/best_model.h5')
     myPredictGen = gen.predict_generator(
-        normalised_dataset, list_avail_keys, hamming_set, hamming_idx=idx_list, batch_size=batch_size, blank_idx=0, N=10)
+        normalised_dataset, list_avail_keys, hamming_set, hamming_idx=idx_list, batch_size=batch_size, blank_idx=None, N=10)
     opt = optimizers.SGD(lr=0.01)
     model.compile(optimizer=opt, loss='categorical_crossentropy', metrics=["accuracy"])
     print("Pre Eval")
