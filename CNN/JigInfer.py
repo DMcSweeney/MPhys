@@ -45,7 +45,7 @@ def infer(batch_size=1):
     idx_list = [10, 12]
     scores = []
 
-    K.clear_session()
+    # K.clear_session()
     model = load_model(inputPath + '/best_model.h5')
     myPredictGen = gen.predict_generator(
         normalised_dataset, list_avail_keys, hamming_set, hamming_idx=idx_list, batch_size=batch_size, blank_idx=None, N=10)
