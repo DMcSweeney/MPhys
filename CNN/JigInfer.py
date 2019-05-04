@@ -9,7 +9,7 @@ import pandas as pd
 import numpy as np
 
 
-def infer(batch_size=1):
+def infer(batch_size=2):
     # On server with PET and PCT in
     image_dir = "/hepgpu3-data1/dmcsween/DataTwoWay128/fixed"
     #image_dir = "/hepgpu3-data1/dmcsween/Data128/ResampleData/PlanningCT"
@@ -33,7 +33,7 @@ def infer(batch_size=1):
     # Get hamming set
     print("Load hamming Set")
     hamming_set = pd.read_csv(
-        "./mixed_hamming_set.txt", sep=",", header=None)
+        "mixed_hamming_set.txt", sep=",", header=None)
 
     hamming_set = hamming_set.loc[:99]
     # Ignore moving and dvf
@@ -42,13 +42,13 @@ def infer(batch_size=1):
     print("Valid Shape:", test_dataset.shape)
     normalised_dataset = helper.normalise(test_dataset)
     print('Load models')
-    idx_list = [10, 12]
+    idx_list = [2, 8]
     scores = []
 
     # K.clear_session()
-    model = load_model(inputPath + '/final_model.h5')
+    model = load_model(inputPath + '/best_model.h5')
     myPredictGen = gen.predict_generator(
-        normalised_dataset, list_avail_keys, hamming_set, hamming_idx=idx_list, batch_size=batch_size, blank_idx=None, N=100)
+        normalised_dataset, list_avail_keys, hamming_set, hamming_idx=idx_list, batch_size=batch_size, N=100)
     opt = optimizers.SGD(lr=0.01)
     model.compile(optimizer=opt, loss='categorical_crossentropy', metrics=["accuracy"])
     print("Pre Eval")
