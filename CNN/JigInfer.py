@@ -60,7 +60,8 @@ def infer(batch_size=2):
         print("Predicted index:{}. Should be: {}".format(np.argmax(img), idx_list[i]))
         print("Accuracy: {}".format(np.max(img)))
     """
-    accuracy = model.evaluate_generator(generator=myPredictGen, steps=1, verbose=1)
+    accuracy = model.evaluate_generator(generator=myPredictGen, steps=5, verbose=1)
+    print(model.metrics_names)
     print("%s: %.2f%%" % (model.metrics_names[1], accuracy[1]*100))
     print("Done")
     #scores.append(accuracy[1] * 100)
