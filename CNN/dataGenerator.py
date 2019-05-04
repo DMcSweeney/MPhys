@@ -86,8 +86,9 @@ def predict_generator(image_array, avail_keys, hamming_set, hamming_idx=None, im
             # Blank out cubes = to blank_idx in avail_keys
 
             if blank_idx is not None:
-                blank_key = avail_keys[blank_idx]
-                shuffle_dict[blank_key] = np.zeros(shape=(1, 32, 32, 32, 1))
+                for idx in blank_idx:
+                    blank_key = avail_keys[idx]
+                    shuffle_dict[blank_key] = np.zeros(shape=(1, 32, 32, 32, 1))
             else:
                 pass
             # Random crop within cubes
