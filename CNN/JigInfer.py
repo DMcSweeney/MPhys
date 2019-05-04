@@ -56,7 +56,8 @@ def infer(batch_size=2):
         accuracy = model.evaluate_generator(generator=myPredictGen, steps=5, verbose=1)
         print("%s: %.2f%%" % (model.metrics_names[1], accuracy[1]*100))
         scores.append(accuracy[1] * 100)
-    print(scores)
+    for n, acc in enumerate(scores):
+        print(n, acc)
     print("Done")
 
 
