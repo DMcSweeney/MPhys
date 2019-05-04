@@ -48,7 +48,7 @@ def infer(batch_size=2):
 
     K.clear_session()
     model = load_model(inputPath + '/best_model.h5')
-    myPredictGen = gen.predict_generator(
+    myPredictGen = gen.evaluate_generator(
         normalised_dataset, list_avail_keys, hamming_set, hamming_idx=idx_list, batch_size=batch_size, blank_idx=blank_idx, N=100)
     opt = optimizers.SGD(lr=0.01)
     model.compile(optimizer=opt, loss='categorical_crossentropy', metrics=["accuracy"])
@@ -60,7 +60,7 @@ def infer(batch_size=2):
         print("Predicted index:{}. Should be: {}".format(np.argmax(img), idx_list[i]))
         print("Accuracy: {}".format(np.max(img)))
     """
-    accuracy = model.evaluate_generator(generator=myPredictGen, steps=1, verbose=0)
+    accuracy = model.evaluate_generator(generator=myPredictGen, steps=1, verbose=1)
     print("%s: %.2f%%" % (model.metrics_names[1], accuracy[1]*100))
     print("Done")
     #scores.append(accuracy[1] * 100)

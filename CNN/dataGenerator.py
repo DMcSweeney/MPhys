@@ -105,6 +105,49 @@ def predict_generator(image_array, avail_keys, hamming_set, hamming_idx=None, im
         yield inputs
 
 
+def evaluate_generator(image_array, avail_keys, hamming_set, hamming_idx=None, image_idx=None, blank_idx=None, crop_size=28, batch_size=8, N=25):
+    # Divide array into cubes
+    while True:
+        idx_array = np.zeros((batch_size, hamming_set.shape[0]), dtype=np.uint8)
+        array_list = np.zeros((batch_size, len(avail_keys), crop_size, crop_size, crop_size, 1))
+        for i in range(batch_size):
+            # rand_idx = random image
+            if image_idx is None:
+                rand_idx = random.randrange(image_array.shape[0])
+            else:
+                rand_idx = int(image_idx[i])
+            # random_idx = random permutation
+            if hamming_idx is None:
+                random_idx = random.randrange(hamming_set.shape[0])
+            else:
+                random_idx = int(hamming_idx[i])
+            # Divide image into cubes
+            cells = help.divide_input(image_array[np.newaxis, rand_idx])
+            # Figure out which should move
+            shuffle_dict, fix_dict = help.avail_keys_shuffle(cells, avail_keys)
+            # Blank out cubes = to blank_idx in avail_keys
+
+            if blank_idx is not None:
+                for idx in blank_idx:
+                    blank_key = avail_keys[idx]
+                    shuffle_dict[blank_key] = np.zeros(shape=(1, 32, 32, 32, 1))
+            else:
+                pass
+            # Random crop within cubes
+            cropped_dict = help.random_div(shuffle_dict)
+            # Shuffle according to hamming
+            # Randomly assign labels to cells
+            # print("Permutation:", hamming_set[random_idx])
+            # dummy_dict = helper.dummy_dict(cropped_dict)
+            out_dict = help.shuffle_jigsaw(cropped_dict, hamming_set.loc[random_idx, :].values)
+            for n, val in enumerate(out_dict.values()):
+                array_list[i, n, ...] = val
+            idx_array[i, random_idx] = 1
+        # return array_list, idx_array, out_dict, fix_dict
+        inputs = [array_list[:, n, ...] for n in range(len(avail_keys))]
+        yield inputs, idx_array
+
+
 """
 class mygenerator(Sequence):
     def __init__(self, image_set, batch_size):
