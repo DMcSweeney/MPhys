@@ -11,9 +11,9 @@ import numpy as np
 
 def infer(batch_size=1):
     # On server with PET and PCT in
-    image_dir = "/hepgpu3-data1/dmcsween/DataTwoWay128/fixed"
-    #image_dir = "/hepgpu3-data1/dmcsween/Data128/ResampleData/PlanningCT"
-    inputPath = "./all_logs/both_logs100perms"
+    #image_dir = "/hepgpu3-data1/dmcsween/DataTwoWay128/fixed"
+    image_dir = "/hepgpu3-data1/dmcsween/Data128/ResampleData/PlanningCT"
+    inputPath = "./all_logs/PCT_logs100perms"
     print("Load Data")
     image_data, __image, __label = load.data_reader(image_dir, image_dir, image_dir)
 
