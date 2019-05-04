@@ -43,10 +43,10 @@ def infer(batch_size=2):
     normalised_dataset = helper.normalise(test_dataset)
     print('Load models')
     idx_list = [12, 38]
-    blank_idx = [0, 1]
+    blank_idx = [n for n in range(15)]
     scores = []
 
-    # K.clear_session()
+    K.clear_session()
     model = load_model(inputPath + '/best_model.h5')
     myPredictGen = gen.predict_generator(
         normalised_dataset, list_avail_keys, hamming_set, hamming_idx=idx_list, batch_size=batch_size, blank_idx=blank_idx, N=100)
