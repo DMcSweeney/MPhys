@@ -33,7 +33,7 @@ def infer(batch_size=1):
     # Get hamming set
     print("Load hamming Set")
     hamming_set = pd.read_csv(
-        "/hepgpu3-data1/heyst/MPhys/CNN/hamming_set.txt", sep=",", header=None)
+        "./mixed_hamming_set.txt", sep=",", header=None)
 
     hamming_set = hamming_set.loc[:99]
     # Ignore moving and dvf
