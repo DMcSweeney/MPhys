@@ -42,13 +42,13 @@ def infer(batch_size=2):
     print("Valid Shape:", test_dataset.shape)
     normalised_dataset = helper.normalise(test_dataset)
     print('Load models')
-    idx_list = [2, 8]
+    idx_list = [12, 38]
     scores = []
 
     # K.clear_session()
     model = load_model(inputPath + '/best_model.h5')
     myPredictGen = gen.predict_generator(
-        normalised_dataset, list_avail_keys, hamming_set, hamming_idx=idx_list, batch_size=batch_size, N=100)
+        normalised_dataset, list_avail_keys, hamming_set, hamming_idx=idx_list, batch_size=batch_size, blank_idx=0, N=100)
     opt = optimizers.SGD(lr=0.01)
     model.compile(optimizer=opt, loss='categorical_crossentropy', metrics=["accuracy"])
     print("Pre Eval")
