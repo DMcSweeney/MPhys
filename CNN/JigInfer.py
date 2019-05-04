@@ -43,7 +43,7 @@ def infer(batch_size=2):
     normalised_dataset = helper.normalise(test_dataset)
     print('Load models')
     idx_list = [12, 38]
-    blank_idx = [n for n in range(15)]
+    blank_idx = [n for n in range(22)]
     scores = []
 
     K.clear_session()
