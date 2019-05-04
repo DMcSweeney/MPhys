@@ -51,7 +51,7 @@ def infer(batch_size=1):
         normalised_dataset, list_avail_keys, hamming_set, hamming_idx=idx_list, batch_size=batch_size, blank_idx=None, N=100)
     opt = optimizers.SGD(lr=0.01)
     model.compile(optimizer=opt, loss='categorical_crossentropy', metrics=["accuracy"])
-    print("Pre Eval")s
+    print("Pre Eval")
     output = model.predict_generator(generator=myPredictGen, steps=1, verbose=1)
     for i, img in enumerate(output):
         print(img)
