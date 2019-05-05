@@ -199,7 +199,7 @@ def main(N=10, batch_size=2):
     # cropped_fixed = help.random_div(fix_dict)
     puzzle_array = help.solve_jigsaw(shuffle_dict, fix_dict, fixed_array)
     helper.write_images(puzzle_array, fixed_affine,
-                        file_path="./oclusion_test/", file_prefix='inner_crop')
+                        file_path="./oclusion_test/", file_prefix='idx16_inner_crop')
 
 
 if __name__ == '__main__':
