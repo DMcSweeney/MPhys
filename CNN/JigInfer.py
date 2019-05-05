@@ -49,7 +49,7 @@ def infer(batch_size=2):
     model = load_model(inputPath + '/best_model.h5')
     opt = optimizers.SGD(lr=0.01)
     model.compile(optimizer=opt, loss='categorical_crossentropy', metrics=["accuracy"])
-    for i in range(22):
+    for i in range(23):
         blank_idx.append(i)
         print("Pre Eval")
         myPredictGen = gen.evaluate_generator(
