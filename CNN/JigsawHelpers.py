@@ -53,6 +53,7 @@ def outer_crop(input_dict, blank_key, crop_size=14, border_size=7):
             # Centre_cells is central region of random div
             centre = val[:, border_size:border_size+crop_size,
                          border_size:border_size+crop_size, border_size:border_size+crop_size, :]
+            print(np.mean(centre))
             val[...] = np.zeros(shape=val.shape)
             new_tile = np.pad(centre, 7, mode='constant')
             print(centre.shape)
