@@ -54,6 +54,7 @@ def outer_crop(input_dict, blank_key, crop_size=14, border_size=7):
             centre = val[:, border_size:border_size+crop_size,
                          border_size:border_size+crop_size, border_size:border_size+crop_size, :]
             print(np.mean(centre))
+            print(val.shape)
             val[...] = np.zeros(shape=val.shape)
             val[:, border_size:border_size+crop_size, border_size:border_size +
                 crop_size, border_size:border_size+crop_size, :] = centre
