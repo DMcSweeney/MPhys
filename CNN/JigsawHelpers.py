@@ -44,6 +44,22 @@ def random_div(input_dict, crop_size=28):
     return cells
 
 
+def outer_crop(input_dict, crop_size=14, border_size=7):
+    # Function to crop small region inside and pad back up
+    # Leaves a blank margin around region
+    centre_cells = {}
+    out_cells = {}
+    print("Border size:", border_size)
+    for key, val in input_dict.items():
+        # Centre_cells is central region of random div
+        centre_cells[key] = val[:, border_size:border_size+crop_size,
+                                border_size:border_size+crop_size, border_size:border_size+crop_size, :]
+        out_cells[key] = np.zeros(shape=val.shape)
+    for key, val in out_cells.items():
+        val[:, border_size, border_size, border_size, :] = centre_cells[key]
+    return out_cells
+
+
 def shuffle_jigsaw(input_dict, hamming_set, number_cells_per_dim=4, dims=3):
     # Randomly assign key to value
     list_keys = [key for key in input_dict.keys()]

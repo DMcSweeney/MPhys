@@ -126,7 +126,6 @@ def evaluate_generator(image_array, avail_keys, hamming_set, hamming_idx=None, i
             # Figure out which should move
             shuffle_dict, fix_dict = help.avail_keys_shuffle(cells, avail_keys)
             # Blank out cubes = to blank_idx in avail_keys
-
             if blank_idx is not None:
                 for idx in blank_idx:
                     blank_key = avail_keys[idx]
