@@ -57,8 +57,8 @@ def outer_crop(input_dict, blank_key, crop_size=14, border_size=7):
             centre_cells[key] = val[:, border_size:border_size+crop_size,
                                     border_size:border_size+crop_size, border_size:border_size+crop_size, :]
             out_cells[key] = np.zeros(shape=val.shape)
-            del input_dict[key]
     for key, val in out_cells.items():
+        del input_dict[key]
         val[:, border_size:border_size+crop_size, border_size:border_size +
             crop_size, border_size:border_size+crop_size, :] = centre_cells[key]
     all_cells.update(input_dict)
