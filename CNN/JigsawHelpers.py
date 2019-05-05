@@ -55,11 +55,9 @@ def outer_crop(input_dict, blank_key, crop_size=14, border_size=7):
                          border_size:border_size+crop_size, border_size:border_size+crop_size, :]
             print(np.mean(centre))
             val[...] = np.zeros(shape=val.shape)
-            new_tile = np.pad(centre, 7, mode='constant')
-            print(centre.shape)
-            print(np.mean(new_tile))
-            input_dict[key] = new_tile
-            print(np.mean(input_dict[key]))
+            val[:, border_size:border_size+crop_size, border_size:border_size +
+                crop_size, border_size:border_size+crop_size, :] = centre
+
     return input_dict
 
 
