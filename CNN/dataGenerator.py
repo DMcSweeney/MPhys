@@ -105,7 +105,7 @@ def predict_generator(image_array, avail_keys, hamming_set, hamming_idx=None, im
         yield inputs
 
 
-def evaluate_generator(image_array, avail_keys, hamming_set, hamming_idx=None, image_idx=None, blank_idx=None, crop_size=28, batch_size=8, N=25):
+def evaluate_generator(image_array, avail_keys, hamming_set, hamming_idx=None, image_idx=None, blank_idx=None, out_crop=False, crop_size=28, batch_size=8, N=25):
     # Divide array into cubes
     while True:
         idx_array = np.zeros((batch_size, hamming_set.shape[0]), dtype=np.uint8)
@@ -134,6 +134,11 @@ def evaluate_generator(image_array, avail_keys, hamming_set, hamming_idx=None, i
                 pass
             # Random crop within cubes
             cropped_dict = help.random_div(shuffle_dict)
+
+            if out_crop is True:
+                cropped_dict = help.outer_crop(cropped_dict)
+            else:
+                pass
             # Shuffle according to hamming
             # Randomly assign labels to cells
             # print("Permutation:", hamming_set[random_idx])
@@ -179,10 +184,9 @@ def main(N=10, batch_size=2):
     print("\n\nImage:", rand_idx_list)
     print("\n\nPerm:", random_idx_list)
 
-    np.savetxt("image_idx.txt", rand_idx_list, delimiter=",", fmt='%1.2i')
-    np.savetxt("perm_idx.txt", random_idx_list, delimiter=",", fmt='%1.2i')
+    #np.savetxt("image_idx.txt", rand_idx_list, delimiter=",", fmt='%1.2i')
+    #np.savetxt("perm_idx.txt", random_idx_list, delimiter=",", fmt='%1.2i')
 
-    """
     # cropped_fixed = help.random_div(fix_dict)
     print("Solve puzzle number:", index_array)
     # puzzle_array = help.solve_jigsaw(shuffle_dict, cropped_fixed, fixed_array)
@@ -191,10 +195,8 @@ def main(N=10, batch_size=2):
         check_dummy = [np.mean(list_arrays[n, i, ...]) for i in range(len(avail_keys))]
         dummy_list.append(check_dummy)
     print(dummy_list)
-    # helper.write_images(puzzle_array, fixed_affine,
-    #                    file_path="./jigsaw_out/", file_prefix='no_padding')
-
-    """
+    helper.write_images(puzzle_array, fixed_affine,
+                        file_path="./jigsaw_out/", file_prefix='no_padding')
 
 
 if __name__ == '__main__':
