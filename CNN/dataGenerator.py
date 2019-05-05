@@ -134,7 +134,7 @@ def evaluate_generator(image_array, avail_keys, hamming_set, hamming_idx=None, i
                 pass
             # Random crop within cubes
             cropped_dict = help.random_div(shuffle_dict)
-            fix_dict = help.random_dicv(fix_dict)
+            fix_dict = help.random_div(fix_dict)
             if out_crop is True:
                 cropped_dict = help.outer_crop(cropped_dict)
             else:
