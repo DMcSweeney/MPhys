@@ -61,6 +61,16 @@ def outer_crop(input_dict, crop_size=14, border_size=7):
     return out_cells
 
 
+def inner_crop(input_dict, crop_size=14, border_size=7):
+    # Function to remove inner region of random div
+    # Leaves blank squanre in middle
+
+    for key, val in input_dict.items():
+        val[:, border_size:border_size+crop_size, border_size:border_size +
+            crop_size, border_size:border_size+crop_size, :] = np.zeros(shape=(val.shape[0], crop_size, crop_size, crop_size, val.shape[4]))
+    return input_dict
+
+
 def shuffle_jigsaw(input_dict, hamming_set, number_cells_per_dim=4, dims=3):
     # Randomly assign key to value
     list_keys = [key for key in input_dict.keys()]

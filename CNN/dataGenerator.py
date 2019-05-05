@@ -105,7 +105,7 @@ def predict_generator(image_array, avail_keys, hamming_set, hamming_idx=None, im
         yield inputs
 
 
-def evaluate_generator(image_array, avail_keys, hamming_set, hamming_idx=None, image_idx=None, blank_idx=None, out_crop=False, crop_size=28, batch_size=8, N=25):
+def evaluate_generator(image_array, avail_keys, hamming_set, hamming_idx=None, image_idx=None, blank_idx=None, out_crop=False, inner_crop=False, crop_size=28, batch_size=8, N=25):
     # Divide array into cubes
     while True:
         idx_array = np.zeros((batch_size, hamming_set.shape[0]), dtype=np.uint8)
@@ -134,9 +134,12 @@ def evaluate_generator(image_array, avail_keys, hamming_set, hamming_idx=None, i
                 pass
             # Random crop within cubes
             cropped_dict = help.random_div(shuffle_dict)
-
             if out_crop is True:
                 cropped_dict = help.outer_crop(cropped_dict)
+            else:
+                pass
+            if inner_crop is True:
+                cropped_dict = help.inner_crop(cropped_dict)
             else:
                 pass
             # Shuffle according to hamming
