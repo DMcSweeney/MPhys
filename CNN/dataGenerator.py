@@ -126,21 +126,27 @@ def evaluate_generator(image_array, avail_keys, hamming_set, hamming_idx=None, i
             # Figure out which should move
             shuffle_dict, fix_dict = help.avail_keys_shuffle(cells, avail_keys)
             # Blank out cubes = to blank_idx in avail_keys
+            """
             if blank_idx is not None:
                 for idx in blank_idx:
                     blank_key = avail_keys[idx]
                     shuffle_dict[blank_key] = np.zeros(shape=(1, 32, 32, 32, 1))
             else:
                 pass
+            """
             # Random crop within cubes
             cropped_dict = help.random_div(shuffle_dict)
             fix_dict = help.random_div(fix_dict)
             if out_crop is True:
-                cropped_dict = help.outer_crop(cropped_dict)
+                for idx in blank_idx:
+                    blank_key = avail_keys[idx]
+                    cropped_dict = help.outer_crop(cropped_dict, blank_key)
             else:
                 pass
             if inner_crop is True:
-                cropped_dict = help.inner_crop(cropped_dict)
+                for idx in blank_idx:
+                    blank_key = avail_keys[idx]
+                    cropped_dict = help.inner_crop(cropped_dict, blank_key)
             else:
                 pass
             # Shuffle according to hamming
@@ -186,9 +192,9 @@ def main(N=10, batch_size=2):
     hamming_set = hamming_set.loc[:99]
     hamming_idx = [12]
     img_idx = [0]
-
+    blank_idx = [16]
     shuffle_dict, fix_dict = evaluate_generator(
-        fixed_array, list_avail_keys, hamming_set, hamming_idx=hamming_idx, image_idx=img_idx, blank_idx=None, out_crop=False, inner_crop=True, batch_size=1, N=10)
+        fixed_array, list_avail_keys, hamming_set, hamming_idx=hamming_idx, image_idx=img_idx, blank_idx=blank_idx, out_crop=False, inner_crop=True, batch_size=1, N=10)
 
     # cropped_fixed = help.random_div(fix_dict)
     puzzle_array = help.solve_jigsaw(shuffle_dict, fix_dict, fixed_array)

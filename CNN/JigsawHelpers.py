@@ -44,30 +44,31 @@ def random_div(input_dict, crop_size=28):
     return cells
 
 
-def outer_crop(input_dict, crop_size=14, border_size=7):
+def outer_crop(input_dict, blank_key, crop_size=14, border_size=7):
     # Function to crop small region inside and pad back up
     # Leaves a blank margin around region
     centre_cells = {}
     out_cells = {}
     print("Border size:", border_size)
     for key, val in input_dict.items():
-        # Centre_cells is central region of random div
-        centre_cells[key] = val[:, border_size:border_size+crop_size,
-                                border_size:border_size+crop_size, border_size:border_size+crop_size, :]
-        out_cells[key] = np.zeros(shape=val.shape)
+        if key == blank_key:
+            # Centre_cells is central region of random div
+            centre_cells[key] = val[:, border_size:border_size+crop_size,
+                                    border_size:border_size+crop_size, border_size:border_size+crop_size, :]
+            out_cells[key] = np.zeros(shape=val.shape)
     for key, val in out_cells.items():
         val[:, border_size:border_size+crop_size, border_size:border_size +
             crop_size, border_size:border_size+crop_size, :] = centre_cells[key]
     return out_cells
 
 
-def inner_crop(input_dict, crop_size=14, border_size=7):
+def inner_crop(input_dict, blank_key, crop_size=14, border_size=7):
     # Function to remove inner region of random div
-    # Leaves blank squanre in middle
-
+    # Leaves blank square in middle
     for key, val in input_dict.items():
-        val[:, border_size:border_size+crop_size, border_size:border_size +
-            crop_size, border_size:border_size+crop_size, :] = np.zeros(shape=(val.shape[0], crop_size, crop_size, crop_size, val.shape[4]))
+        if key == blank_key:
+            val[:, border_size:border_size+crop_size, border_size:border_size +
+                crop_size, border_size:border_size+crop_size, :] = np.zeros(shape=(val.shape[0], crop_size, crop_size, crop_size, val.shape[4]))
     return input_dict
 
 
