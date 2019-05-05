@@ -194,12 +194,12 @@ def main(N=10, batch_size=2):
     img_idx = [0]
     blank_idx = [16]
     shuffle_dict, fix_dict = evaluate_generator(
-        fixed_array, list_avail_keys, hamming_set, hamming_idx=hamming_idx, image_idx=img_idx, blank_idx=blank_idx, out_crop=False, inner_crop=True, batch_size=1, N=10)
+        fixed_array, list_avail_keys, hamming_set, hamming_idx=hamming_idx, image_idx=img_idx, blank_idx=blank_idx, out_crop=True, inner_crop=False, batch_size=1, N=10)
 
     # cropped_fixed = help.random_div(fix_dict)
     puzzle_array = help.solve_jigsaw(shuffle_dict, fix_dict, fixed_array)
     helper.write_images(puzzle_array, fixed_affine,
-                        file_path="./oclusion_test/", file_prefix='idx16_inner_crop')
+                        file_path="./oclusion_test/", file_prefix='idx16_outer_crop')
 
 
 if __name__ == '__main__':
