@@ -48,16 +48,16 @@ def outer_crop(input_dict, blank_key, crop_size=14, border_size=7):
     # Function to crop small region inside and pad back up
     # Leaves a blank margin around region
     print("Border size:", border_size)
-    for key, val in input_dict.items()
-    if key == blank_key:
-        # Centre_cells is central region of random div
-        centre = val[:, border_size:border_size+crop_size,
-                     border_size:border_size+crop_size, border_size:border_size+crop_size, :]
-        val[...] = np.zeros(shape=val.shape)
-        print(centre_cells[key].shape)
-        val[:, border_size:border_size+crop_size, border_size:border_size +
-            crop_size, border_size:border_size+crop_size, :] = centre
-        print(np.mean(input_dict[key]))
+    for key, val in input_dict.items():
+        if key == blank_key:
+            # Centre_cells is central region of random div
+            centre = val[:, border_size:border_size+crop_size,
+                         border_size:border_size+crop_size, border_size:border_size+crop_size, :]
+            val[...] = np.zeros(shape=val.shape)
+            print(centre_cells[key].shape)
+            val[:, border_size:border_size+crop_size, border_size:border_size +
+                crop_size, border_size:border_size+crop_size, :] = centre
+            print(np.mean(input_dict[key]))
 
     return input_dict
 
