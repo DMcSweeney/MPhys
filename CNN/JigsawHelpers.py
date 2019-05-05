@@ -58,7 +58,7 @@ def outer_crop(input_dict, blank_key, crop_size=14, border_size=7):
             print(centre_cells[key].shape)
             val[:, border_size:border_size+crop_size, border_size:border_size +
                 crop_size, border_size:border_size+crop_size, :] = centre_cells[key]
-            print(np.mean(val))
+            print(np.mean(centre_cells[key]))
     return input_dict
 
 
