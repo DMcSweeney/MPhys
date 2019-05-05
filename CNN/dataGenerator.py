@@ -134,6 +134,7 @@ def evaluate_generator(image_array, avail_keys, hamming_set, hamming_idx=None, i
                 pass
             # Random crop within cubes
             cropped_dict = help.random_div(shuffle_dict)
+            fix_dict = help.random_dicv(fix_dict)
             if out_crop is True:
                 cropped_dict = help.outer_crop(cropped_dict)
             else:
@@ -152,7 +153,8 @@ def evaluate_generator(image_array, avail_keys, hamming_set, hamming_idx=None, i
             idx_array[i, random_idx] = 1
         # return array_list, idx_array, out_dict, fix_dict
         inputs = [array_list[:, n, ...] for n in range(len(avail_keys))]
-        yield inputs, idx_array
+        # yield inputs, idx_array
+        return out_dict, fix_dict
 
 
 """
@@ -172,34 +174,26 @@ class mygenerator(Sequence):
 def main(N=10, batch_size=2):
     print("Load data")
     fixed_array, fixed_affine = help.get_data(fixed_dir, moving_dir, dvf_dir)
+    #normalised_dataset = helper.normalise(test_dataset)
     print("Get moveable keys")
-    avail_keys = help.get_moveable_keys(fixed_array)
-    # max_dist_set, dist_array = hamming.gen_max_hamming_set(N, avail_keys)
-    # np.savetxt("hamming_set.txt", max_dist_set, delimiter=",", fmt='%1.2i')
-    hamming_set = pd.read_csv("hamming_set.txt", sep=",", header=None)
-    print("Hamming Set Shape:", hamming_set.shape)
-    print(hamming_set)
-    print("Generator")
-    # list_arrays, index_array, shuffle_dict, fix_dict = generator(
-    #    fixed_array, avail_keys, hamming_set, batch_size=2, N=10)
-    inputs, idx_array, random_idx_list, rand_idx_list = generator(
-        fixed_array, avail_keys, hamming_set, batch_size=32, N=10)
-    print("\n\nImage:", rand_idx_list)
-    print("\n\nPerm:", random_idx_list)
+    avail_keys = pd.read_csv("avail_keys_both.txt", sep=",", header=None)
+    list_avail_keys = [(avail_keys.loc[i, 0], avail_keys.loc[i, 1], avail_keys.loc[i, 2])
+                       for i in range(len(avail_keys))]
+    # Get hamming set
+    print("Load hamming Set")
+    hamming_set = pd.read_csv(
+        "mixed_hamming_set.txt", sep=",", header=None)
+    hamming_set = hamming_set.loc[:99]
+    hamming_idx = [12]
+    img_idx = [0]
 
-    #np.savetxt("image_idx.txt", rand_idx_list, delimiter=",", fmt='%1.2i')
-    #np.savetxt("perm_idx.txt", random_idx_list, delimiter=",", fmt='%1.2i')
+    shuffle_dict, fix_dict = evaluate_generator(
+        fixed_array, list_avail_keys, hamming_set, hamming_idx=hamming_idx, image_idx=img_idx, blank_idx=None, out_crop=False, inner_crop=False, batch_size=1, N=10)
 
     # cropped_fixed = help.random_div(fix_dict)
-    print("Solve puzzle number:", index_array)
-    # puzzle_array = help.solve_jigsaw(shuffle_dict, cropped_fixed, fixed_array)
-    dummy_list = []
-    for n in range(batch_size):
-        check_dummy = [np.mean(list_arrays[n, i, ...]) for i in range(len(avail_keys))]
-        dummy_list.append(check_dummy)
-    print(dummy_list)
+    puzzle_array = help.solve_jigsaw(shuffle_dict, fix_dict, fixed_array)
     helper.write_images(puzzle_array, fixed_affine,
-                        file_path="./jigsaw_out/", file_prefix='no_padding')
+                        file_path="./oclusion_test/", file_prefix='no_block')
 
 
 if __name__ == '__main__':
