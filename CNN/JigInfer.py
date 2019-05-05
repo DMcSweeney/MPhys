@@ -44,16 +44,15 @@ def infer(batch_size=2):
     print('Load models')
     idx_list = [12, 12]
     scores = []
-    blank_idx = []
     K.clear_session()
     model = load_model(inputPath + '/best_model.h5')
     opt = optimizers.SGD(lr=0.01)
     model.compile(optimizer=opt, loss='categorical_crossentropy', metrics=["accuracy"])
     for i in range(23):
-        #blank_idx = [i]
+        blank_idx = [i]
         print("Pre Eval")
         myPredictGen = gen.evaluate_generator(
-            normalised_dataset, list_avail_keys, hamming_set, hamming_idx=idx_list, batch_size=batch_size, blank_idx=None, out_crop=False, inner_crop=True, N=100)
+            normalised_dataset, list_avail_keys, hamming_set, hamming_idx=idx_list, batch_size=batch_size, blank_idx=blank_idx, out_crop=False, inner_crop=True, N=100)
         accuracy = model.evaluate_generator(generator=myPredictGen, steps=5, verbose=1)
         print("%s: %.2f%%" % (model.metrics_names[1], accuracy[1]*100))
         scores.append(accuracy[1] * 100)

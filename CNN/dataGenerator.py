@@ -136,7 +136,7 @@ def evaluate_generator(image_array, avail_keys, hamming_set, hamming_idx=None, i
             """
             # Random crop within cubes
             cropped_dict = help.random_div(shuffle_dict)
-            fix_dict = help.random_div(fix_dict)
+            #fix_dict = help.random_div(fix_dict)
             if out_crop is True:
                 for idx in blank_idx:
                     blank_key = avail_keys[idx]
@@ -159,8 +159,8 @@ def evaluate_generator(image_array, avail_keys, hamming_set, hamming_idx=None, i
             idx_array[i, random_idx] = 1
         # return array_list, idx_array, out_dict, fix_dict
         inputs = [array_list[:, n, ...] for n in range(len(avail_keys))]
-        # yield inputs, idx_array
-        return out_dict, fix_dict
+        yield inputs, idx_array
+        # return out_dict, fix_dict
 
 
 """
