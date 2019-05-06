@@ -13,7 +13,8 @@ def infer(batch_size=2):
     # On server with PET and PCT in
     image_dir = "/hepgpu3-data1/dmcsween/DataTwoWay128/fixed"
     #image_dir = "/hepgpu3-data1/dmcsween/Data128/ResampleData/PlanningCT"
-    inputPath = "./all_logs/both_logs100perms"
+    #inputPath = "./all_logs/both_logs100perms"
+    inputPath = './mixed_hamming_logs'
     print("Load Data")
     image_data, __image, __label = load.data_reader(image_dir, image_dir, image_dir)
 
@@ -35,7 +36,7 @@ def infer(batch_size=2):
     hamming_set = pd.read_csv(
         "mixed_hamming_set.txt", sep=",", header=None)
 
-    hamming_set = hamming_set.loc[:99]
+    hamming_set = hamming_set.loc[:9]
     # Ignore moving and dvf
     test_dataset, validation_moving, validation_dvf, trainVal_dataset, train_moving, train_dvf = helper.split_data(
         image_array, moving_array, dvf_array, split_ratio=0.05)
@@ -53,7 +54,7 @@ def infer(batch_size=2):
         blank_idx.append(i)
         print("Pre Eval")
         myPredictGen = gen.evaluate_generator(
-            normalised_dataset, list_avail_keys, hamming_set, hamming_idx=idx_list, batch_size=batch_size, blank_idx=blank_idx, out_crop=True, inner_crop=False, N=100)
+            normalised_dataset, list_avail_keys, hamming_set, hamming_idx=idx_list, batch_size=batch_size, blank_idx=blank_idx, out_crop=False, inner_crop=False, N=10)
         accuracy = model.evaluate_generator(generator=myPredictGen, steps=5, verbose=1)
         print("%s: %.2f%%" % (model.metrics_names[1], accuracy[1]*100))
         scores.append(accuracy[1] * 100)
