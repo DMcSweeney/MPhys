@@ -205,7 +205,7 @@ def train(tileSize=64, numPuzzles=23, num_permutations=10, batch_size=16):
                         validation_data=gen.generator(
         normalised_val, list_avail_keys, hamming_set, batch_size=batch_size, N=num_permutations),
         validation_steps=5, callbacks=callbacks, shuffle=False)
-    model.save(outputPath + '/final_model_{}.h5'.format(i))
+    model.save(outputPath + '/final_model.h5')
 
 
 def main(argv=None):
