@@ -43,7 +43,7 @@ def infer(batch_size=2):
     print("Valid Shape:", test_dataset.shape)
     normalised_dataset = helper.normalise(test_dataset)
     print('Load models')
-    idx_list = [12, 12]
+    idx_list = [3, 3]
     scores = []
     blank_idx = []
     K.clear_session()
