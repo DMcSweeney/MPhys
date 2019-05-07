@@ -191,50 +191,50 @@ def train(tileSize=64, numPuzzles=23, num_permutations=100, batch_size=16):
 
     X = conc_data
 
-    i=1
-    os.mkdir("./k-fold")
+    train = train_index[0]
+    test = test_index[0]
 
-    for train_index, test_index in kf.split(X):
-        K.clear_session()
-        trainData = X[train_index]
-        testData = X[test_index]
 
-        print("=========================================")
-        print("====== K Fold Validation step => %d =======" % (i))
-        print("=========================================")
+    i = 1
+    K.clear_session()
+    trainData = X[train]
+    testData = X[test]
 
-        # Output all data from a training session into a dated folder
-        os.mkdir("./k-fold/k{}" .format(i))
-        outputPath = "./k-fold/k{}" .format(i)
-        # hamming_list = [0, 1, 2, 3, 4]
-        # img_idx = [0, 1, 2, 3, 4]
-        # callbacks
-        checkpoint = ModelCheckpoint(outputPath + '/best_model.h5', monitor='val_acc',
-                                     verbose=1, save_best_only=True, period=1)
-        reduce_lr_plateau = ReduceLROnPlateau(monitor='val_acc', patience=10, verbose=1)
-        # early_stop = EarlyStopping(monitor='val_acc', patience=5, verbose=1)
-        tensorboard = TrainValTensorBoard(write_graph=False, log_dir=outputPath)
-        callbacks = [checkpoint, reduce_lr_plateau, tensorboard]
-        # BUILD Model
-        model = createSharedAlexnet3D_onemodel()
-        # for layer in model.layers
-        #     print(layer.name, layer.output_shape)
-        opt = optimizers.SGD(lr=0.01)
-        #plot_model(model, to_file='model.png')
-        print(model.summary())
-        model.compile(optimizer=opt,
-                      loss='categorical_crossentropy',
-                      metrics=['accuracy'])
+    print("=========================================")
+    print("====== K Fold Validation step => %d =======" % (i))
+    print("=========================================")
 
-        model.fit_generator(generator=gen.generator(trainData, list_avail_keys, hamming_set, batch_size=batch_size, N=num_permutations),
-                            epochs=50, verbose=1,
-                            steps_per_epoch=5,
-                            validation_data=gen.generator(
-            testData, list_avail_keys, hamming_set, batch_size=batch_size, N=num_permutations),
-            validation_steps=5, callbacks=callbacks, shuffle=False)
-        model.save(outputPath + '/final_model{}.h5' .format(i))
+    # Output all data from a training session into a dated folder
+    outputPath = "./k-fold/k{}" .format(i)
+    # hamming_list = [0, 1, 2, 3, 4]
+    # img_idx = [0, 1, 2, 3, 4]
+    # callbacks
+    checkpoint = ModelCheckpoint(outputPath + '/best_model.h5', monitor='val_acc',
+                                 verbose=1, save_best_only=True, period=1)
+    reduce_lr_plateau = ReduceLROnPlateau(monitor='val_acc', patience=10, verbose=1)
+    # early_stop = EarlyStopping(monitor='val_acc', patience=5, verbose=1)
+    tensorboard = TrainValTensorBoard(write_graph=False, log_dir=outputPath)
+    callbacks = [checkpoint, reduce_lr_plateau, tensorboard]
+    # BUILD Model
+    model = createSharedAlexnet3D_onemodel()
+    # for layer in model.layers
+    #     print(layer.name, layer.output_shape)
+    opt = optimizers.SGD(lr=0.01)
+    #plot_model(model, to_file='model.png')
+    print(model.summary())
+    model.compile(optimizer=opt,
+                  loss='categorical_crossentropy',
+                  metrics=['accuracy'])
 
-        i+=1
+    model.fit_generator(generator=gen.generator(trainData, list_avail_keys, hamming_set, batch_size=batch_size, N=num_permutations),
+                        epochs=50, verbose=1,
+                        steps_per_epoch=5,
+                        validation_data=gen.generator(
+        testData, list_avail_keys, hamming_set, batch_size=batch_size, N=num_permutations),
+        validation_steps=5, callbacks=callbacks, shuffle=False)
+    model.save(outputPath + '/final_model{}.h5' .format(i))
+
+
 
 def main(argv=None):
     train()
