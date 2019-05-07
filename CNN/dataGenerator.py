@@ -105,7 +105,7 @@ def predict_generator(image_array, avail_keys, hamming_set, hamming_idx=None, im
         yield inputs
 
 
-def evaluate_generator(image_array, avail_keys, hamming_set, hamming_idx=None, image_idx=None, blank_idx=None, out_crop=False, inner_crop=False, crop_size=28, batch_size=8, N=25):
+def evaluate_generator(image_array, avail_keys, hamming_set, hamming_idx=None, image_idx=None, blank_idx=None, full_crop=False, out_crop=False, inner_crop=False, crop_size=28, batch_size=8, N=25):
     # Divide array into cubes
     while True:
         idx_array = np.zeros((batch_size, hamming_set.shape[0]), dtype=np.uint8)
@@ -126,14 +126,12 @@ def evaluate_generator(image_array, avail_keys, hamming_set, hamming_idx=None, i
             # Figure out which should move
             shuffle_dict, fix_dict = help.avail_keys_shuffle(cells, avail_keys)
             # Blank out cubes = to blank_idx in avail_keys
-            """
-            if blank_idx is not None:
+            if full_crop is True:
                 for idx in blank_idx:
                     blank_key = avail_keys[idx]
                     shuffle_dict[blank_key] = np.zeros(shape=(1, 32, 32, 32, 1))
             else:
                 pass
-            """
             # Random crop within cubes
             cropped_dict = help.random_div(shuffle_dict)
             fix_dict = help.random_div(fix_dict)
@@ -197,7 +195,7 @@ def main(N=10, batch_size=2):
     for i in range(23):
         blank_idx.append(i)
         shuffle_dict, fix_dict = evaluate_generator(
-            fixed_array, list_avail_keys, hamming_set, hamming_idx=hamming_idx, image_idx=img_idx, blank_idx=blank_idx, out_crop=False, inner_crop=False, batch_size=1, N=10)
+            fixed_array, list_avail_keys, hamming_set, hamming_idx=hamming_idx, image_idx=img_idx, blank_idx=blank_idx, full_crop=True, out_crop=False, inner_crop=False, batch_size=1, N=10)
         if i in save_idx:
             # cropped_fixed = help.random_div(fix_dict)
             puzzle_array = help.solve_jigsaw(shuffle_dict, fix_dict, fixed_array)
