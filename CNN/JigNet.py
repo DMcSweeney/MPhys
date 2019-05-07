@@ -199,11 +199,11 @@ def train(tileSize=64, numPuzzles=23, num_permutations=100, batch_size=16):
                   loss='categorical_crossentropy',
                   metrics=['accuracy'])
 
-    model.fit_generator(generator=gen.generator(normalised_train, list_avail_keys, hamming_set, batch_size=batch_size, N=num_permutations),
+    model.fit_generator(generator=gen.generator(train_dataset, list_avail_keys, hamming_set, batch_size=batch_size, N=num_permutations),
                         epochs=50, verbose=1,
                         steps_per_epoch=5,
                         validation_data=gen.generator(
-        normalised_val, list_avail_keys, hamming_set, batch_size=batch_size, N=num_permutations),
+        validation_dataset, list_avail_keys, hamming_set, batch_size=batch_size, N=num_permutations),
         validation_steps=5, callbacks=callbacks, shuffle=False)
     model.save(outputPath + '/final_model.h5')
 
