@@ -13,8 +13,8 @@ def infer(batch_size=2):
     # On server with PET and PCT in
     image_dir = "/hepgpu3-data1/dmcsween/DataTwoWay128/fixed"
     #image_dir = "/hepgpu3-data1/dmcsween/Data128/ResampleData/PlanningCT"
-    #inputPath = "./all_logs/both_logs100perms"
-    inputPath = './mixed_hamming_logs'
+    inputPath = "./all_logs/both_logs100perms"
+    #inputPath = './mixed_hamming_logs'
     print("Load Data")
     image_data, __image, __label = load.data_reader(image_dir, image_dir, image_dir)
 
@@ -36,7 +36,7 @@ def infer(batch_size=2):
     hamming_set = pd.read_csv(
         "mixed_hamming_set.txt", sep=",", header=None)
 
-    hamming_set = hamming_set.loc[:9]
+    hamming_set = hamming_set.loc[:99]
     # Ignore moving and dvf
     test_dataset, validation_moving, validation_dvf, trainVal_dataset, train_moving, train_dvf = helper.split_data(
         image_array, moving_array, dvf_array, split_ratio=0.05)
