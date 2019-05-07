@@ -190,16 +190,19 @@ def main(N=10, batch_size=2):
     hamming_set = pd.read_csv(
         "mixed_hamming_set.txt", sep=",", header=None)
     hamming_set = hamming_set.loc[:99]
-    hamming_idx = [12]
+    hamming_idx = [3]
     img_idx = [0]
-    blank_idx = [16]
-    shuffle_dict, fix_dict = evaluate_generator(
-        fixed_array, list_avail_keys, hamming_set, hamming_idx=hamming_idx, image_idx=img_idx, blank_idx=blank_idx, out_crop=True, inner_crop=False, batch_size=1, N=10)
-
-    # cropped_fixed = help.random_div(fix_dict)
-    puzzle_array = help.solve_jigsaw(shuffle_dict, fix_dict, fixed_array)
-    helper.write_images(puzzle_array, fixed_affine,
-                        file_path="./oclusion_test/", file_prefix='idx16_outer_crop')
+    blank_idx = []
+    save_idx = [0, 11, 22]
+    for i in range(23):
+        blank_idx.append(i)
+        shuffle_dict, fix_dict = evaluate_generator(
+            fixed_array, list_avail_keys, hamming_set, hamming_idx=hamming_idx, image_idx=img_idx, blank_idx=blank_idx, out_crop=False, inner_crop=False, batch_size=1, N=10)
+        if i in save_idx:
+            # cropped_fixed = help.random_div(fix_dict)
+            puzzle_array = help.solve_jigsaw(shuffle_dict, fix_dict, fixed_array)
+            helper.write_images(puzzle_array, fixed_affine,
+                                file_path="./oclusion_test/", file_prefix='full_block_{}'.format(i))
 
 
 if __name__ == '__main__':
