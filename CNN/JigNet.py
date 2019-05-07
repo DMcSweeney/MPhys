@@ -123,7 +123,7 @@ def createNet(input_shape=(28, 28, 28, 1)):
     return an3D
 
 
-def createSharedAlexnet3D_onemodel(input_shape=(28, 28, 28, 1), nInputs=23, nclass=10):
+def createSharedAlexnet3D_onemodel(input_shape=(28, 28, 28, 1), nInputs=23, nclass=100):
     activation = 'relu'
     input_layers = [Input(shape=input_shape, name="alexnet_input_{}".format(n))
                     for n in range(nInputs)]
@@ -136,7 +136,7 @@ def createSharedAlexnet3D_onemodel(input_shape=(28, 28, 28, 1), nInputs=23, ncla
     return model
 
 
-def train(tileSize=64, numPuzzles=23, num_permutations=10, batch_size=16):
+def train(tileSize=64, numPuzzles=23, num_permutations=100, batch_size=16):
     # On server with PET and PCT in
     #image_dir = "/hepgpu3-data1/dmcsween/Data128/ResampleData/PlanningCT"
     #image_dir = "/hepgpu3-data1/dmcsween/Data128/ResampleData/PET_Rigid"
@@ -162,7 +162,7 @@ def train(tileSize=64, numPuzzles=23, num_permutations=10, batch_size=16):
     hamming_set = pd.read_csv(
         "mixed_hamming_set.txt", sep=",", header=None)
 
-    hamming_set = hamming_set.loc[:9]
+    hamming_set = hamming_set.loc[:99]
     print("Ham Len", len(hamming_set))
     # print(hamming_set)
 
@@ -175,8 +175,8 @@ def train(tileSize=64, numPuzzles=23, num_permutations=10, batch_size=16):
     validation_dataset, validation_moving, validation_dvf, train_dataset, train_moving, train_dvf = helper.split_data(
         trainVal_dataset, moving_array, dvf_array, split_ratio=0.15)
 
-    normalised_train = helper.normalise(train_dataset)
-    normalised_val = helper.normalise(validation_dataset)
+    #normalised_train = helper.normalise(train_dataset)
+    #normalised_val = helper.normalise(validation_dataset)
     # Output all data from a training session into a dated folder
     outputPath = "./mixed_hamming_logs"
     # hamming_list = [0, 1, 2, 3, 4]
