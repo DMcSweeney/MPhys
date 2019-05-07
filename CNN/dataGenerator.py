@@ -134,7 +134,7 @@ def evaluate_generator(image_array, avail_keys, hamming_set, hamming_idx=None, i
                 pass
             # Random crop within cubes
             cropped_dict = help.random_div(shuffle_dict)
-            #fix_dict = help.random_div(fix_dict)
+            fix_dict = help.random_div(fix_dict)
             if out_crop is True:
                 for idx in blank_idx:
                     blank_key = avail_keys[idx]
@@ -157,8 +157,8 @@ def evaluate_generator(image_array, avail_keys, hamming_set, hamming_idx=None, i
             idx_array[i, random_idx] = 1
         # return array_list, idx_array, out_dict, fix_dict
         inputs = [array_list[:, n, ...] for n in range(len(avail_keys))]
-        yield inputs, idx_array
-        # return out_dict, fix_dict
+        # yield inputs, idx_array
+        return out_dict, fix_dict
 
 
 """
@@ -195,12 +195,12 @@ def main(N=10, batch_size=2):
     for i in range(23):
         blank_idx.append(i)
         shuffle_dict, fix_dict = evaluate_generator(
-            fixed_array, list_avail_keys, hamming_set, hamming_idx=hamming_idx, image_idx=img_idx, blank_idx=blank_idx, full_crop=True, out_crop=False, inner_crop=False, batch_size=1, N=10)
+            fixed_array, list_avail_keys, hamming_set, hamming_idx=hamming_idx, image_idx=img_idx, blank_idx=blank_idx, full_crop=False, out_crop=False, inner_crop=True, batch_size=1, N=10)
         if i in save_idx:
             # cropped_fixed = help.random_div(fix_dict)
             puzzle_array = help.solve_jigsaw(shuffle_dict, fix_dict, fixed_array)
             helper.write_images(puzzle_array, fixed_affine,
-                                file_path="./oclusion_test/", file_prefix='full_block_{}'.format(i))
+                                file_path="./oclusion_test/", file_prefix='inner_block_{}'.format(i))
 
 
 if __name__ == '__main__':
