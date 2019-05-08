@@ -193,11 +193,11 @@ def train(tileSize=64, numPuzzles=23, num_permutations=100, batch_size=16):
 
     i = 1
     print(kf.split(X))
-
-    for train_index, test_index in kf.split(X):
-        print(train_index)
-        print(test_index)
-
+    indexPath = './indices/'
+    for n, indices in enumerate(kf.split(X)):
+        train_index, test_index = indices
+        np.savetxt(indexPath + 'train_{}'.format(n), train_index, delimiter=",", fmt='%1.2i')
+        np.savetxt(indexPath + 'test_{}'.format(n), test_index, delimiter=",", fmt='%1.2i')
         trainData = X[train_index]
         testData = X[test_index]
 
