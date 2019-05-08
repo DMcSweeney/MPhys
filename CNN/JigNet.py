@@ -195,14 +195,13 @@ def train(tileSize=64, numPuzzles=23, num_permutations=100, batch_size=16):
     print(kf.split(X))
 
     for train_index, test_index in kf.split(X):
-        K.clear_session()
+        print(train_index)
+        print(test_index)
+
         trainData = X[train_index]
         testData = X[test_index]
 
 
-        train = X[0]
-        test = X[1]
-        
     print("=========================================")
     print("====== K Fold Validation step => %d =======" % (i))
     print("=========================================")
