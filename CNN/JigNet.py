@@ -198,7 +198,7 @@ def train(tileSize=64, numPuzzles=23, num_permutations=100, batch_size=16):
         trainData = X[train_index]
         testData = X[test_index]
 
-        print(X.shape())
+        
         train = X[0]
         test = X[1]
 
