@@ -198,7 +198,9 @@ def train(tileSize=64, numPuzzles=23, num_permutations=100, batch_size=16):
         trainData = X[train_index]
         testData = X[test_index]
 
-        print(X[0])
+        print(X.shape())
+        train = X[0]
+        test = X[1]
 
     print("=========================================")
     print("====== K Fold Validation step => %d =======" % (i))
@@ -226,11 +228,11 @@ def train(tileSize=64, numPuzzles=23, num_permutations=100, batch_size=16):
                   loss='categorical_crossentropy',
                   metrics=['accuracy'])
 
-    model.fit_generator(generator=gen.generator(trainData, list_avail_keys, hamming_set, batch_size=batch_size, N=num_permutations),
+    model.fit_generator(generator=gen.generator(train, list_avail_keys, hamming_set, batch_size=batch_size, N=num_permutations),
                         epochs=50, verbose=1,
                         steps_per_epoch=5,
                         validation_data=gen.generator(
-        testData, list_avail_keys, hamming_set, batch_size=batch_size, N=num_permutations),
+        test, list_avail_keys, hamming_set, batch_size=batch_size, N=num_permutations),
         validation_steps=5, callbacks=callbacks, shuffle=False)
     model.save(outputPath + '/final_model{}.h5' .format(i))
 
