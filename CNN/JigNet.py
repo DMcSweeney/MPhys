@@ -185,7 +185,7 @@ def train(tileSize=64, numPuzzles=23, num_permutations=100, batch_size=16):
 
     conc_data = np.concatenate((normalised_train,normalised_val))
     #prepare cross validation
-    kf =KFold(n_splits=5,random_state=None, shuffle=True)
+    kf =KFold(n_splits=5,random_state=666, shuffle=True )
 
     kf.get_n_splits(conc_data)
 
