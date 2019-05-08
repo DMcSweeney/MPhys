@@ -191,14 +191,14 @@ def train(tileSize=64, numPuzzles=23, num_permutations=100, batch_size=16):
 
     X = conc_data
 
-    train = train_index[0]
-    test = test_index[0]
-
-
     i = 1
-    K.clear_session()
-    trainData = X[train]
-    testData = X[test]
+
+    for train_index, test_index in kf.split(X):
+        K.clear_session()
+        trainData = X[train_index]
+        testData = X[test_index]
+
+        print(X[0])
 
     print("=========================================")
     print("====== K Fold Validation step => %d =======" % (i))
@@ -234,7 +234,7 @@ def train(tileSize=64, numPuzzles=23, num_permutations=100, batch_size=16):
         validation_steps=5, callbacks=callbacks, shuffle=False)
     model.save(outputPath + '/final_model{}.h5' .format(i))
 
-
+    i+=1
 
 def main(argv=None):
     train()
