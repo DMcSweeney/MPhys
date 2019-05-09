@@ -60,6 +60,7 @@ def infer(batch_size=2):
             print("%s: %.2f%%" % (model.metrics_names[1], accuracy[1]*100))
             scores[i, j] = (accuracy[1] * 100)
 
+    np.savetxt("scores_full_block.txt", scores, delimiter=",", fmt='%1.2i')
     avg_score = np.mean(scores, axis=1)
     error_score = np.std(scores, axis=1)
     print(avg_score, error_score)
