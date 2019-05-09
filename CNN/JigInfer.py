@@ -56,12 +56,12 @@ def infer(batch_size=2):
             idx_list = [j, j]
             print("Pre Eval:", i, j)
             myPredictGen = gen.evaluate_generator(
-                normalised_dataset, list_avail_keys, hamming_set, hamming_idx=idx_list, batch_size=batch_size, blank_idx=blank_idx, full_crop=True, out_crop=False, inner_crop=False, N=100)
+                normalised_dataset, list_avail_keys, hamming_set, hamming_idx=idx_list, batch_size=batch_size, blank_idx=blank_idx, full_crop=False, out_crop=False, inner_crop=True, N=100)
             accuracy = model.evaluate_generator(generator=myPredictGen, steps=5, verbose=1)
             print("%s: %.2f%%" % (model.metrics_names[1], accuracy[1]*100))
             scores[i, j] = (accuracy[1] * 100)
 
-    np.savetxt("scores_full_block.txt", scores, delimiter=",", fmt='%1.2i')
+    np.savetxt("scores_inner_block.txt", scores, delimiter=",", fmt='%1.2i')
     avg_score = np.mean(scores, axis=1)
     error_score = np.std(scores, axis=1)
     print(avg_score, error_score)
