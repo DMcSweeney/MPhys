@@ -200,12 +200,13 @@ def train(tileSize=64, numPuzzles=23, num_permutations=100, batch_size=16):
     trainIndex = trainIndex.values
     testIndex = pd.read_csv(indexPath + "test_0.txt", sep=",", header=None)
     testIndex = testIndex.values
-    print(trainIndex)
-    print(type(trainIndex))
 
-    trainData = X[trainIndex]
-    testData = X[testIndex]
+    trainData = X[np.newaxis, trainIndex]
+    testData = X[np.newaxis, testIndex]
 
+    print(trainData.shape())
+    print(testData.shape())
+    
     print("=========================================")
     print("====== K Fold Validation step => %d =======" % (i))
     print("=========================================")
