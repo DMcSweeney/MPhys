@@ -192,14 +192,6 @@ def train(tileSize=64, numPuzzles=23, num_permutations=100, batch_size=16):
     X = conc_data
 
     i = 1
-    print(kf.split(X))
-    indexPath = './indices/'
-    for n, indices in enumerate(kf.split(X)):
-        train_index, test_index = indices
-        np.savetxt(indexPath + 'train_{}.txt'.format(n), train_index, delimiter=",", fmt='%1.2i')
-        np.savetxt(indexPath + 'test_{}.txt'.format(n), test_index, delimiter=",", fmt='%1.2i')
-        trainData = X[train_index]
-        testData = X[test_index]
 
 
     trainIndex = pd.read_csv(indexPath + "train_0 ", sep=",", header=None)
