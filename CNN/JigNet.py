@@ -156,7 +156,7 @@ def train(tileSize=64, numPuzzles=23, num_permutations=100, batch_size=16):
     list_avail_keys = help.get_moveable_keys(image_array)
     hamming_set = pd.read_csv(
         "hamming_set_PCT.txt", sep=",", header=None)
-    
+
     avail_keys = pd.read_csv("avail_keys_both.txt", sep=",", header=None)
     print("Len keys:", len(avail_keys))
     list_avail_keys = [(avail_keys.loc[i, 0], avail_keys.loc[i, 1], avail_keys.loc[i, 2])
@@ -196,8 +196,8 @@ def train(tileSize=64, numPuzzles=23, num_permutations=100, batch_size=16):
 
 
 
-    trainIndex = pd.read_csv(indexPath + "train_0 ", sep=",", header=None)
-    testIndex = pd.read_csv(indexPath + "test_0 ", sep=",", header=None)
+    trainIndex = pd.read_csv(indexPath + "train_0.txt", sep=",", header=None)
+    testIndex = pd.read_csv(indexPath + "test_0 .txt", sep=",", header=None)
 
     trainData = X[trainIndex]
     testData = X[testIndex]
