@@ -152,11 +152,11 @@ def train(tileSize=64, numPuzzles=23, num_permutations=100, batch_size=16):
     image_array, image_affine = image_data.get_data()
     moving_array, moving_affine = __image.get_data()
     dvf_array, dvf_affine = __label.get_data()
-    """
+
     list_avail_keys = help.get_moveable_keys(image_array)
     hamming_set = pd.read_csv(
         "hamming_set_PCT.txt", sep=",", header=None)
-    """
+    
     avail_keys = pd.read_csv("avail_keys_both.txt", sep=",", header=None)
     print("Len keys:", len(avail_keys))
     list_avail_keys = [(avail_keys.loc[i, 0], avail_keys.loc[i, 1], avail_keys.loc[i, 2])
