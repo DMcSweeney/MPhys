@@ -142,7 +142,7 @@ def createSharedAlexnet3D_onemodel(input_shape=(28, 28, 28, 1), nInputs=23, ncla
 
 
 def train(tileSize=64, numPuzzles=23, num_permutations=100, batch_size=16):
-    # On server with PET and PCT in
+    """# On server with PET and PCT in
     image_dir = "/hepgpu3-data1/dmcsween/Data128/ResampleData/PlanningCT"
     #image_dir = "/hepgpu3-data1/dmcsween/Data128/ResampleData/PET_Rigid"
 
@@ -190,7 +190,7 @@ def train(tileSize=64, numPuzzles=23, num_permutations=100, batch_size=16):
     kf.get_n_splits(conc_data)
 
     X = conc_data
-
+"""
     i = 1
     indexPath = './indices/'
 
