@@ -204,6 +204,7 @@ def train(tileSize=64, numPuzzles=23, num_permutations=100, batch_size=16):
     trainData = X[np.newaxis, trainIndex]
     testData = X[np.newaxis, testIndex]
 
+    print(trainData.shape)
     print("=========================================")
     print("====== K Fold Validation step => %d =======" % (i))
     print("=========================================")
