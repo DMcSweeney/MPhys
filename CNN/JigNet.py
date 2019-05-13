@@ -191,14 +191,14 @@ def train(tileSize=64, numPuzzles=23, num_permutations=100, batch_size=16):
 
     X = conc_data
 
-    i = 4
+    i = 5
     indexPath = './indices/'
 
 
 
-    trainIndex = pd.read_csv(indexPath + "train_3.txt", sep=",", header=None)
+    trainIndex = pd.read_csv(indexPath + "train_4.txt", sep=",", header=None)
     trainIndex = trainIndex.values
-    testIndex = pd.read_csv(indexPath + "test_3.txt", sep=",", header=None)
+    testIndex = pd.read_csv(indexPath + "test_4.txt", sep=",", header=None)
     testIndex = testIndex.values
 
     trainData = X[trainIndex]
