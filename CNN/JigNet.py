@@ -241,6 +241,10 @@ def train(tileSize=64, numPuzzles=23, num_permutations=100, batch_size=16):
         testData, list_avail_keys, hamming_set, batch_size=batch_size, N=num_permutations),
         validation_steps=5, callbacks=callbacks, shuffle=False)
     model.save(outputPath + '/final_model{}.h5' .format(i))
+    myPredictGen = gen.evaluate_generator(
+                testData, list_avail_keys, hamming_set, hamming_idx=None, batch_size=4, blank_idx=None, full_crop=False, out_crop=False, inner_crop=False, N=100)
+    accuracy = model.evaluate_generator(generator=myPredictGen, steps=5, verbose=1)
+    print("%s: %.2f%%" % (model.metrics_names[1], accuracy[1]*100))
 
     i+=1
 
