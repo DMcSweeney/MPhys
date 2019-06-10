@@ -161,8 +161,8 @@ def evaluate_generator(image_array, avail_keys, hamming_set, hamming_idx=None, i
             idx_array[i, random_idx] = 1
         # return array_list, idx_array, out_dict, fix_dict
         inputs = [array_list[:, n, ...] for n in range(len(avail_keys))]
-        yield inputs, idx_array
-        # return out_dict, fix_dict
+        # yield inputs, idx_array
+        return out_dict, fix_dict
 
 
 """
@@ -194,17 +194,16 @@ def main(N=10, batch_size=2):
     hamming_set = hamming_set.loc[:99]
     hamming_idx = [3]
     img_idx = [0]
-    blank_idx = []
-    save_idx = [0, 11, 22]
-    for i in range(23):
-        blank_idx.append(i)
+    blank_idx = [n for n in range(23)]
+    save_idx = [0, 7, 14]
+    for i in range(15):
         shuffle_dict, fix_dict = evaluate_generator(
-            fixed_array, list_avail_keys, hamming_set, hamming_idx=hamming_idx, image_idx=img_idx, blank_idx=blank_idx, full_crop=False, out_crop=False, inner_crop=True, batch_size=1, N=10)
+            fixed_array, list_avail_keys, hamming_set, hamming_idx=hamming_idx, image_idx=img_idx, blank_idx=blank_idx, border_size=i, full_crop=False, out_crop=True, inner_crop=False, batch_size=1, N=100)
         if i in save_idx:
             # cropped_fixed = help.random_div(fix_dict)
             puzzle_array = help.solve_jigsaw(shuffle_dict, fix_dict, fixed_array)
             helper.write_images(puzzle_array, fixed_affine,
-                                file_path="./oclusion_test/", file_prefix='inner_block_{}'.format(i))
+                                file_path="./border_test/", file_prefix='border_{}'.format(i))
 
 
 if __name__ == '__main__':
