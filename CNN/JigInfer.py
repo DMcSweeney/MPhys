@@ -52,7 +52,7 @@ def infer(batch_size=2):
     model.compile(optimizer=opt, loss='categorical_crossentropy', metrics=["accuracy"])
     idx_list = []
     # i is border size
-    for i in range(14):
+    for i in range(15):
         for j in range(10):
             idx_list = [j, j]
             print("Pre Eval:", i, j)
