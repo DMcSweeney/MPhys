@@ -47,7 +47,7 @@ def random_div(input_dict, crop_size=28):
 def outer_crop(input_dict, blank_key, crop_size=14, border_size=7):
     # Function to crop small region inside and pad back up
     # Leaves a blank margin around region
-    print("Border size:", border_size)
+    #print("Border size:", border_size)
     centre_cells = {}
     out_cells = {}
     all_cells = {}
