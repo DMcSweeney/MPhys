@@ -51,6 +51,7 @@ def outer_crop(input_dict, blank_key, crop_size=14, border_size=7):
     centre_cells = {}
     out_cells = {}
     all_cells = {}
+    crop_size = 28-2*border_size
     for key, val in input_dict.items():
         if key == blank_key:
             # Centre_cells is central region of random div
