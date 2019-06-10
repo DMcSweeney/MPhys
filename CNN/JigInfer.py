@@ -44,24 +44,24 @@ def infer(batch_size=2):
     normalised_dataset = helper.normalise(test_dataset)
     print('Load models')
     scores = np.zeros((23, 10))
-    blank_idx = []
+    blank_idx = [n for n in range(23)]
     K.clear_session()
     model = load_model(inputPath + '/final_model.h5')
     opt = optimizers.SGD(lr=0.01)
     model.compile(optimizer=opt, loss='categorical_crossentropy', metrics=["accuracy"])
     idx_list = []
-    for i in range(23):
-        blank_idx.append(i)
+    # i is border size
+    for i in range(14):
         for j in range(10):
             idx_list = [j, j]
             print("Pre Eval:", i, j)
             myPredictGen = gen.evaluate_generator(
-                normalised_dataset, list_avail_keys, hamming_set, hamming_idx=idx_list, batch_size=batch_size, blank_idx=blank_idx, full_crop=False, out_crop=True, inner_crop=False, N=100)
+                normalised_dataset, list_avail_keys, hamming_set, hamming_idx=idx_list, batch_size=batch_size, blank_idx=blank_idx, border_size=i, full_crop=False, out_crop=True, inner_crop=False, N=100)
             accuracy = model.evaluate_generator(generator=myPredictGen, steps=5, verbose=1)
             print("%s: %.2f%%" % (model.metrics_names[1], accuracy[1]*100))
             scores[i, j] = (accuracy[1] * 100)
 
-    np.savetxt("scores_outer_block.txt", scores, delimiter=",", fmt='%1.2i')
+    np.savetxt("scores_diff_border.txt", scores, delimiter=",", fmt='%1.2i')
     avg_score = np.mean(scores, axis=1)
     error_score = np.std(scores, axis=1)
     print(avg_score, error_score)

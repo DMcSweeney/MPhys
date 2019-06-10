@@ -105,7 +105,7 @@ def predict_generator(image_array, avail_keys, hamming_set, hamming_idx=None, im
         yield inputs
 
 
-def evaluate_generator(image_array, avail_keys, hamming_set, hamming_idx=None, image_idx=None, blank_idx=None, full_crop=False, out_crop=False, inner_crop=False, crop_size=28, batch_size=8, N=25):
+def evaluate_generator(image_array, avail_keys, hamming_set, hamming_idx=None, image_idx=None, blank_idx=None, full_crop=False, out_crop=False, inner_crop=False, border_size=None, crop_size=28, batch_size=8, N=25):
     # Divide array into cubes
     while True:
         idx_array = np.zeros((batch_size, hamming_set.shape[0]), dtype=np.uint8)
@@ -138,7 +138,11 @@ def evaluate_generator(image_array, avail_keys, hamming_set, hamming_idx=None, i
             if out_crop is True:
                 for idx in blank_idx:
                     blank_key = avail_keys[idx]
-                    cropped_dict = help.outer_crop(cropped_dict, blank_key)
+                    if border_size is not None:
+                        cropped_dict = help.outer_crop(
+                            cropped_dict, blank_key, border_size=border_size)
+                    else:
+                        cropped_dict = help.outer_crop(cropped_dict, blank_key)
             else:
                 pass
             if inner_crop is True:
