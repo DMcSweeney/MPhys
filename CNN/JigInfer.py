@@ -69,8 +69,8 @@ def infer(batch_size=2):
     error_perm = np.std(scores, axis=0)
     var_score = np.var(scores, axis=1)
     var_perm = np.var(scores, axis=0)
-    print("Scores:"avg_score, error_score, var_score)
-    print("Perms:"avg_perm, error_perm, var_perm)
+    print("Scores:", avg_score, error_score, var_score)
+    print("Perms:", avg_perm, error_perm, var_perm)
     print("Done")
 
 
