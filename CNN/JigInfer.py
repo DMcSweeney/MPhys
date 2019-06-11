@@ -57,7 +57,7 @@ def infer(batch_size=2):
             idx_list = [j, j]
             print("Pre Eval:", i, j)
             myPredictGen = gen.evaluate_generator(
-                normalised_dataset, list_avail_keys, hamming_set, hamming_idx=idx_list, batch_size=batch_size, blank_idx=blank_idx, border_size=i, full_crop=False, out_crop=True, inner_crop=False, N=100)
+                normalised_dataset, list_avail_keys, hamming_set, hamming_idx=idx_list, batch_size=batch_size, blank_idx=blank_idx, border_size=i, image_idx=0, full_crop=False, out_crop=True, inner_crop=False, N=100)
             accuracy = model.evaluate_generator(generator=myPredictGen, steps=5, verbose=1)
             print("%s: %.2f%%" % (model.metrics_names[1], accuracy[1]*100))
             scores[i, j] = (accuracy[1] * 100)
