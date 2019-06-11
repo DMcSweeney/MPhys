@@ -64,9 +64,13 @@ def infer(batch_size=2):
 
     np.savetxt("scores_diff_border.txt", scores, delimiter=",", fmt='%1.2i')
     avg_score = np.mean(scores, axis=1)
+    avg_perm = np.mean(scores, axis=0)
     error_score = np.std(scores, axis=1)
-    var_score = np.var(scores, axis=-1)
-    print(avg_score, error_score, var_score)
+    error_perm = np.std(scores, axis=0)
+    var_score = np.var(scores, axis=1)
+    var_perm = np.var(scores, axis=0)
+    print("Scores:"avg_score, error_score, var_score)
+    print("Perms:"avg_perm, error_perm, var_perm)
     print("Done")
 
 
