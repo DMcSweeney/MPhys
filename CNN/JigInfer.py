@@ -53,7 +53,7 @@ def infer(batch_size=2):
     idx_list = []
     # i is border size
     for i in range(15):
-        for j in range(10):
+        for j in range(100):
             idx_list = [j, j]
             print("Pre Eval:", i, j)
             myPredictGen = gen.evaluate_generator(
