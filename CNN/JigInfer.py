@@ -43,7 +43,7 @@ def infer(batch_size=2):
     print("Valid Shape:", test_dataset.shape)
     normalised_dataset = helper.normalise(test_dataset)
     print('Load models')
-    scores = np.zeros((15, 11))
+    scores = np.zeros((15, 20))
     blank_idx = [n for n in range(23)]
     print(blank_idx)
     K.clear_session()
@@ -53,11 +53,11 @@ def infer(batch_size=2):
     idx_list = []
     # i is border size
     for i in range(15):
-        for j in range(11):
+        for j in range(20):
             idx_list = [10, 10]
             print("Pre Eval:", i, j)
             myPredictGen = gen.evaluate_generator(
-                normalised_dataset, list_avail_keys, hamming_set, hamming_idx=idx_list, batch_size=batch_size, blank_idx=blank_idx, border_size=i, image_idx=[j, j], full_crop=False, out_crop=True, inner_crop=False, N=100)
+                normalised_dataset, list_avail_keys, hamming_set, hamming_idx=idx_list, batch_size=batch_size, blank_idx=blank_idx, border_size=i, image_idx=[10, 10], full_crop=False, out_crop=True, inner_crop=False, N=100)
             accuracy = model.evaluate_generator(generator=myPredictGen, steps=5, verbose=1)
             print("%s: %.2f%%" % (model.metrics_names[1], accuracy[1]*100))
             scores[i, j] = (accuracy[1] * 100)
